@@ -4,6 +4,10 @@
   var loading = document.getElementById("agreement-loading");
   var DEFAULT_COMPANY = "广州熊动科技有限公司";
   var DEFAULT_EMAIL = "pingce@dxyx6888.com";
+  var GAME_NAME_BY_CODE = {
+    xmb: "仙魔变",
+    xdsb: "仙帝神兵",
+  };
 
   /** 使用 URLSearchParams 读取查询串（浏览器已对百分号编码做 decodeURIComponent） */
   function getParams() {
@@ -37,6 +41,19 @@
     return !isNaN(t);
   }
 
+  function normalizeDateParam(rawDate) {
+    if (!rawDate) return "";
+    if (/^\d{8}$/.test(rawDate)) {
+      var y = rawDate.slice(0, 4);
+      var m = rawDate.slice(4, 6);
+      var d = rawDate.slice(6, 8);
+      var iso = y + "-" + m + "-" + d;
+      return isoDateOk(iso) ? iso : "";
+    }
+    if (isoDateOk(rawDate)) return rawDate;
+    return "";
+  }
+
   function renderError(message, detail) {
     if (loading) loading.remove();
     root.innerHTML =
@@ -57,9 +74,11 @@
     if (!PT || !root) return;
 
     var p = getParams();
+    var normalizedDate = normalizeDateParam(p.date);
+    var gameName = GAME_NAME_BY_CODE[p.game] || p.game;
     var missing = [];
-    if (!p.date) missing.push("date（更新日期）");
-    if (!p.game) missing.push("game（游戏/应用名称）");
+    if (!p.date) missing.push("d/date（更新日期）");
+    if (!p.game) missing.push("g/game（游戏/应用名称）");
 
     if (missing.length) {
       renderError(
@@ -69,8 +88,8 @@
       return;
     }
 
-    if (!isoDateOk(p.date)) {
-      renderError("参数 date 格式无效。", "应为 YYYY-MM-DD，例如 2026-03-30。");
+    if (!normalizedDate) {
+      renderError("参数 d/date 格式无效。", "应为 YYYYMMDD 或 YYYY-MM-DD，例如 20260330 或 2026-03-30。");
       return;
     }
 
@@ -79,12 +98,12 @@
       return;
     }
 
-    var dateDisplay = PT.formatDateParam(p.date);
-    var html = PT.buildPolicyHtml(p.company, p.game, p.email, dateDisplay);
+    var dateDisplay = PT.formatDateParam(normalizedDate);
+    var html = PT.buildPolicyHtml(p.company, gameName, p.email, dateDisplay);
 
     if (loading) loading.remove();
     root.innerHTML = html;
-    var titleSafe = String(p.game).replace(/[<>&]/g, "");
+    var titleSafe = String(gameName).replace(/[<>&]/g, "");
     document.title = "隐私政策 - " + titleSafe;
   }
 

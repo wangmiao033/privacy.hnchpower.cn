@@ -17,6 +17,10 @@
   var toast = document.getElementById("toast");
   var DEFAULT_COMPANY = "广州熊动科技有限公司";
   var DEFAULT_EMAIL = "pingce@dxyx6888.com";
+  var GAME_CODE_MAP = {
+    "仙魔变": "xmb",
+    "仙帝神兵": "xdsb",
+  };
 
   var hints = {
     date: document.getElementById("hint-date"),
@@ -103,8 +107,10 @@
   function buildPublishUrl() {
     var v = getValues();
     var url = new URL("agreement.html", window.location.href);
-    url.searchParams.set("g", v.game);
-    url.searchParams.set("d", v.date);
+    var gameCode = GAME_CODE_MAP[v.game] || v.game;
+    var compactDate = String(v.date || "").replace(/-/g, "");
+    url.searchParams.set("g", gameCode);
+    url.searchParams.set("d", compactDate);
     if (v.company !== DEFAULT_COMPANY) {
       url.searchParams.set("c", v.company);
     }
