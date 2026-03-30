@@ -2,6 +2,7 @@
   var PT = window.PolicyTemplate;
   var root = document.getElementById("agreement-root");
   var loading = document.getElementById("agreement-loading");
+  var SB_CFG = window.SupabaseConfig || {};
   var DEFAULT_COMPANY = "广州熊动科技有限公司";
   var DEFAULT_EMAIL = "pingce@dxyx6888.com";
   var GAME_NAME_BY_CODE = {
@@ -25,11 +26,38 @@
     var company = pickPrefer("c", "company");
     var email = pickPrefer("e", "email");
     return {
+      id: pickPrefer("id", "code"),
       company: company || DEFAULT_COMPANY,
       game: pickPrefer("g", "game"),
       email: email || DEFAULT_EMAIL,
       date: pickPrefer("d", "date"),
     };
+  }
+
+  function getFunctionsBaseUrl() {
+    if (!SB_CFG.SUPABASE_URL) return "";
+    return String(SB_CFG.SUPABASE_URL).replace(/\/+$/, "") + "/functions/v1";
+  }
+
+  async function fetchPolicyByShortCode(shortCode) {
+    var base = getFunctionsBaseUrl();
+    if (!base || !SB_CFG.SUPABASE_ANON_KEY) {
+      throw new Error("Supabase 配置缺失");
+    }
+    var url = base + "/get-policy-link?id=" + encodeURIComponent(shortCode);
+    var res = await fetch(url, {
+      method: "GET",
+      headers: {
+        apikey: SB_CFG.SUPABASE_ANON_KEY,
+      },
+    });
+    var json = await res.json().catch(function () {
+      return {};
+    });
+    if (!res.ok || !json || !json.data) {
+      throw new Error((json && json.error) || "短链内容读取失败");
+    }
+    return json.data;
   }
 
   function simpleEmailOk(s) {
@@ -71,10 +99,43 @@
     document.title = "隐私政策 - 参数不完整";
   }
 
-  function run() {
+  async function run() {
     if (!PT || !root) return;
 
     var p = getParams();
+    if (p.id) {
+      try {
+        var row = await fetchPolicyByShortCode(p.id);
+        var dateFromDb = normalizeDateParam(row.date);
+        if (!dateFromDb) {
+          renderError("短链数据中的日期无效。", "请重新生成短链后再访问。");
+          return;
+        }
+        if (!simpleEmailOk(row.email || "")) {
+          renderError("短链数据中的邮箱无效。", "请重新生成短链后再访问。");
+          return;
+        }
+        var dateDisplayFromDb = PT.formatDateParam(dateFromDb);
+        var htmlFromDb = PT.buildPolicyHtml(
+          String(row.company || DEFAULT_COMPANY),
+          String(row.game || ""),
+          String(row.email || DEFAULT_EMAIL),
+          dateDisplayFromDb
+        );
+        if (loading) loading.remove();
+        root.innerHTML = htmlFromDb;
+        var dbTitleSafe = String(row.game || "隐私政策").replace(/[<>&]/g, "");
+        document.title = "隐私政策 - " + dbTitleSafe;
+        return;
+      } catch (e) {
+        renderError(
+          "短链无效或已失效。",
+          (e && e.message) || "请确认链接正确，或重新在首页发布。"
+        );
+        return;
+      }
+    }
+
     var normalizedDate = normalizeDateParam(p.date);
     var gameName = GAME_NAME_BY_CODE[p.game] || p.game;
     var missing = [];

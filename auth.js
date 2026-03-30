@@ -59,6 +59,7 @@
   }
 
   var supabase = supabaseLib.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  window.AppSupabaseClient = supabase;
 
   async function refreshUser() {
     try {

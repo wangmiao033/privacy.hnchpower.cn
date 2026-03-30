@@ -15,6 +15,7 @@
   var btnCopyLink = document.getElementById("btn-copy-link");
   var publishTime = document.getElementById("publish-time");
   var toast = document.getElementById("toast");
+  var SB_CFG = window.SupabaseConfig || {};
   var DEFAULT_COMPANY = "广州熊动科技有限公司";
   var DEFAULT_EMAIL = "pingce@dxyx6888.com";
   var GAME_CODE_MAP = {
@@ -105,19 +106,58 @@
     return ok;
   }
 
-  function buildPublishUrl() {
+  function getFunctionsBaseUrl() {
+    if (!SB_CFG.SUPABASE_URL) return "";
+    return String(SB_CFG.SUPABASE_URL).replace(/\/+$/, "") + "/functions/v1";
+  }
+
+  async function createShortPolicyLink(values) {
+    var base = getFunctionsBaseUrl();
+    if (!base || !SB_CFG.SUPABASE_ANON_KEY) {
+      throw new Error("Supabase 配置缺失，无法生成短链");
+    }
+
+    var token = "";
+    try {
+      var appSupabase = window.AppSupabaseClient;
+      if (appSupabase && appSupabase.auth && appSupabase.auth.getSession) {
+        var sessionRes = await appSupabase.auth.getSession();
+        token = sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.access_token || "";
+      }
+    } catch (_e) {
+      token = "";
+    }
+
+    var headers = {
+      "Content-Type": "application/json",
+      apikey: SB_CFG.SUPABASE_ANON_KEY,
+    };
+    if (token) headers.Authorization = "Bearer " + token;
+
+    var res = await fetch(base + "/create-policy-link", {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        company: values.company,
+        game: values.game,
+        email: values.email,
+        date: values.date,
+      }),
+    });
+
+    var json = await res.json().catch(function () {
+      return {};
+    });
+    if (!res.ok || !json || !json.short_code) {
+      throw new Error((json && json.error) || "短链创建失败");
+    }
+    return json.short_code;
+  }
+
+  function buildPublishUrlByCode(shortCode) {
     var v = getValues();
     var url = new URL("agreement.html", window.location.href);
-    var gameCode = GAME_CODE_MAP[v.game] || v.game;
-    var compactDate = String(v.date || "").replace(/-/g, "");
-    url.searchParams.set("g", gameCode);
-    url.searchParams.set("d", compactDate);
-    if (v.company !== DEFAULT_COMPANY) {
-      url.searchParams.set("c", v.company);
-    }
-    if (v.email !== DEFAULT_EMAIL) {
-      url.searchParams.set("e", v.email);
-    }
+    url.searchParams.set("id", shortCode);
     return url.href;
   }
 
@@ -164,9 +204,20 @@
   });
   updatePreview();
 
-  btnPublish.addEventListener("click", function () {
+  btnPublish.addEventListener("click", async function () {
     if (!validate()) return;
-    var url = buildPublishUrl();
+    btnPublish.disabled = true;
+    var values = getValues();
+    var url = "";
+    try {
+      var shortCode = await createShortPolicyLink(values);
+      url = buildPublishUrlByCode(shortCode);
+    } catch (e) {
+      showToast("发布失败：" + (e && e.message ? e.message : "请稍后重试"));
+      btnPublish.disabled = false;
+      return;
+    }
+
     if (publishedUrlInput) publishedUrlInput.value = url;
     if (publishTime) publishTime.textContent = "最近一次生成：" + nowTimeText();
     window.open(url, "_blank", "noopener,noreferrer");
@@ -178,6 +229,7 @@
         showToast("发布成功（请手动复制地址栏链接）");
       }
     );
+    btnPublish.disabled = false;
   });
 
   btnCopyPreview.addEventListener("click", function () {
