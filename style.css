@@ -628,6 +628,7 @@ body {
   text-align: justify;
   hyphens: auto;
   color: #2d4254;
+  word-break: break-word;
 }
 
 .policy-doc-body a {
@@ -664,10 +665,24 @@ body {
   color: #234763;
 }
 
+.policy-doc-subsection-title {
+  margin: 0.8rem 0 0.45rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #2d4f6d;
+}
+
 .policy-doc-list-item {
   margin-left: 0.2rem;
   padding-left: 0.3rem;
   border-left: 2px solid #dbe8f4;
+}
+
+.policy-doc-meta-line {
+  margin: 0 0 0.5rem;
+  padding: 0.12rem 0 0.12rem 0.35rem;
+  border-left: 2px solid #e4edf6;
+  color: #38526a;
 }
 
 .sdk-grid {
