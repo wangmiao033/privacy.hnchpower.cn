@@ -116,10 +116,21 @@
       var appSupabase = window.AppSupabaseClient;
       if (appSupabase && appSupabase.auth && appSupabase.auth.getSession) {
         var sessionRes = await appSupabase.auth.getSession();
-        return sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.access_token || "";
+        var session = sessionRes && sessionRes.data && sessionRes.data.session;
+        var token = session && session.access_token || "";
+        console.log("[publish] session exists:", !!session);
+        console.log("[publish] access token exists:", !!token);
+        console.log("[publish] access token length:", token ? token.length : 0);
+        if (token) {
+          console.log("[publish] access token prefix:", String(token).slice(0, 10) + "...");
+        }
+        return token;
       }
+      console.log("[publish] session exists:", false);
+      console.log("[publish] access token exists:", false);
       return "";
     } catch (_e) {
+      console.log("[publish] getSession error");
       return "";
     }
   }
@@ -146,8 +157,11 @@
         date: values.date,
       }),
     });
+    console.log("[publish] request url:", base + "/create-policy-link");
+    console.log("[publish] response status:", res.status);
 
     var rawText = await res.text();
+    console.log("[publish] response body:", rawText ? String(rawText).slice(0, 500) : "");
     var json = {};
     try {
       json = rawText ? JSON.parse(rawText) : {};
@@ -237,6 +251,12 @@
       var token = await getCurrentAccessToken();
       if (!token) {
         showToast("请先登录后再发布");
+        btnPublish.disabled = false;
+        return;
+      }
+      if (String(token).split(".").length !== 3) {
+        console.error("[publish] invalid token shape");
+        showToast("请先重新登录后再发布");
         btnPublish.disabled = false;
         return;
       }

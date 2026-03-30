@@ -32,14 +32,12 @@ Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   const supabaseUrl = Deno.env.get("APP_SUPABASE_URL") || "";
-  const anonKey = Deno.env.get("APP_SUPABASE_ANON_KEY") || "";
   const serviceKey = Deno.env.get("APP_SUPABASE_SECRET_KEY") || "";
-  if (!supabaseUrl || !anonKey || !serviceKey) {
+  if (!supabaseUrl || !serviceKey) {
     return json({ error: "Function env not configured" }, 500);
   }
 
   const admin = createClient(supabaseUrl, serviceKey);
-  const anon = createClient(supabaseUrl, anonKey);
 
   let body: Record<string, unknown> = {};
   try {
@@ -63,7 +61,7 @@ Deno.serve(async (req) => {
     return json({ error: "Missing authorization header" }, 401);
   }
   const jwt = authHeader.replace(/^Bearer\s+/i, "");
-  const userRes = await anon.auth.getUser(jwt);
+  const userRes = await admin.auth.getUser(jwt);
   if (userRes.error || !userRes.data.user?.id) {
     return json({ error: "Invalid user token" }, 401);
   }
