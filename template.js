@@ -23,20 +23,13 @@
     var t = String(text || "");
     t = t.replace(/ /g, " ");
     t = t
-      .replace(/\r\n/g, "\n")
-      .replace(/\n{2,}/g, "\n")
-      .replace(/(用户隐私协议更新日期[:：])/g, "\n$1")
       .replace(/(【特别提示】)/g, "\n$1")
       .replace(/(隐私协议内容：)/g, "\n$1")
       .replace(/(第[一二三四五六七八九十]+章)/g, "\n$1")
       .replace(/(九、我们如何处理未成年人的个人信息)/g, "\n$1")
+      .replace(/(第十章)/g, "\n$1")
       .replace(/(第三方SDK信息表)/g, "\n$1")
-      .replace(/([一二三四五六七八九十]、我们如何)/g, "\n$1")
-      .replace(/(\d+、游戏注册、登录账号|\d+、游戏注册、登录|\d+、充值、消费|\d+、异常日志|\d+、角色信息、聊天信息)/g, "\n$1")
-      .replace(/(（\d+）使用的第三方SDK|（\d+）必需信息、非必需信息|（\d+）敏感权限)/g, "\n$1")
-      .replace(/(1）|2）|3）|4）|5）|6）|7）|8）|9）|10）/g, "\n$1")
-      .replace(/(SDK名称：|OPPO PUSH 客户端SDK|欢太账号授权SDK|游戏联运SDK|产品名称：游戏服务|punk SDK)/g, "\n$1")
-      .replace(/(所属机构名称[:：]|所属机构[:：]|提供方名称[:：]|开发者[:：]|第三方主体[:：]|运营方[:：]|SDK用途、功能[:：]|SDK用途[:：]|SDK使用目的[:：]|收集的个人信息类型[:：]|SDK收集的信息[:：]|权限获取[:：]|使用目的[:：]|处理方式[:：]|隐私链接[:：]|SDK隐私政策链接[:：]|隐私政策链接[:：]|产品名称[:：]|数据类型[:：])/g, "\n$1");
+      .replace(/(SDK名称：|OPPO PUSH 客户端SDK|欢太账号授权SDK|游戏联运SDK|产品名称：游戏服务|punk SDK)/g, "\n$1");
     return t.split(/\n+/).map(function (s) { return s.trim(); }).filter(Boolean);
   }
 
@@ -64,15 +57,6 @@
     }
     if (/^隐私协议内容：/.test(p)) {
       return '<section class="policy-doc-intro"><h3 class="policy-doc-subheading">隐私协议内容</h3><p>' + p.replace(/^隐私协议内容：/, "") + '</p></section>';
-    }
-    if (/^[一二三四五六七八九十]、/.test(p)) {
-      return '<h3 class="policy-doc-subsection-title">' + p + '</h3>';
-    }
-    if (/^\d+、/.test(p) || /^（\d+）/.test(p)) {
-      return '<h4 class="policy-doc-item-title">' + p + '</h4>';
-    }
-    if (/^(所属机构名称|所属机构|提供方名称|开发者|第三方主体|运营方|SDK用途、功能|SDK用途|SDK使用目的|收集的个人信息类型|SDK收集的信息|权限获取|使用目的|处理方式|隐私链接|SDK隐私政策链接|隐私政策链接|产品名称|数据类型)[:：]/.test(p)) {
-      return '<p class="policy-doc-meta-line">' + p + '</p>';
     }
     if (/^(\d+[、.）\)]|\(\d+\)|（\d+）|\d+）)/.test(p)) {
       return '<p class="policy-doc-list-item">' + p + '</p>';
