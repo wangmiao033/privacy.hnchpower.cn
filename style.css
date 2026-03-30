@@ -635,6 +635,41 @@ body {
   word-break: break-all;
 }
 
+.policy-doc-intro,
+.policy-doc-section {
+  margin: 0 0 1rem;
+}
+
+.policy-doc-subheading {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #1f3e5b;
+}
+
+.policy-doc-notice {
+  margin: 0.75rem 0 1rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #f3d8a8;
+  border-radius: 10px;
+  background: #fff8ea;
+}
+
+.policy-doc-notice p {
+  margin: 0;
+}
+
+.policy-doc-section-title {
+  margin: 1.1rem 0 0.55rem;
+  font-size: 1.08rem;
+  color: #234763;
+}
+
+.policy-doc-list-item {
+  margin-left: 0.2rem;
+  padding-left: 0.3rem;
+  border-left: 2px solid #dbe8f4;
+}
+
 .sdk-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -655,11 +690,24 @@ body {
   color: #1f4264;
 }
 
+.sdk-item-title {
+  margin: 0 0 0.42rem;
+  font-size: 0.93rem;
+  color: #173d61;
+}
+
 .sdk-item p {
   margin: 0 0 0.32rem;
   font-size: 0.78rem;
   color: #4b647b;
   text-align: left;
+}
+
+.sdk-item-meta {
+  margin: 0 0 0.36rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: #4b647b;
 }
 
 /* ========== 打印 ========== */
