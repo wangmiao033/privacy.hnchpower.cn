@@ -24,31 +24,9 @@
         <h1 class="site-title">隐私政策生成与发布</h1>
         <p class="site-subtitle">填写信息，实时预览，一键生成正式链接</p>
       </div>
-      <section class="auth-box" aria-label="账号登录区域">
-        <div class="auth-box-head">
-          <span class="auth-box-icon" aria-hidden="true">🔐</span>
-          <span class="auth-box-title">账号状态</span>
-        </div>
-        <p class="auth-box-desc">登录后可发布真短链</p>
-        <div id="auth-guest" class="auth-guest">
-          <label class="auth-label" for="auth-email">账号邮箱</label>
-          <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" />
-          <label class="auth-label" for="auth-password">账号密码</label>
-          <input id="auth-password" class="auth-input" type="password" placeholder="请输入密码" autocomplete="current-password" />
-          <div class="auth-actions">
-            <button type="button" id="btn-signup" class="btn btn-secondary">注册</button>
-            <button type="button" id="btn-signin" class="btn btn-primary">登录</button>
-          </div>
-        </div>
-        <div id="auth-user" class="auth-user" hidden>
-          <div class="auth-user-meta">
-            <span class="auth-user-avatar" aria-hidden="true">👤</span>
-            <p class="auth-user-text">当前登录：<span id="auth-user-email"></span></p>
-          </div>
-          <button type="button" id="btn-signout" class="btn btn-secondary">退出登录</button>
-        </div>
-        <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
-      </section>
+      <div class="header-actions">
+        <a id="account-entry-link" class="btn btn-secondary btn-account-entry" href="account.html">登录 / 注册</a>
+      </div>
     </div>
   </header>
 
@@ -116,6 +94,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
+  <script src="header-account-link.js"></script>
   <script src="template.js"></script>
   <script src="script.js"></script>
 </body>

@@ -68,6 +68,19 @@ body {
   color: #587086;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-account-entry {
+  min-height: 2rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
 .auth-box {
   width: min(312px, 100%);
   text-align: left;
@@ -193,6 +206,88 @@ body {
 
 .auth-status.is-info {
   color: #1565c0;
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.account-auth-panel .auth-box-desc {
+  margin-bottom: 0.6rem;
+}
+
+.account-links-panel .panel-subtitle {
+  margin-bottom: 0.7rem;
+}
+
+.account-empty {
+  padding: 1.2rem 0.9rem;
+  border: 1px dashed #cfddeb;
+  border-radius: 10px;
+  color: #6f8497;
+  background: #f7fbff;
+  font-size: 0.84rem;
+}
+
+.my-links-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.link-item {
+  border: 1px solid #d9e4ef;
+  border-radius: 12px;
+  background: #fbfdff;
+  padding: 0.8rem;
+}
+
+.link-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.link-item-title {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1f3850;
+}
+
+.link-item-time {
+  font-size: 0.76rem;
+  color: #70859a;
+  white-space: nowrap;
+}
+
+.link-item-company {
+  margin: 0.25rem 0 0.55rem;
+  font-size: 0.8rem;
+  color: #60788d;
+}
+
+.link-item-url {
+  margin-bottom: 0.55rem;
+}
+
+.link-item-input {
+  width: 100%;
+  height: 2rem;
+  border: 1px solid #cad7e4;
+  border-radius: 9px;
+  background: #f4f8fc;
+  color: #32475b;
+  padding: 0 0.58rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.8rem;
+}
+
+.link-item-actions {
+  display: flex;
+  gap: 0.45rem;
 }
 
 /* ========== 生成页：主体布局 ========== */
@@ -581,6 +676,10 @@ body {
     width: 100%;
   }
 
+  .header-actions {
+    justify-content: center;
+  }
+
   .auth-user {
     flex-direction: column;
     align-items: stretch;
@@ -591,6 +690,10 @@ body {
   }
 
   .generator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .account-layout {
     grid-template-columns: 1fr;
   }
 
@@ -628,5 +731,14 @@ body {
 
   .policy-doc-title {
     font-size: 1.45rem;
+  }
+
+  .link-item-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .link-item-actions .btn {
+    flex: 1;
   }
 }

@@ -14,17 +14,20 @@
 
 - `create-policy-link`
 - `get-policy-link`
+- `get-my-policy-links`
 
 目录分别为：
 
 - `supabase/functions/create-policy-link/index.ts`
 - `supabase/functions/get-policy-link/index.ts`
+- `supabase/functions/get-my-policy-links/index.ts`
 
 示例命令（本地已安装 Supabase CLI）：
 
 ```bash
 supabase functions deploy create-policy-link
 supabase functions deploy get-policy-link
+supabase functions deploy get-my-policy-links
 ```
 
 说明：
@@ -32,6 +35,7 @@ supabase functions deploy get-policy-link
 - 项目已提供 `supabase/config.toml`：
   - `create-policy-link`：`verify_jwt = false`（网关层不拦截，函数内强制校验 Bearer token）
   - `get-policy-link`：`verify_jwt = false`（公开读取短链内容）
+  - `get-my-policy-links`：`verify_jwt = false`（函数内校验登录态，仅返回当前用户记录）
 - 更新该配置后请重新部署函数。
 
 ## 3) 配置 Function Secrets

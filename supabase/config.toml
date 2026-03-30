@@ -3,3 +3,6 @@ verify_jwt = false
 
 [functions.get-policy-link]
 verify_jwt = false
+
+[functions.get-my-policy-links]
+verify_jwt = false

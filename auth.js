@@ -1,6 +1,7 @@
 (function () {
   var cfg = window.SupabaseConfig || {};
   var supabaseLib = window.supabase;
+  var hasAuthUi = false;
   var statusEl = document.getElementById("auth-status");
   var guestBox = document.getElementById("auth-guest");
   var userBox = document.getElementById("auth-user");
@@ -11,7 +12,20 @@
   var btnSignIn = document.getElementById("btn-signin");
   var btnSignOut = document.getElementById("btn-signout");
 
-  if (!statusEl || !guestBox || !userBox) return;
+  hasAuthUi = !!(statusEl && guestBox && userBox);
+
+  function initOnlyClient() {
+    if (!supabaseLib || !supabaseLib.createClient) return null;
+    if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || /YOUR_/.test(cfg.SUPABASE_URL) || /YOUR_/.test(cfg.SUPABASE_ANON_KEY)) return null;
+    var client = supabaseLib.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+    window.AppSupabaseClient = client;
+    return client;
+  }
+
+  if (!hasAuthUi) {
+    initOnlyClient();
+    return;
+  }
 
   function setStatus(message, type) {
     statusEl.textContent = message || "";
@@ -58,7 +72,11 @@
     return;
   }
 
-  var supabase = supabaseLib.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  var supabase = initOnlyClient();
+  if (!supabase) {
+    setStatus("Supabase 客户端初始化失败，请检查配置。", "is-error");
+    return;
+  }
   window.AppSupabaseClient = supabase;
 
   async function refreshUser() {

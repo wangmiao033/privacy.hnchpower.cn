@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>个人中心 - 隐私政策生成与发布</title>
+  <meta name="theme-color" content="#0b4aa2" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-generator">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-header-main">
+        <h1 class="site-title">个人中心</h1>
+        <p class="site-subtitle">账号管理与我的短链记录</p>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-secondary btn-account-entry" href="index.html">返回生成器</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <div class="account-layout">
+      <section class="panel account-auth-panel" aria-label="账号区域">
+        <h2 class="panel-title">账号</h2>
+        <p class="panel-subtitle">登录后可查看自己创建的短链记录</p>
+        <div id="auth-guest" class="auth-guest">
+          <label class="auth-label" for="auth-email">账号邮箱</label>
+          <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" />
+          <label class="auth-label" for="auth-password">账号密码</label>
+          <input id="auth-password" class="auth-input" type="password" placeholder="请输入密码" autocomplete="current-password" />
+          <div class="auth-actions">
+            <button type="button" id="btn-signup" class="btn btn-secondary">注册</button>
+            <button type="button" id="btn-signin" class="btn btn-primary">登录</button>
+          </div>
+        </div>
+        <div id="auth-user" class="auth-user" hidden>
+          <div class="auth-user-meta">
+            <span class="auth-user-avatar" aria-hidden="true">👤</span>
+            <p class="auth-user-text">当前登录：<span id="auth-user-email"></span></p>
+          </div>
+          <button type="button" id="btn-signout" class="btn btn-secondary">退出登录</button>
+        </div>
+        <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="panel account-links-panel" aria-label="我的短链记录">
+        <h2 class="panel-title">我的短链记录</h2>
+        <p class="panel-subtitle">按创建时间倒序显示，仅当前登录账号可见</p>
+        <div id="my-links-empty" class="account-empty">暂无短链记录，去首页生成第一条吧。</div>
+        <div id="my-links-list" class="my-links-list" hidden></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>
