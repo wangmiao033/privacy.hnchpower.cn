@@ -117,6 +117,12 @@ body {
   color: #c62828;
 }
 
+.form-tip {
+  margin: 0.85rem 0 0;
+  font-size: 0.82rem;
+  color: #607d8b;
+}
+
 /* ========== 预览区 ========== */
 .preview-toolbar {
   display: flex;
@@ -152,6 +158,41 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
+}
+
+.publish-result {
+  margin-top: 0.9rem;
+}
+
+.publish-result-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.84rem;
+  color: #455a64;
+}
+
+.publish-result-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.publish-result-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  color: #263238;
+  background: #f8fafc;
+}
+
+.publish-time {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: #78909c;
 }
 
 /* ========== 按钮 ========== */
@@ -325,6 +366,15 @@ body {
   }
 
   .preview-toolbar .btn-primary {
+    width: 100%;
+  }
+
+  .publish-result-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .publish-result-row .btn {
     width: 100%;
   }
 

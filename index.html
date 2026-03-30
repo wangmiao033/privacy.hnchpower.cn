@@ -40,6 +40,7 @@
             <span class="field-hint" id="hint-email"></span>
           </div>
         </form>
+        <p class="form-tip">公司名称和联系邮箱使用默认值时，生成链接会更短。</p>
       </section>
 
       <section class="panel panel-preview" aria-label="实时预览">
@@ -51,6 +52,14 @@
         <div class="preview-actions">
           <button type="button" id="btn-copy-preview" class="btn btn-secondary">复制预览文字</button>
           <button type="button" id="btn-print" class="btn btn-secondary">打印 / 另存为 PDF</button>
+        </div>
+        <div class="publish-result" aria-label="正式链接结果">
+          <label for="published-url" class="publish-result-label">正式链接</label>
+          <div class="publish-result-row">
+            <input type="text" id="published-url" class="publish-result-input" readonly />
+            <button type="button" id="btn-copy-link" class="btn btn-secondary">复制链接</button>
+          </div>
+          <p id="publish-time" class="publish-time">最近一次生成：尚未生成</p>
         </div>
       </section>
     </div>

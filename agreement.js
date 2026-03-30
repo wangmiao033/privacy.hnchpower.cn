@@ -2,6 +2,8 @@
   var PT = window.PolicyTemplate;
   var root = document.getElementById("agreement-root");
   var loading = document.getElementById("agreement-loading");
+  var DEFAULT_COMPANY = "广州熊动科技有限公司";
+  var DEFAULT_EMAIL = "pingce@dxyx6888.com";
 
   /** 使用 URLSearchParams 读取查询串（浏览器已对百分号编码做 decodeURIComponent） */
   function getParams() {
@@ -10,11 +12,18 @@
       var v = sp.get(key);
       return v == null ? "" : String(v).trim();
     }
+    function pickPrefer(shortKey, legacyKey) {
+      var shortVal = pick(shortKey);
+      if (shortVal) return shortVal;
+      return pick(legacyKey);
+    }
+    var company = pickPrefer("c", "company");
+    var email = pickPrefer("e", "email");
     return {
-      company: pick("company"),
-      game: pick("game"),
-      email: pick("email"),
-      date: pick("date"),
+      company: company || DEFAULT_COMPANY,
+      game: pickPrefer("g", "game"),
+      email: email || DEFAULT_EMAIL,
+      date: pickPrefer("d", "date"),
     };
   }
 
@@ -50,9 +59,7 @@
     var p = getParams();
     var missing = [];
     if (!p.date) missing.push("date（更新日期）");
-    if (!p.company) missing.push("company（公司名称）");
     if (!p.game) missing.push("game（游戏/应用名称）");
-    if (!p.email) missing.push("email（联系邮箱）");
 
     if (missing.length) {
       renderError(

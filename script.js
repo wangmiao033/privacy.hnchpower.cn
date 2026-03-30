@@ -11,7 +11,12 @@
   var btnPublish = document.getElementById("btn-publish");
   var btnCopyPreview = document.getElementById("btn-copy-preview");
   var btnPrint = document.getElementById("btn-print");
+  var publishedUrlInput = document.getElementById("published-url");
+  var btnCopyLink = document.getElementById("btn-copy-link");
+  var publishTime = document.getElementById("publish-time");
   var toast = document.getElementById("toast");
+  var DEFAULT_COMPANY = "广州熊动科技有限公司";
+  var DEFAULT_EMAIL = "pingce@dxyx6888.com";
 
   var hints = {
     date: document.getElementById("hint-date"),
@@ -30,6 +35,12 @@
 
   if (fieldDate && !fieldDate.value) {
     fieldDate.value = todayISODate();
+  }
+  if (fieldCompany && !fieldCompany.value) {
+    fieldCompany.value = DEFAULT_COMPANY;
+  }
+  if (fieldEmail && !fieldEmail.value) {
+    fieldEmail.value = DEFAULT_EMAIL;
   }
 
   function getValues() {
@@ -92,11 +103,23 @@
   function buildPublishUrl() {
     var v = getValues();
     var url = new URL("agreement.html", window.location.href);
-    url.searchParams.set("company", v.company);
-    url.searchParams.set("game", v.game);
-    url.searchParams.set("email", v.email);
-    url.searchParams.set("date", v.date);
+    url.searchParams.set("g", v.game);
+    url.searchParams.set("d", v.date);
+    if (v.company !== DEFAULT_COMPANY) {
+      url.searchParams.set("c", v.company);
+    }
+    if (v.email !== DEFAULT_EMAIL) {
+      url.searchParams.set("e", v.email);
+    }
     return url.href;
+  }
+
+  function nowTimeText() {
+    var n = new Date();
+    var hh = String(n.getHours()).padStart(2, "0");
+    var mm = String(n.getMinutes()).padStart(2, "0");
+    var ss = String(n.getSeconds()).padStart(2, "0");
+    return hh + ":" + mm + ":" + ss;
   }
 
   function showToast(msg) {
@@ -137,6 +160,8 @@
   btnPublish.addEventListener("click", function () {
     if (!validate()) return;
     var url = buildPublishUrl();
+    if (publishedUrlInput) publishedUrlInput.value = url;
+    if (publishTime) publishTime.textContent = "最近一次生成：" + nowTimeText();
     window.open(url, "_blank", "noopener,noreferrer");
     copyText(url).then(
       function () {
@@ -164,4 +189,22 @@
   btnPrint.addEventListener("click", function () {
     window.print();
   });
+
+  if (btnCopyLink) {
+    btnCopyLink.addEventListener("click", function () {
+      var link = (publishedUrlInput && publishedUrlInput.value.trim()) || "";
+      if (!link) {
+        showToast("请先点击一键发布生成正式链接");
+        return;
+      }
+      copyText(link).then(
+        function () {
+          showToast("正式链接已复制");
+        },
+        function () {
+          showToast("复制失败，请手动选择复制");
+        }
+      );
+    });
+  }
 })();
