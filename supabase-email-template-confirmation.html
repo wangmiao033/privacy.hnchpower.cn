@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>请确认你的邮箱</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f7fa;font-family:Arial,'PingFang SC','Microsoft YaHei',sans-serif;color:#1f2937;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f7fa;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+          <tr>
+            <td style="background:#0b4aa2;padding:14px 20px;color:#ffffff;font-size:16px;font-weight:600;">
+              隐私政策生成与发布
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 20px 8px 20px;font-size:20px;font-weight:700;color:#111827;">
+              请确认你的邮箱地址
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 20px 8px 20px;font-size:14px;line-height:1.8;color:#374151;">
+              你好，{{ .Email }}。<br />
+              你正在注册「隐私政策生成与发布」账号，请点击下方按钮完成邮箱验证并继续登录使用。
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:20px;">
+              <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#1565c0;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;padding:12px 22px;border-radius:8px;">
+                立即验证邮箱
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 20px 18px 20px;font-size:12px;line-height:1.7;color:#6b7280;">
+              如果按钮无法点击，请复制以下链接到浏览器打开：<br />
+              <span style="word-break:break-all;color:#4b5563;">{{ .ConfirmationURL }}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 20px 22px 20px;font-size:12px;line-height:1.7;color:#6b7280;">
+              如果这不是你本人操作，可忽略此邮件。
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

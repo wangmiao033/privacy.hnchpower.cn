@@ -29,6 +29,14 @@ body {
 .site-header-inner {
   max-width: 960px;
   margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.site-header-main {
+  text-align: left;
 }
 
 .site-title {
@@ -42,6 +50,81 @@ body {
   margin: 0;
   font-size: 0.9rem;
   color: #37474f;
+}
+
+.auth-box {
+  width: min(360px, 100%);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #b9d7f3;
+  border-radius: 8px;
+  padding: 0.7rem;
+}
+
+.auth-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.76rem;
+  color: #455a64;
+}
+
+.auth-input {
+  width: 100%;
+  margin-bottom: 0.45rem;
+  padding: 0.42rem 0.55rem;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  font-size: 0.84rem;
+  background: #fff;
+}
+
+.auth-actions {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.auth-actions .btn {
+  flex: 1;
+  padding: 0.38rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.auth-user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid #b7dfc0;
+  border-radius: 6px;
+  background: #f2fbf4;
+}
+
+.auth-user-text {
+  margin: 0;
+  font-size: 0.83rem;
+  color: #1b5e20;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.auth-status {
+  margin: 0.45rem 0 0;
+  min-height: 1.2em;
+  font-size: 0.78rem;
+  color: #546e7a;
+}
+
+.auth-status.is-success {
+  color: #2e7d32;
+}
+
+.auth-status.is-error {
+  color: #c62828;
+}
+
+.auth-status.is-info {
+  color: #1565c0;
 }
 
 /* ========== 生成页：主体布局 ========== */
@@ -356,6 +439,19 @@ body {
 
 /* ========== 移动端 ========== */
 @media (max-width: 768px) {
+  .site-header-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-header-main {
+    text-align: center;
+  }
+
+  .auth-box {
+    width: 100%;
+  }
+
   .generator-layout {
     grid-template-columns: 1fr;
   }
