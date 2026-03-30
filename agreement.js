@@ -7,6 +7,7 @@
   var GAME_NAME_BY_CODE = {
     xmb: "仙魔变",
     xdsb: "仙帝神兵",
+    cs: "测试",
   };
 
   /** 使用 URLSearchParams 读取查询串（浏览器已对百分号编码做 decodeURIComponent） */

@@ -20,6 +20,7 @@
   var GAME_CODE_MAP = {
     "仙魔变": "xmb",
     "仙帝神兵": "xdsb",
+    "测试": "cs",
   };
 
   var hints = {
