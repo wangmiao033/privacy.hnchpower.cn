@@ -29,6 +29,40 @@
     return parts.map(function (x) { return x.trim(); }).filter(Boolean);
   }
 
+  function cleanupBrokenParagraphs(lines) {
+    var src = Array.isArray(lines) ? lines.slice() : [];
+    var out = [];
+    for (var i = 0; i < src.length; i++) {
+      var cur = String(src[i] || "").trim();
+      if (!cur) continue;
+
+      // 避免出现孤立的左括号段：与下一段合并
+      if (cur === "（" || cur === "(") {
+        var next = i + 1 < src.length ? String(src[i + 1] || "").trim() : "";
+        if (next) {
+          out.push(cur + next);
+          i += 1;
+        }
+        continue;
+      }
+
+      // 避免出现孤立的右括号段：并回前一段
+      if ((cur === "）" || cur === ")") && out.length) {
+        out[out.length - 1] = out[out.length - 1] + cur;
+        continue;
+      }
+
+      // 若以右括号开头，多半是被错误拆段，尝试并回前一段
+      if ((cur.charAt(0) === "）" || cur.charAt(0) === ")") && out.length) {
+        out[out.length - 1] = out[out.length - 1] + cur;
+        continue;
+      }
+
+      out.push(cur);
+    }
+    return out;
+  }
+
   function toParagraphs(text) {
     var t = String(text || "");
     t = t.replace(/ /g, " ").replace(/\r\n?/g, "\n");
@@ -47,7 +81,12 @@
     t = t
       .replace(/(\d+、)/g, "\n$1")
       .replace(/([（(]\d+[）)])/g, "\n$1")
-      .replace(/(\d+[）\)])/g, "\n$1");
+      .replace(/(\d+[）\)])/g, function (m, _g1, offset, all) {
+        // 避免把（1）再次拆成“（” + “1）”
+        var prev = offset > 0 ? all.charAt(offset - 1) : "";
+        if (prev === "（" || prev === "(") return m;
+        return "\n" + m;
+      });
 
     // 4) 字段行切段（正文与 SDK 共用）
     t = t
@@ -88,7 +127,7 @@
         out.push(piece);
       });
     });
-    return out;
+    return cleanupBrokenParagraphs(out);
   }
 
   function splitMainAndSdk(paragraphs) {
