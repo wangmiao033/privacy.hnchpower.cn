@@ -31,14 +31,14 @@ supabase functions deploy get-policy-link
 
 在 Supabase 项目里为函数配置以下环境变量：
 
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
+- `APP_SUPABASE_URL`
+- `APP_SUPABASE_ANON_KEY`
+- `APP_SUPABASE_SECRET_KEY`
 
 说明：
 
 - 前端仍只用 `anon/publishable key`。
-- `service role key` 只在函数端使用，不能放到前端。
+- `APP_SUPABASE_SECRET_KEY` 只在函数端使用，不能放到前端。
 
 ## 4) 前端已接入行为
 

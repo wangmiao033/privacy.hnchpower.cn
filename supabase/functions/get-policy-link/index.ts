@@ -20,8 +20,8 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS_HEADERS });
   if (req.method !== "GET") return json({ error: "Method not allowed" }, 405);
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  const supabaseUrl = Deno.env.get("APP_SUPABASE_URL") || "";
+  const serviceKey = Deno.env.get("APP_SUPABASE_SECRET_KEY") || "";
   if (!supabaseUrl || !serviceKey) return json({ error: "Function env not configured" }, 500);
 
   const admin = createClient(supabaseUrl, serviceKey);
