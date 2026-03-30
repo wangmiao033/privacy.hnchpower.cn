@@ -29,6 +29,7 @@
           <span class="auth-box-icon" aria-hidden="true">🔐</span>
           <span class="auth-box-title">账号状态</span>
         </div>
+        <p class="auth-box-desc">登录后可发布真短链</p>
         <div id="auth-guest" class="auth-guest">
           <label class="auth-label" for="auth-email">账号邮箱</label>
           <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" />
@@ -55,6 +56,7 @@
     <div class="generator-layout">
       <section class="panel panel-form" aria-label="信息填写">
         <h2 class="panel-title">填写信息</h2>
+        <p class="panel-subtitle">按顺序填写后，右侧将实时更新正式预览</p>
         <form id="gen-form" class="gen-form" novalidate>
           <div class="field">
             <label for="field-date">更新日期</label>
@@ -82,7 +84,10 @@
 
       <section class="panel panel-preview" aria-label="实时预览">
         <div class="preview-toolbar">
-          <h2 class="panel-title">实时预览</h2>
+          <div class="preview-title-wrap">
+            <h2 class="panel-title">实时预览</h2>
+            <p class="panel-subtitle">发布前请确认正文信息准确</p>
+          </div>
           <div class="publish-cta">
             <button type="button" id="btn-publish" class="btn btn-primary">一键发布</button>
             <p class="publish-login-tip">需登录后发布短链</p>
