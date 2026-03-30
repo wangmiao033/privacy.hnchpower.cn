@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隐私政策生成与发布</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-generator">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <h1 class="site-title">隐私政策生成与发布</h1>
+      <p class="site-subtitle">填写信息后一键生成可分享的正式链接</p>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <div class="generator-layout">
+      <section class="panel panel-form" aria-label="信息填写">
+        <h2 class="panel-title">填写信息</h2>
+        <form id="gen-form" class="gen-form" novalidate>
+          <div class="field">
+            <label for="field-date">更新日期</label>
+            <input type="date" id="field-date" name="date" required />
+            <span class="field-hint" id="hint-date"></span>
+          </div>
+          <div class="field">
+            <label for="field-company">公司名称</label>
+            <input type="text" id="field-company" name="company" placeholder="请输入公司全称" required autocomplete="organization" />
+            <span class="field-hint" id="hint-company"></span>
+          </div>
+          <div class="field">
+            <label for="field-game">游戏 / 应用名称</label>
+            <input type="text" id="field-game" name="game" placeholder="请输入产品名称" required />
+            <span class="field-hint" id="hint-game"></span>
+          </div>
+          <div class="field">
+            <label for="field-email">联系邮箱</label>
+            <input type="email" id="field-email" name="email" placeholder="privacy@example.com" required autocomplete="email" />
+            <span class="field-hint" id="hint-email"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel panel-preview" aria-label="实时预览">
+        <div class="preview-toolbar">
+          <h2 class="panel-title">实时预览</h2>
+          <button type="button" id="btn-publish" class="btn btn-primary">一键发布</button>
+        </div>
+        <div id="preview-box" class="preview-box" tabindex="0"></div>
+        <div class="preview-actions">
+          <button type="button" id="btn-copy-preview" class="btn btn-secondary">复制预览文字</button>
+          <button type="button" id="btn-print" class="btn btn-secondary">打印 / 另存为 PDF</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
