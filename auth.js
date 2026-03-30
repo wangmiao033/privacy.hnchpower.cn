@@ -169,7 +169,7 @@
       showUser(user.email);
     } else {
       showGuest();
-      setStatus("当前未登录。", "is-info");
+      setStatus("当前未登录，可登录后发布短链。", "is-info");
     }
   });
 

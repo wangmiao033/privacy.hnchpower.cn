@@ -111,6 +111,10 @@
     return String(SB_CFG.SUPABASE_URL).replace(/\/+$/, "") + "/functions/v1";
   }
 
+  function isPublishDebugEnabled() {
+    return window.__PUBLISH_DEBUG__ === true;
+  }
+
   async function getCurrentAccessToken() {
     try {
       var appSupabase = window.AppSupabaseClient;
@@ -118,19 +122,25 @@
         var sessionRes = await appSupabase.auth.getSession();
         var session = sessionRes && sessionRes.data && sessionRes.data.session;
         var token = session && session.access_token || "";
-        console.log("[publish] session exists:", !!session);
-        console.log("[publish] access token exists:", !!token);
-        console.log("[publish] access token length:", token ? token.length : 0);
-        if (token) {
-          console.log("[publish] access token prefix:", String(token).slice(0, 10) + "...");
+        if (isPublishDebugEnabled()) {
+          console.log("[publish] session exists:", !!session);
+          console.log("[publish] access token exists:", !!token);
+          console.log("[publish] access token length:", token ? token.length : 0);
+          if (token) {
+            console.log("[publish] access token prefix:", String(token).slice(0, 10) + "...");
+          }
         }
         return token;
       }
-      console.log("[publish] session exists:", false);
-      console.log("[publish] access token exists:", false);
+      if (isPublishDebugEnabled()) {
+        console.log("[publish] session exists:", false);
+        console.log("[publish] access token exists:", false);
+      }
       return "";
     } catch (_e) {
-      console.log("[publish] getSession error");
+      if (isPublishDebugEnabled()) {
+        console.log("[publish] getSession error");
+      }
       return "";
     }
   }
@@ -157,11 +167,12 @@
         date: values.date,
       }),
     });
-    console.log("[publish] request url:", base + "/create-policy-link");
-    console.log("[publish] response status:", res.status);
-
     var rawText = await res.text();
-    console.log("[publish] response body:", rawText ? String(rawText).slice(0, 500) : "");
+    if (isPublishDebugEnabled()) {
+      console.log("[publish] request url:", base + "/create-policy-link");
+      console.log("[publish] response status:", res.status);
+      console.log("[publish] response body:", rawText ? String(rawText).slice(0, 500) : "");
+    }
     var json = {};
     try {
       json = rawText ? JSON.parse(rawText) : {};
@@ -183,13 +194,12 @@
 
   function readablePublishError(msg) {
     var s = String(msg || "");
-    if (/Missing authorization header/i.test(s)) return "权限不足（缺少 Authorization）";
-    if (/Invalid Token|Protected Header formatting/i.test(s)) return "Token 无效（函数可能开启了 JWT 校验）";
-    if (/Function not found|404/i.test(s)) return "函数未找到（create-policy-link）";
-    if (/Function env not configured/i.test(s)) return "函数环境变量未配置";
-    if (/short_code/i.test(s)) return "返回格式错误（short_code）";
+    if (/Missing authorization header|Invalid user token|Invalid JWT|Invalid Token|Protected Header formatting/i.test(s)) return "登录状态已失效，请重新登录后再发布";
+    if (/Function not found|404/i.test(s)) return "发布服务暂不可用，请联系管理员";
+    if (/Function env not configured/i.test(s)) return "发布服务配置异常，请联系管理员";
+    if (/short_code/i.test(s)) return "发布服务返回异常，请稍后重试";
     if (/network|Failed to fetch|Load failed/i.test(s)) return "网络异常，请稍后重试";
-    return s || "短链创建失败";
+    return "发布失败，请稍后重试";
   }
 
   function buildPublishUrlByCode(shortCode) {
@@ -264,7 +274,10 @@
       url = buildPublishUrlByCode(shortCode);
     } catch (e) {
       var detail = e && e.message ? e.message : "短链创建失败";
-      console.error("[publish] create-policy-link failed:", detail);
+      console.error("[publish] create-policy-link failed");
+      console.error("[publish] session exists:", !!window.AppSupabaseClient);
+      console.error("[publish] request url:", getFunctionsBaseUrl() + "/create-policy-link");
+      console.error("[publish] error detail:", detail);
       showToast("发布失败：" + readablePublishError(detail));
       btnPublish.disabled = false;
       return;
@@ -275,10 +288,10 @@
     window.open(url, "_blank", "noopener,noreferrer");
     copyText(url).then(
       function () {
-        showToast("发布成功，链接已复制");
+        showToast("发布成功，正式链接已复制");
       },
       function () {
-        showToast("发布成功（请手动复制地址栏链接）");
+        showToast("发布成功，请手动复制正式链接");
       }
     );
     btnPublish.disabled = false;
@@ -316,6 +329,15 @@
           showToast("复制失败，请手动选择复制");
         }
       );
+    });
+  }
+
+  if (publishedUrlInput) {
+    publishedUrlInput.addEventListener("click", function () {
+      if (publishedUrlInput.value) publishedUrlInput.select();
+    });
+    publishedUrlInput.addEventListener("focus", function () {
+      if (publishedUrlInput.value) publishedUrlInput.select();
     });
   }
 })();

@@ -83,7 +83,10 @@
       <section class="panel panel-preview" aria-label="实时预览">
         <div class="preview-toolbar">
           <h2 class="panel-title">实时预览</h2>
-          <button type="button" id="btn-publish" class="btn btn-primary">一键发布</button>
+          <div class="publish-cta">
+            <button type="button" id="btn-publish" class="btn btn-primary">一键发布</button>
+            <p class="publish-login-tip">需登录后发布短链</p>
+          </div>
         </div>
         <div id="preview-box" class="preview-box" tabindex="0"></div>
         <div class="preview-actions">
@@ -91,7 +94,7 @@
           <button type="button" id="btn-print" class="btn btn-secondary">打印 / 另存为 PDF</button>
         </div>
         <div class="publish-result" aria-label="正式链接结果">
-          <label for="published-url" class="publish-result-label">正式链接</label>
+          <label for="published-url" class="publish-result-label">正式链接（可复制）</label>
           <div class="publish-result-row">
             <span class="publish-link-icon" aria-hidden="true">🔗</span>
             <input type="text" id="published-url" class="publish-result-input" readonly />
