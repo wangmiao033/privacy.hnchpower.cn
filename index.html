@@ -22,9 +22,13 @@
     <div class="site-header-inner">
       <div class="site-header-main">
         <h1 class="site-title">隐私政策生成与发布</h1>
-        <p class="site-subtitle">填写信息后一键生成可分享的正式链接</p>
+        <p class="site-subtitle">填写信息，实时预览，一键生成正式链接</p>
       </div>
       <section class="auth-box" aria-label="账号登录区域">
+        <div class="auth-box-head">
+          <span class="auth-box-icon" aria-hidden="true">🔐</span>
+          <span class="auth-box-title">账号状态</span>
+        </div>
         <div id="auth-guest" class="auth-guest">
           <label class="auth-label" for="auth-email">账号邮箱</label>
           <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" />
@@ -36,7 +40,10 @@
           </div>
         </div>
         <div id="auth-user" class="auth-user" hidden>
-          <p class="auth-user-text">当前登录：<span id="auth-user-email"></span></p>
+          <div class="auth-user-meta">
+            <span class="auth-user-avatar" aria-hidden="true">👤</span>
+            <p class="auth-user-text">当前登录：<span id="auth-user-email"></span></p>
+          </div>
           <button type="button" id="btn-signout" class="btn btn-secondary">退出登录</button>
         </div>
         <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
@@ -86,6 +93,7 @@
         <div class="publish-result" aria-label="正式链接结果">
           <label for="published-url" class="publish-result-label">正式链接</label>
           <div class="publish-result-row">
+            <span class="publish-link-icon" aria-hidden="true">🔗</span>
             <input type="text" id="published-url" class="publish-result-input" readonly />
             <button type="button" id="btn-copy-link" class="btn btn-secondary">复制链接</button>
           </div>
