@@ -104,11 +104,28 @@
     if (!client || !client.auth) {
       emptyEl.hidden = false;
       listEl.hidden = true;
+      console.log("[account] session exists:", false);
+      console.log("[account] user id:", "");
       return;
     }
     var sessionRes = await client.auth.getSession();
     var session = sessionRes && sessionRes.data && sessionRes.data.session;
+    var userRes = await client.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
     var token = session && session.access_token || "";
+    console.log("[account] session exists:", !!session);
+    console.log("[account] user id:", user && user.id ? user.id : "");
+
+    if (!token && user && client.auth.refreshSession) {
+      try {
+        var refreshRes = await client.auth.refreshSession();
+        var refreshed = refreshRes && refreshRes.data && refreshRes.data.session;
+        token = refreshed && refreshed.access_token || "";
+        console.log("[account] refreshed token exists:", !!token);
+      } catch (_e) {
+        token = "";
+      }
+    }
     if (!token) {
       emptyEl.hidden = false;
       listEl.hidden = true;
@@ -117,21 +134,33 @@
     }
 
     var base = getFunctionsBaseUrl();
-    var res = await fetch(base + "/get-my-policy-links", {
+    var requestUrl = base + "/get-my-policy-links";
+    console.log("[account] request url:", requestUrl);
+    var res = await fetch(requestUrl, {
       method: "GET",
       headers: {
         apikey: SB_CFG.SUPABASE_ANON_KEY,
         Authorization: "Bearer " + token,
       },
     });
-    var json = await res.json().catch(function () { return {}; });
+    var raw = await res.text();
+    console.log("[account] response status:", res.status);
+    console.log("[account] response body:", raw ? String(raw).slice(0, 600) : "");
+    var json = {};
+    try {
+      json = raw ? JSON.parse(raw) : {};
+    } catch (_e) {
+      json = {};
+    }
     if (!res.ok) {
       emptyEl.hidden = false;
       listEl.hidden = true;
       emptyEl.textContent = "记录读取失败，请稍后重试。";
       return;
     }
-    renderRows((json && json.data) || []);
+    var rows = (json && json.data) || [];
+    console.log("[account] links count:", Array.isArray(rows) ? rows.length : 0);
+    renderRows(rows);
   }
 
   bindListEvents();

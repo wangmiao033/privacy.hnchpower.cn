@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
 
   const result = await admin
     .from("policy_links")
-    .select("short_code, company, game, created_at")
+    .select("short_code, company, game, created_at, created_by")
     .eq("created_by", userId)
     .order("created_at", { ascending: false })
     .limit(100);
