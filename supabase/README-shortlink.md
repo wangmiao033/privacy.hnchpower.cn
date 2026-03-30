@@ -27,6 +27,13 @@ supabase functions deploy create-policy-link
 supabase functions deploy get-policy-link
 ```
 
+说明：
+
+- 项目已提供 `supabase/config.toml`：
+  - `create-policy-link`：`verify_jwt = true`（必须登录后可创建短链）
+  - `get-policy-link`：`verify_jwt = false`（公开读取短链内容）
+- 更新该配置后请重新部署函数。
+
 ## 3) 配置 Function Secrets
 
 在 Supabase 项目里为函数配置以下环境变量：

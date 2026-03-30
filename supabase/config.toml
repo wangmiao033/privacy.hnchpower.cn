@@ -1,0 +1,5 @@
+[functions.create-policy-link]
+verify_jwt = true
+
+[functions.get-policy-link]
+verify_jwt = false

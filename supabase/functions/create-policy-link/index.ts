@@ -59,11 +59,15 @@ Deno.serve(async (req) => {
 
   let createdBy: string | null = null;
   const authHeader = req.headers.get("Authorization") || "";
-  if (/^Bearer\s+/i.test(authHeader)) {
-    const jwt = authHeader.replace(/^Bearer\s+/i, "");
-    const userRes = await anon.auth.getUser(jwt);
-    createdBy = userRes.data.user?.id || null;
+  if (!/^Bearer\s+/i.test(authHeader)) {
+    return json({ error: "Missing authorization header" }, 401);
   }
+  const jwt = authHeader.replace(/^Bearer\s+/i, "");
+  const userRes = await anon.auth.getUser(jwt);
+  if (userRes.error || !userRes.data.user?.id) {
+    return json({ error: "Invalid user token" }, 401);
+  }
+  createdBy = userRes.data.user.id;
 
   for (let i = 0; i < 8; i++) {
     const shortCode = genCode(6);

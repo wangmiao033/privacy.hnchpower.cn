@@ -51,11 +51,18 @@
         apikey: SB_CFG.SUPABASE_ANON_KEY,
       },
     });
-    var json = await res.json().catch(function () {
-      return {};
-    });
-    if (!res.ok || !json || !json.data) {
-      throw new Error((json && json.error) || "短链内容读取失败");
+    var rawText = await res.text();
+    var json = {};
+    try {
+      json = rawText ? JSON.parse(rawText) : {};
+    } catch (_e) {
+      json = {};
+    }
+    if (!res.ok) {
+      throw new Error((json && json.error) || (json && json.message) || rawText || ("HTTP " + res.status));
+    }
+    if (!json || !json.data) {
+      throw new Error("返回格式错误：data 为空");
     }
     return json.data;
   }

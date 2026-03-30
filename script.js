@@ -111,28 +111,30 @@
     return String(SB_CFG.SUPABASE_URL).replace(/\/+$/, "") + "/functions/v1";
   }
 
-  async function createShortPolicyLink(values) {
+  async function getCurrentAccessToken() {
+    try {
+      var appSupabase = window.AppSupabaseClient;
+      if (appSupabase && appSupabase.auth && appSupabase.auth.getSession) {
+        var sessionRes = await appSupabase.auth.getSession();
+        return sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.access_token || "";
+      }
+      return "";
+    } catch (_e) {
+      return "";
+    }
+  }
+
+  async function createShortPolicyLink(values, accessToken) {
     var base = getFunctionsBaseUrl();
     if (!base || !SB_CFG.SUPABASE_ANON_KEY) {
       throw new Error("Supabase 配置缺失，无法生成短链");
     }
 
-    var token = "";
-    try {
-      var appSupabase = window.AppSupabaseClient;
-      if (appSupabase && appSupabase.auth && appSupabase.auth.getSession) {
-        var sessionRes = await appSupabase.auth.getSession();
-        token = sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.access_token || "";
-      }
-    } catch (_e) {
-      token = "";
-    }
-
     var headers = {
       "Content-Type": "application/json",
       apikey: SB_CFG.SUPABASE_ANON_KEY,
+      Authorization: "Bearer " + accessToken,
     };
-    if (token) headers.Authorization = "Bearer " + token;
 
     var res = await fetch(base + "/create-policy-link", {
       method: "POST",
@@ -145,13 +147,35 @@
       }),
     });
 
-    var json = await res.json().catch(function () {
-      return {};
-    });
-    if (!res.ok || !json || !json.short_code) {
-      throw new Error((json && json.error) || "短链创建失败");
+    var rawText = await res.text();
+    var json = {};
+    try {
+      json = rawText ? JSON.parse(rawText) : {};
+    } catch (_e) {
+      json = {};
+    }
+    if (!res.ok) {
+      var reason = (json && json.error) || (json && json.message) || rawText || ("HTTP " + res.status);
+      throw new Error(reason);
+    }
+    if (!json || !json.short_code) {
+      throw new Error("返回格式错误：short_code 为空");
+    }
+    if (typeof json.short_code !== "string") {
+      throw new Error("返回格式错误：short_code 类型无效");
     }
     return json.short_code;
+  }
+
+  function readablePublishError(msg) {
+    var s = String(msg || "");
+    if (/Missing authorization header/i.test(s)) return "权限不足（缺少 Authorization）";
+    if (/Invalid Token|Protected Header formatting/i.test(s)) return "Token 无效（函数可能开启了 JWT 校验）";
+    if (/Function not found|404/i.test(s)) return "函数未找到（create-policy-link）";
+    if (/Function env not configured/i.test(s)) return "函数环境变量未配置";
+    if (/short_code/i.test(s)) return "返回格式错误（short_code）";
+    if (/network|Failed to fetch|Load failed/i.test(s)) return "网络异常，请稍后重试";
+    return s || "短链创建失败";
   }
 
   function buildPublishUrlByCode(shortCode) {
@@ -210,10 +234,18 @@
     var values = getValues();
     var url = "";
     try {
-      var shortCode = await createShortPolicyLink(values);
+      var token = await getCurrentAccessToken();
+      if (!token) {
+        showToast("请先登录后再发布");
+        btnPublish.disabled = false;
+        return;
+      }
+      var shortCode = await createShortPolicyLink(values, token);
       url = buildPublishUrlByCode(shortCode);
     } catch (e) {
-      showToast("发布失败：" + (e && e.message ? e.message : "请稍后重试"));
+      var detail = e && e.message ? e.message : "短链创建失败";
+      console.error("[publish] create-policy-link failed:", detail);
+      showToast("发布失败：" + readablePublishError(detail));
       btnPublish.disabled = false;
       return;
     }
