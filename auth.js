@@ -30,14 +30,16 @@
    * 从 account.html?return= 读取 return（须为 decodeURIComponent 后的路径），登录成功后跳转。
    * return 建议由调用方使用 encodeURIComponent 编码，例如 %2Ftools%2Fpdf-seal%2F
    */
+  /** 仅在 account.html 且 URL 带合法非空 return 时跳转，避免其它页面误触发 */
   function tryConsumeReturnRedirect() {
     try {
       var path = window.location.pathname || "";
       if (!/account\.html$/i.test(path)) return;
       var u = new URL(window.location.href);
+      if (!u.searchParams.has("return")) return;
       var raw = u.searchParams.get("return");
-      if (!raw) return;
-      var decoded = decodeURIComponent(raw);
+      if (raw == null || String(raw).trim() === "") return;
+      var decoded = decodeURIComponent(String(raw).trim());
       if (!isSafeInternalReturnPath(decoded)) return;
       window.location.replace(decoded);
     } catch (_e) {}

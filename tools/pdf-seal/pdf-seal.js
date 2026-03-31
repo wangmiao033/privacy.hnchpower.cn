@@ -135,6 +135,171 @@
     return '../../account.html?return=' + encodeURIComponent(getReturnPathForLogin());
   }
 
+  /** 登录跳转前恢复用：IndexedDB 单条记录，避免 sessionStorage 体积限制 */
+  var RESTORE_DB_NAME = 'pdfseal-restore-v1';
+  var RESTORE_STORE = 'pending';
+  var RESTORE_KEY = 'export-latest';
+
+  function idbOpenRestore() {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(RESTORE_DB_NAME, 1);
+      req.onerror = function () {
+        reject(req.error);
+      };
+      req.onupgradeneeded = function (e) {
+        var db = e.target.result;
+        if (!db.objectStoreNames.contains(RESTORE_STORE)) {
+          db.createObjectStore(RESTORE_STORE, { keyPath: 'id' });
+        }
+      };
+      req.onsuccess = function () {
+        resolve(req.result);
+      };
+    });
+  }
+
+  function idbPutRestore(record) {
+    return idbOpenRestore().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(RESTORE_STORE, 'readwrite');
+        tx.oncomplete = function () {
+          resolve();
+        };
+        tx.onerror = function () {
+          reject(tx.error);
+        };
+        tx.objectStore(RESTORE_STORE).put(record);
+      });
+    });
+  }
+
+  function idbGetRestore(id) {
+    return idbOpenRestore().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(RESTORE_STORE, 'readonly');
+        var r = tx.objectStore(RESTORE_STORE).get(id);
+        r.onsuccess = function () {
+          resolve(r.result);
+        };
+        r.onerror = function () {
+          reject(r.error);
+        };
+      });
+    });
+  }
+
+  function idbDeleteRestore(id) {
+    return idbOpenRestore().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(RESTORE_STORE, 'readwrite');
+        tx.oncomplete = function () {
+          resolve();
+        };
+        tx.onerror = function () {
+          reject(tx.error);
+        };
+        tx.objectStore(RESTORE_STORE).delete(id);
+      });
+    });
+  }
+
+  function blobToBase64(blob) {
+    return new Promise(function (resolve, reject) {
+      var fr = new FileReader();
+      fr.onload = function () {
+        var s = String(fr.result || '');
+        var i = s.indexOf(',');
+        resolve(i >= 0 ? s.slice(i + 1) : s);
+      };
+      fr.onerror = function () {
+        reject(fr.error);
+      };
+      fr.readAsDataURL(blob);
+    });
+  }
+
+  function base64ToUint8Array(b64) {
+    var bin = atob(b64);
+    var len = bin.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  function getParamsForRestore() {
+    return {
+      edge: getEdge(),
+      size: getSizePreset(),
+      vpos: getVPos(),
+      margin: getMarginPt()
+    };
+  }
+
+  function applyRestoredParams(p) {
+    if (!p || typeof p !== 'object') return;
+    document.querySelectorAll('input[name="pdfseal-edge"]').forEach(function (inp) {
+      inp.checked = inp.value === p.edge;
+    });
+    document.querySelectorAll('input[name="pdfseal-size"]').forEach(function (inp) {
+      inp.checked = inp.value === p.size;
+    });
+    document.querySelectorAll('input[name="pdfseal-vpos"]').forEach(function (inp) {
+      inp.checked = inp.value === p.vpos;
+    });
+    if (typeof p.margin === 'number' || (typeof p.margin === 'string' && p.margin !== '')) {
+      var m = Math.max(0, Math.min(144, parseFloat(p.margin, 10) || 0));
+      if (el.marginNum) el.marginNum.value = String(m);
+      if (el.marginSlider) el.marginSlider.value = String(Math.min(72, m));
+    }
+  }
+
+  function persistGeneratedResult() {
+    if (!state.generatedBlob) return Promise.resolve();
+    return blobToBase64(state.generatedBlob)
+      .then(function (b64) {
+        return idbPutRestore({
+          id: RESTORE_KEY,
+          v: 1,
+          pdfBase64: b64,
+          fileName: state.generatedName || 'output.pdf',
+          params: getParamsForRestore(),
+          savedAt: Date.now()
+        });
+      })
+      .catch(function (e) {
+        console.error('[pdf-seal] persistGeneratedResult', e);
+      });
+  }
+
+  function clearPersistedGeneratedResult() {
+    return idbDeleteRestore(RESTORE_KEY).catch(function () {});
+  }
+
+  /**
+   * 从 IndexedDB 恢复上次生成的 PDF（登录回跳后）
+   * @returns {Promise<boolean>}
+   */
+  function tryRestorePersistedGeneratedResult() {
+    return idbGetRestore(RESTORE_KEY)
+      .then(function (rec) {
+        if (!rec || !rec.pdfBase64 || !rec.fileName) return false;
+        var bytes = base64ToUint8Array(rec.pdfBase64);
+        if (!hasPdfHeader(bytes)) {
+          clearPersistedGeneratedResult();
+          return false;
+        }
+        state.generatedBlob = new Blob([bytes], { type: 'application/pdf' });
+        state.generatedName = rec.fileName;
+        applyRestoredParams(rec.params);
+        if (el.outName) el.outName.value = rec.fileName;
+        return true;
+      })
+      .catch(function (e) {
+        console.error('[pdf-seal] tryRestorePersistedGeneratedResult', e);
+        return false;
+      });
+  }
+
   async function isUserLoggedIn() {
     try {
       var c = window.AppSupabaseClient;
@@ -818,6 +983,7 @@
       if (!/\.pdf$/i.test(name)) name += '.pdf';
       state.generatedBlob = new Blob([out], { type: 'application/pdf' });
       state.generatedName = name;
+      persistGeneratedResult();
       updateDownloadAuthState();
       await refreshPreview();
     } catch (e) {
@@ -890,6 +1056,7 @@
     syncPreviewOverlay();
     setRightPanelInitial();
     updateSchematicPreview();
+    clearPersistedGeneratedResult();
     updateDownloadAuthState();
   }
 
@@ -909,6 +1076,17 @@
   el.btnApply.addEventListener('click', onApply);
   el.btnReset.addEventListener('click', onReset);
   el.btnDownload.addEventListener('click', onDownload);
+
+  if (el.linkLogin) {
+    el.linkLogin.addEventListener('click', function (e) {
+      if (!state.generatedBlob) return;
+      e.preventDefault();
+      var url = buildAccountLoginUrl();
+      persistGeneratedResult().finally(function () {
+        window.location.href = url;
+      });
+    });
+  }
 
   window.addEventListener('focus', function () {
     updateDownloadAuthState();
@@ -959,5 +1137,17 @@
   setApplyBusy(false);
   setPreviewBusy(false);
   syncPreviewOverlay();
-  updateDownloadAuthState();
+
+  tryRestorePersistedGeneratedResult()
+    .then(function (restored) {
+      if (restored) {
+        updateMarginBadge();
+        updateSchematicPreview();
+        showPdfsealToast('已恢复上次生成结果');
+      }
+      updateDownloadAuthState();
+    })
+    .catch(function () {
+      updateDownloadAuthState();
+    });
 })();

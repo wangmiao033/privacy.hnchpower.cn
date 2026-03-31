@@ -381,6 +381,27 @@ body {
   color: #6f8596;
 }
 
+.policy-seo-footnote {
+  margin: 0.75rem 0 0;
+  font-size: 0.74rem;
+  color: #6f8596;
+  line-height: 1.55;
+}
+
+.policy-seo-footnote--bottom {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1rem 1.75rem;
+}
+
+.policy-seo-footnote a {
+  color: var(--primary);
+}
+
+.policy-seo-footnote a:hover {
+  color: var(--primary-hover);
+}
+
 /* ========== 预览区 ========== */
 .preview-toolbar {
   display: flex;
