@@ -1,24 +1,24 @@
 /* PDF 骑缝章工具 — 样式限定在 .pdfseal-page 内，class 前缀 pdfseal- */
 
 .pdfseal-page {
-  --pdfseal-bg-page: #f4f7fb;
+  --pdfseal-bg-page: #f1f5f9;
   --pdfseal-bg-panel: #ffffff;
-  --pdfseal-text: #1f2d3d;
-  --pdfseal-text-sub: #5f7388;
-  --pdfseal-border: #d8e3ef;
-  --pdfseal-border-strong: #c9d7e6;
-  --pdfseal-primary: #1c69c2;
-  --pdfseal-primary-hover: #165aa8;
+  --pdfseal-text: #0f172a;
+  --pdfseal-text-sub: #64748b;
+  --pdfseal-border: #e2e8f0;
+  --pdfseal-border-strong: #cbd5e1;
+  --pdfseal-primary: #2563eb;
+  --pdfseal-primary-hover: #1d4ed8;
   --pdfseal-radius-lg: 14px;
-  --pdfseal-radius-md: 11px;
-  --pdfseal-shadow: 0 10px 30px rgba(21, 57, 98, 0.08);
+  --pdfseal-radius-md: 10px;
+  --pdfseal-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 18px rgba(15, 23, 42, 0.06);
   min-height: 100vh;
   margin: 0;
   font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.55;
   color: var(--pdfseal-text);
-  background: radial-gradient(1200px 420px at 50% -200px, #e3efff 0%, var(--pdfseal-bg-page) 58%);
+  background: linear-gradient(180deg, #f8fafc 0%, var(--pdfseal-bg-page) 28%);
 }
 
 .pdfseal-page *,
@@ -28,9 +28,10 @@
 }
 
 .pdfseal-header {
-  background: linear-gradient(180deg, #eaf3ff 0%, #dfecfb 100%);
-  border-bottom: 1px solid #c8dced;
-  padding: 0.95rem 1rem 1rem;
+  background: #fff;
+  border-bottom: 1px solid var(--pdfseal-border);
+  padding: 0.65rem 1rem 0.75rem;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
 }
 
 .pdfseal-header-inner {
@@ -48,23 +49,25 @@
 }
 
 .pdfseal-title {
-  margin: 0 0 0.24rem;
-  font-size: 1.58rem;
+  margin: 0 0 0.2rem;
+  font-size: 1.35rem;
   font-weight: 700;
-  color: #0d47a1;
-  letter-spacing: 0.01em;
+  color: #0f172a;
+  letter-spacing: -0.02em;
 }
 
 .pdfseal-subtitle {
   margin: 0;
-  font-size: 0.88rem;
-  color: #587086;
+  font-size: 0.8125rem;
+  color: var(--pdfseal-text-sub);
+  line-height: 1.45;
 }
 
 .pdfseal-privacy-tip {
-  margin: 0.45rem 0 0;
-  font-size: 0.78rem;
-  color: #6b8499;
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: var(--pdfseal-text-sub);
+  line-height: 1.45;
 }
 
 .pdfseal-link-home {
@@ -87,13 +90,13 @@
 .pdfseal-main {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 2rem;
+  padding: 1rem 1rem 1.75rem;
 }
 
 .pdfseal-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
-  gap: 1.25rem;
+  grid-template-columns: minmax(288px, 400px) minmax(0, 1fr);
+  gap: 1rem;
   align-items: start;
 }
 
@@ -108,18 +111,19 @@
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-lg);
   box-shadow: var(--pdfseal-shadow);
-  padding: 1rem 1.1rem 1.15rem;
+  padding: 0.95rem 1.05rem 1.05rem;
 }
 
 .pdfseal-panel-title {
-  margin: 0 0 0.85rem;
-  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.98rem;
   font-weight: 600;
-  color: #0d47a1;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
 .pdfseal-field {
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
 }
 
 .pdfseal-field:last-child {
@@ -171,10 +175,10 @@
 }
 
 .pdfseal-upload-card {
-  padding: 0.65rem 0.75rem;
+  padding: 0.6rem 0.7rem;
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-md);
-  background: #fafcfe;
+  background: #f8fafc;
   margin-bottom: 0;
 }
 
@@ -212,8 +216,9 @@
 .pdfseal-fieldset {
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-md);
-  padding: 0.65rem 0.75rem 0.75rem;
-  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.65rem 0.65rem;
+  margin: 0 0 0.75rem;
+  background: #fafafa;
 }
 
 .pdfseal-legend {
@@ -410,10 +415,11 @@
 
 .pdfseal-btn {
   cursor: pointer;
-  font-size: 0.88rem;
+  font-size: 0.8125rem;
   font-weight: 600;
-  border-radius: 10px;
-  padding: 0.52rem 1.05rem;
+  border-radius: var(--pdfseal-radius-md);
+  padding: 0.48rem 0.95rem;
+  min-height: 2.35rem;
   border: 1px solid transparent;
   font-family: inherit;
 }
@@ -421,7 +427,8 @@
 .pdfseal-btn-primary {
   background: var(--pdfseal-primary);
   color: #fff;
-  border-color: var(--pdfseal-primary);
+  border-color: #1d4ed8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(37, 99, 235, 0.18);
 }
 
 .pdfseal-btn-primary:hover:not(:disabled) {
@@ -486,19 +493,20 @@
   position: relative;
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-md);
-  background: #eef2f7;
-  padding: 0.75rem;
-  min-height: 220px;
+  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+  padding: 0.65rem;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .pdfseal-preview-idle {
   text-align: center;
-  padding: 1.5rem 1rem;
-  max-width: 280px;
+  padding: 1.25rem 0.85rem;
+  max-width: 260px;
 }
 
 .pdfseal-preview-idle[hidden] {
@@ -535,8 +543,8 @@
   max-width: 100%;
   height: auto;
   background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-radius: 6px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(15, 23, 42, 0.04);
+  border-radius: var(--pdfseal-radius-md);
 }
 
 .pdfseal-preview-note {
@@ -597,10 +605,10 @@
 }
 
 .pdfseal-download-auth {
-  padding: 0.55rem 0.7rem;
-  border-radius: 9px;
-  background: #f0f5fb;
-  border: 1px solid #d0dde9;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--pdfseal-radius-md);
+  background: #f8fafc;
+  border: 1px solid var(--pdfseal-border);
 }
 
 .pdfseal-download-auth[hidden] {
@@ -663,18 +671,19 @@
 .pdfseal-footer {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 0 1rem 2.5rem;
+  padding: 0 1rem 2rem;
 }
 
 .pdfseal-footer-block {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .pdfseal-footer-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #0d47a1;
-  margin: 0 0 0.5rem;
+  color: #0f172a;
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.01em;
 }
 
 .pdfseal-footer-list {
