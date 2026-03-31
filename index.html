@@ -20,6 +20,7 @@
   <link rel="icon" href="assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180" />
   <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="feedback-widget.css" />
 </head>
 <body class="home-page">
   <a class="home-skip" href="#home-main">跳到主要内容</a>
@@ -156,6 +157,48 @@
     </div>
   </footer>
 
+  <div class="home-feedback-root">
+    <div class="home-feedback-backdrop" hidden tabindex="-1" aria-hidden="true"></div>
+    <div class="home-feedback-ui">
+      <div
+        id="home-feedback-dialog"
+        class="home-feedback-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="home-feedback-title"
+        hidden
+      >
+        <div class="home-feedback-dialog-inner">
+          <div class="home-feedback-dialog-head">
+            <h2 id="home-feedback-title">问题反馈</h2>
+            <button type="button" class="home-feedback-close" aria-label="关闭">×</button>
+          </div>
+          <p class="home-feedback-desc">如遇功能异常、页面错误或使用问题，可发送邮件联系我们</p>
+          <p class="home-feedback-email">
+            <a href="mailto:yszt@dxyx6888.com">yszt@dxyx6888.com</a>
+          </p>
+          <div class="home-feedback-actions">
+            <a
+              class="home-feedback-btn home-feedback-btn--primary"
+              href="mailto:yszt@dxyx6888.com?subject=网站反馈&amp;body=请描述您遇到的问题："
+            >发送邮件</a>
+            <button type="button" class="home-feedback-btn home-feedback-btn--secondary home-feedback-copy">复制邮箱</button>
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="home-feedback-fab"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        aria-controls="home-feedback-dialog"
+      >
+        问题反馈
+      </button>
+    </div>
+  </div>
+
   <script src="home.js"></script>
+  <script src="feedback-widget.js"></script>
 </body>
 </html>
