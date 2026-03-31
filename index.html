@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>在线文档与 PDF 工具</title>
-  <meta name="theme-color" content="#151d2b" />
+  <meta name="theme-color" content="#0f172a" />
   <meta name="description" content="隐私政策生成、PDF 骑缝章等轻量在线工具。" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
@@ -15,67 +15,134 @@
 
   <header class="home-nav">
     <div class="home-nav-inner">
-      <a class="home-brand" href="./">文档与 PDF 工具集</a>
+      <a class="home-brand" href="./">
+        <span class="home-brand-mark" aria-hidden="true"></span>
+        <span class="home-brand-text">
+          <span class="home-brand-name">文档与 PDF 工具集</span>
+          <span class="home-brand-tagline">轻量在线工具</span>
+        </span>
+      </a>
       <nav class="home-nav-links" aria-label="主导航">
-        <a href="./">首页</a>
-        <a href="#section-policy">政策文档</a>
-        <a href="#section-pdf">PDF 工具</a>
-        <a href="#section-more">更多</a>
+        <a class="home-nav-link" href="./">首页</a>
+        <a class="home-nav-link" href="#section-policy">政策文档</a>
+        <a class="home-nav-link" href="#section-pdf">PDF 工具</a>
+        <a class="home-nav-link" href="#section-more">更多</a>
       </nav>
     </div>
   </header>
 
-  <section class="home-banner" aria-label="简介">
-    <div class="home-banner-inner">
-      <h1 class="home-banner-title">在线文档与 PDF 工具</h1>
-      <p class="home-banner-sub">隐私政策生成、PDF 骑缝章等常用工具</p>
-      <p class="home-banner-note">轻量、快速、可在线使用</p>
+  <section class="home-hero" aria-label="简介">
+    <div class="home-hero-bg" aria-hidden="true"></div>
+    <div class="home-hero-inner">
+      <div class="home-hero-copy">
+        <p class="home-hero-eyebrow">无需安装 · 打开即用</p>
+        <h1 class="home-hero-title">在线文档与 PDF 工具</h1>
+        <p class="home-hero-lead">隐私政策一键生成与发布，PDF 骑缝章本地处理。面向日常办公场景的轻量工具集合。</p>
+        <p class="home-hero-note">纯静态页面，核心能力在浏览器侧完成，加载快、上手简单。</p>
+        <div class="home-hero-cta">
+          <a class="home-btn home-btn-primary" href="tools/privacy-policy/">隐私政策工具</a>
+          <a class="home-btn home-btn-secondary" href="tools/pdf-seal/">PDF 骑缝章</a>
+        </div>
+      </div>
+      <div class="home-hero-visual" aria-hidden="true">
+        <div class="home-hero-glow"></div>
+        <div class="home-hero-mock">
+          <div class="home-mock-window">
+            <div class="home-mock-dots"><span></span><span></span><span></span></div>
+            <div class="home-mock-body">
+              <div class="home-mock-line home-mock-line--long"></div>
+              <div class="home-mock-line home-mock-line--mid"></div>
+              <div class="home-mock-line home-mock-line--short"></div>
+              <div class="home-mock-badge">预览</div>
+            </div>
+          </div>
+          <div class="home-mock-card home-mock-card--float">
+            <span class="home-mock-card-icon">PDF</span>
+            <span class="home-mock-card-text">本地处理</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <main id="home-main" class="home-main">
     <section id="section-policy" class="home-section" aria-labelledby="policy-heading">
-      <div class="home-section-head">
-        <h2 id="policy-heading" class="home-section-title">政策文档</h2>
-        <p class="home-section-desc">生成与发布类</p>
-      </div>
+      <header class="home-section-head">
+        <div class="home-section-head-text">
+          <h2 id="policy-heading" class="home-section-title">政策文档</h2>
+          <p class="home-section-lead">面向产品合规与上架场景，在线生成可分享的正式链接。</p>
+        </div>
+        <p class="home-section-desc">生成与发布类工具</p>
+      </header>
       <div class="home-grid">
         <a class="home-card" href="tools/privacy-policy/">
+          <div class="home-card-top">
+            <span class="home-card-icon home-card-icon--doc" aria-hidden="true"></span>
+            <div class="home-card-tags">
+              <span class="home-tag">在线生成</span>
+              <span class="home-tag home-tag--muted">常用</span>
+            </div>
+          </div>
           <h3 class="home-card-title">隐私政策生成与发布</h3>
-          <p class="home-card-desc">填写信息，实时预览，一键生成正式链接</p>
-          <span class="home-card-arrow">进入工具 →</span>
+          <p class="home-card-desc">填写信息、实时预览，一键生成短链与正式展示页。</p>
+          <span class="home-card-footer">
+            <span class="home-card-arrow">进入工具</span>
+            <span class="home-card-chevron" aria-hidden="true">→</span>
+          </span>
         </a>
       </div>
     </section>
 
     <section id="section-pdf" class="home-section" aria-labelledby="pdf-heading">
-      <div class="home-section-head">
-        <h2 id="pdf-heading" class="home-section-title">PDF 处理</h2>
-        <p class="home-section-desc">本地浏览器处理，文件不上传服务器</p>
-      </div>
+      <header class="home-section-head">
+        <div class="home-section-head-text">
+          <h2 id="pdf-heading" class="home-section-title">PDF 处理</h2>
+          <p class="home-section-lead">文件仅在您的浏览器中处理，不上传服务器，适合敏感文档。</p>
+        </div>
+        <p class="home-section-desc">本地浏览器侧能力</p>
+      </header>
       <div class="home-grid">
         <a class="home-card" href="tools/pdf-seal/">
+          <div class="home-card-top">
+            <span class="home-card-icon home-card-icon--pdf" aria-hidden="true"></span>
+            <div class="home-card-tags">
+              <span class="home-tag">本地处理</span>
+              <span class="home-tag home-tag--muted">浏览器</span>
+            </div>
+          </div>
           <h3 class="home-card-title">PDF 骑缝章</h3>
-          <p class="home-card-desc">上传 PDF 和印章图片，自动生成骑缝章 PDF</p>
-          <span class="home-card-arrow">进入工具 →</span>
+          <p class="home-card-desc">上传 PDF 与印章图，自动切分骑缝、导出成稿。</p>
+          <span class="home-card-footer">
+            <span class="home-card-arrow">进入工具</span>
+            <span class="home-card-chevron" aria-hidden="true">→</span>
+          </span>
         </a>
       </div>
     </section>
 
     <section id="section-more" class="home-section" aria-labelledby="more-heading">
-      <div class="home-section-head">
-        <h2 id="more-heading" class="home-section-title">更多</h2>
-        <p class="home-section-desc">后续可在此扩展更多工具入口</p>
-      </div>
+      <header class="home-section-head">
+        <div class="home-section-head-text">
+          <h2 id="more-heading" class="home-section-title">更多</h2>
+          <p class="home-section-lead">账号与短链记录等与发布能力配套使用。</p>
+        </div>
+        <p class="home-section-desc">扩展入口与说明</p>
+      </header>
       <div class="home-placeholder" role="note">
-        占位：个人中心与账号相关请使用「隐私政策工具」页内的登录入口，或前往
-        <a href="account.html">个人中心</a>。
+        <span class="home-placeholder-icon" aria-hidden="true"></span>
+        <p class="home-placeholder-text">
+          个人中心与账号相关：请在「隐私政策工具」内使用登录入口，或前往
+          <a class="home-inline-link" href="account.html">个人中心</a>。
+        </p>
       </div>
     </section>
   </main>
 
   <footer class="home-footer">
-    <p>© <span id="home-year"></span> · 静态工具导航</p>
+    <div class="home-footer-inner">
+      <p class="home-footer-line">© <span id="home-year"></span> · 静态工具导航</p>
+      <p class="home-footer-sub">本站为静态页面集合，工具页各自独立加载。</p>
+    </div>
   </footer>
 
   <script src="home.js"></script>
