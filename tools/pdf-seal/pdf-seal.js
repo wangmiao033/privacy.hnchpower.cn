@@ -27,18 +27,29 @@
     pdfInput: document.getElementById('pdfseal-input-pdf'),
     thumbWrap: document.getElementById('pdfseal-seal-thumb-wrap'),
     thumb: document.getElementById('pdfseal-seal-thumb'),
+    sealFilename: document.getElementById('pdfseal-seal-filename'),
+    pdfFilename: document.getElementById('pdfseal-pdf-filename'),
     fileInfo: document.getElementById('pdfseal-file-info'),
     error: document.getElementById('pdfseal-error'),
     warning: document.getElementById('pdfseal-warning'),
     marginSlider: document.getElementById('pdfseal-margin-slider'),
     marginNum: document.getElementById('pdfseal-margin'),
+    marginValue: document.getElementById('pdfseal-margin-value'),
     outName: document.getElementById('pdfseal-out-name'),
     btnApply: document.getElementById('pdfseal-btn-apply'),
     btnReset: document.getElementById('pdfseal-btn-reset'),
     btnDownload: document.getElementById('pdfseal-btn-download'),
+    previewIdle: document.getElementById('pdfseal-preview-idle'),
+    previewIdleText: document.getElementById('pdfseal-preview-idle-text'),
+    previewIdleHint: document.getElementById('pdfseal-preview-idle-hint'),
+    previewCanvasWrap: document.getElementById('pdfseal-preview-canvas-wrap'),
     previewCanvas: document.getElementById('pdfseal-preview-canvas'),
-    loading: document.getElementById('pdfseal-loading')
+    loading: document.getElementById('pdfseal-loading'),
+    schematicStrip: document.getElementById('pdfseal-schematic-strip')
   };
+
+  var previewBusy = false;
+  var applyBusy = false;
 
   var state = {
     sealFile: null,
@@ -99,9 +110,92 @@
     }
   }
 
-  function setLoading(on) {
-    el.loading.hidden = !on;
-    el.btnApply.disabled = on;
+  /** 同步「处理中」遮罩：解析/预览 与 应用骑缝章 任一为 true 即显示 */
+  function syncPreviewOverlay() {
+    el.loading.hidden = !(previewBusy || applyBusy);
+  }
+
+  function setApplyBusy(on) {
+    applyBusy = !!on;
+    el.btnApply.disabled = applyBusy;
+    syncPreviewOverlay();
+  }
+
+  function setPreviewBusy(on) {
+    previewBusy = !!on;
+    syncPreviewOverlay();
+  }
+
+  function setPreviewIdleDefault() {
+    if (!el.previewIdleText || !el.previewIdleHint) return;
+    el.previewIdleText.textContent = '请先上传 PDF 与印章图片';
+    el.previewIdleHint.textContent = '上传后将在此显示第一页预览';
+  }
+
+  function setPreviewIdleError() {
+    if (!el.previewIdleText || !el.previewIdleHint) return;
+    el.previewIdleText.textContent = '预览未能完成';
+    el.previewIdleHint.textContent = '请查看上方红色提示，或调整后重试';
+  }
+
+  /** 右侧预览：仅静态提示，无画布 */
+  function setRightPanelInitial() {
+    if (el.previewIdle) el.previewIdle.hidden = false;
+    if (el.previewCanvasWrap) el.previewCanvasWrap.hidden = true;
+    setPreviewIdleDefault();
+  }
+
+  /** 右侧预览：显示画布区域（解析成功） */
+  function setRightPanelCanvasVisible() {
+    if (el.previewIdle) el.previewIdle.hidden = true;
+    if (el.previewCanvasWrap) el.previewCanvasWrap.hidden = false;
+  }
+
+  /** 预览失败：回到提示卡 + 错误文案 */
+  function setRightPanelPreviewFailed() {
+    if (el.previewIdle) el.previewIdle.hidden = false;
+    if (el.previewCanvasWrap) el.previewCanvasWrap.hidden = true;
+    setPreviewIdleError();
+  }
+
+  function updateFilenameDisplay() {
+    if (!el.sealFilename || !el.pdfFilename) return;
+    var s = el.sealInput.files && el.sealInput.files[0];
+    var p = el.pdfInput.files && el.pdfInput.files[0];
+    el.sealFilename.textContent = s ? s.name : '未选择文件';
+    el.pdfFilename.textContent = p ? p.name : '未选择文件';
+  }
+
+  function updateMarginBadge() {
+    if (!el.marginValue) return;
+    var pt = getMarginPt();
+    el.marginValue.textContent = pt + ' pt';
+    if (el.marginSlider) el.marginSlider.setAttribute('aria-valuetext', pt + ' 点');
+  }
+
+  /**
+   * 参数区「位置示意」：竖向纸 + 边缘切片，仅视觉示意，与导出算法比例一致（小/中/大、上/中/下、左/右、边距）
+   */
+  function updateSchematicPreview() {
+    if (!el.schematicStrip) return;
+    var strip = el.schematicStrip;
+    var edge = getEdge();
+    var v = getVPos();
+    var sz = getSizePreset();
+    var heights = { small: '22%', medium: '28%', large: '34%' };
+    var tops = { top: '12%', center: '36%', bottom: '60%' };
+    strip.style.height = heights[sz] || heights.medium;
+    strip.style.top = tops[v] || tops.center;
+    strip.style.width = '14%';
+    var m = getMarginPt();
+    var insetPx = 2 + Math.min(10, Math.round(m / 6));
+    if (edge === 'left') {
+      strip.style.left = insetPx + 'px';
+      strip.style.right = 'auto';
+    } else {
+      strip.style.right = insetPx + 'px';
+      strip.style.left = 'auto';
+    }
   }
 
   function getEdge() {
@@ -443,35 +537,41 @@
 
   async function refreshPreview() {
     if (!state.pdfBytes) {
+      setPreviewBusy(false);
       var c0 = el.previewCanvas.getContext('2d');
       c0.clearRect(0, 0, el.previewCanvas.width, el.previewCanvas.height);
+      setRightPanelInitial();
       return;
     }
+
+    setPreviewBusy(true);
     clearError();
+    setRightPanelCanvasVisible();
+
     try {
       if (!state.sealImage || !state.firstPageSizePt.height) {
         await renderPdfFirstPageOnly(state.pdfBytes, el.previewCanvas);
-        return;
+      } else {
+        var master = buildSealMasterCanvas(
+          state.sealImage,
+          state.pdfPageCount,
+          state.firstPageSizePt.height,
+          getSizePreset()
+        );
+        await renderFirstPagePreview(
+          state.pdfBytes,
+          master,
+          state.pdfPageCount,
+          {
+            edge: getEdge(),
+            marginPt: getMarginPt(),
+            vpos: getVPos(),
+            sizePreset: getSizePreset(),
+            imgAspectFull: state.sealImage.naturalWidth / state.sealImage.naturalHeight
+          },
+          el.previewCanvas
+        );
       }
-      var master = buildSealMasterCanvas(
-        state.sealImage,
-        state.pdfPageCount,
-        state.firstPageSizePt.height,
-        getSizePreset()
-      );
-      await renderFirstPagePreview(
-        state.pdfBytes,
-        master,
-        state.pdfPageCount,
-        {
-          edge: getEdge(),
-          marginPt: getMarginPt(),
-          vpos: getVPos(),
-          sizePreset: getSizePreset(),
-          imgAspectFull: state.sealImage.naturalWidth / state.sealImage.naturalHeight
-        },
-        el.previewCanvas
-      );
     } catch (e) {
       console.error('refreshPreview', e);
       var msg = (e && e.message) || String(e);
@@ -483,6 +583,11 @@
       } else {
         showError('预览失败：' + msg);
       }
+      var ctx = el.previewCanvas.getContext('2d');
+      ctx.clearRect(0, 0, el.previewCanvas.width, el.previewCanvas.height);
+      setRightPanelPreviewFailed();
+    } finally {
+      setPreviewBusy(false);
     }
   }
 
@@ -498,12 +603,15 @@
     state.sealImage = null;
     el.thumbWrap.hidden = true;
     if (!file) {
+      updateFilenameDisplay();
       await refreshPreview();
+      updateSchematicPreview();
       return;
     }
     var ok = /\.(png|jpe?g)$/i.test(file.name) || /^image\/(png|jpeg)$/i.test(file.type);
     if (!ok) {
       showError('请上传 PNG 或 JPG 格式的印章图片。');
+      updateFilenameDisplay();
       return;
     }
     try {
@@ -516,9 +624,12 @@
       if (state.pdfPageCount) {
         setWarning(getLowResolutionWarning(r.image, state.pdfPageCount));
       }
+      updateFilenameDisplay();
       await refreshPreview();
+      updateSchematicPreview();
     } catch (e) {
       showError((e && e.message) || String(e));
+      updateFilenameDisplay();
     }
   }
 
@@ -534,12 +645,17 @@
     el.outName.value = '';
     if (!file) {
       updateFileInfo();
+      updateFilenameDisplay();
       await refreshPreview();
+      updateSchematicPreview();
       return;
     }
     if (!/\.pdf$/i.test(file.name) && file.type !== 'application/pdf') {
       showError('请上传 .pdf 文件。');
       updateFileInfo();
+      updateFilenameDisplay();
+      await refreshPreview();
+      updateSchematicPreview();
       return;
     }
     try {
@@ -560,7 +676,9 @@
       if (state.sealImage) {
         setWarning(getLowResolutionWarning(state.sealImage, state.pdfPageCount));
       }
+      updateFilenameDisplay();
       await refreshPreview();
+      updateSchematicPreview();
     } catch (e) {
       console.error('onPdfChange', e);
       state.pdfFile = null;
@@ -578,6 +696,9 @@
         showError(userMessageForPdfCode('INVALID_PDF'));
       }
       updateFileInfo();
+      updateFilenameDisplay();
+      await refreshPreview();
+      updateSchematicPreview();
     }
   }
 
@@ -591,7 +712,7 @@
       showError('请先上传 PDF 文件。');
       return;
     }
-    setLoading(true);
+    setApplyBusy(true);
     state.generatedBlob = null;
     el.btnDownload.hidden = true;
     try {
@@ -625,7 +746,7 @@
         showError((e && e.message) || String(e));
       }
     } finally {
-      setLoading(false);
+      setApplyBusy(false);
     }
   }
 
@@ -663,8 +784,15 @@
     el.marginSlider.value = '0';
     el.btnDownload.hidden = true;
     updateFileInfo();
+    updateFilenameDisplay();
+    updateMarginBadge();
     var ctx = el.previewCanvas.getContext('2d');
     ctx.clearRect(0, 0, el.previewCanvas.width, el.previewCanvas.height);
+    setApplyBusy(false);
+    setPreviewBusy(false);
+    syncPreviewOverlay();
+    setRightPanelInitial();
+    updateSchematicPreview();
   }
 
   function syncMarginFromSlider() {
@@ -686,20 +814,37 @@
 
   el.marginSlider.addEventListener('input', function () {
     syncMarginFromSlider();
+    updateMarginBadge();
+    updateSchematicPreview();
     refreshPreview();
   });
   el.marginNum.addEventListener('change', function () {
     syncSliderFromMargin();
+    updateMarginBadge();
+    updateSchematicPreview();
     refreshPreview();
   });
 
+  function onParamChange() {
+    updateSchematicPreview();
+    refreshPreview();
+  }
+
   document.querySelectorAll('input[name="pdfseal-edge"]').forEach(function (r) {
-    r.addEventListener('change', refreshPreview);
+    r.addEventListener('change', onParamChange);
   });
   document.querySelectorAll('input[name="pdfseal-size"]').forEach(function (r) {
-    r.addEventListener('change', refreshPreview);
+    r.addEventListener('change', onParamChange);
   });
   document.querySelectorAll('input[name="pdfseal-vpos"]').forEach(function (r) {
-    r.addEventListener('change', refreshPreview);
+    r.addEventListener('change', onParamChange);
   });
+
+  updateFilenameDisplay();
+  updateMarginBadge();
+  updateSchematicPreview();
+  setRightPanelInitial();
+  setApplyBusy(false);
+  setPreviewBusy(false);
+  syncPreviewOverlay();
 })();

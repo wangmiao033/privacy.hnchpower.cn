@@ -92,7 +92,7 @@
 
 .pdfseal-layout {
   display: grid;
-  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
 }
@@ -108,103 +108,224 @@
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-lg);
   box-shadow: var(--pdfseal-shadow);
-  padding: 1.1rem 1.15rem 1.25rem;
+  padding: 1rem 1.1rem 1.15rem;
 }
 
 .pdfseal-panel-title {
-  margin: 0 0 1rem;
+  margin: 0 0 0.85rem;
   font-size: 1.05rem;
   font-weight: 600;
   color: #0d47a1;
 }
 
 .pdfseal-field {
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
-.pdfseal-field-inline {
-  margin-bottom: 0.75rem;
+.pdfseal-field:last-child {
+  margin-bottom: 0;
 }
 
 .pdfseal-label {
   display: block;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #2f4a63;
   margin-bottom: 0.35rem;
 }
 
+.pdfseal-label--inline {
+  display: inline;
+  margin-bottom: 0;
+}
+
+.pdfseal-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.pdfseal-value-badge {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--pdfseal-primary);
+  background: #e8f1fc;
+  border: 1px solid #c5daf0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
 .pdfseal-hint {
   margin: 0 0 0.4rem;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: var(--pdfseal-text-sub);
+}
+
+.pdfseal-upload-grid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.pdfseal-upload-card {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--pdfseal-border);
+  border-radius: var(--pdfseal-radius-md);
+  background: #fafcfe;
+  margin-bottom: 0;
 }
 
 .pdfseal-file-input {
   display: block;
   width: 100%;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  margin-top: 0.25rem;
+}
+
+.pdfseal-filename {
+  margin: 0.45rem 0 0;
+  font-size: 0.76rem;
+  color: #4a6074;
+  word-break: break-all;
+  line-height: 1.45;
 }
 
 .pdfseal-thumb-wrap {
-  margin-top: 0.6rem;
-  padding: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.45rem;
   border: 1px dashed var(--pdfseal-border-strong);
-  border-radius: var(--pdfseal-radius-md);
-  background: #fafcfe;
+  border-radius: 10px;
+  background: #fff;
   max-width: 200px;
 }
 
 .pdfseal-thumb {
   display: block;
   max-width: 100%;
-  max-height: 120px;
+  max-height: 100px;
   object-fit: contain;
 }
 
 .pdfseal-fieldset {
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-md);
-  padding: 0.75rem 0.85rem 0.5rem;
-  margin: 0 0 1rem;
+  padding: 0.65rem 0.75rem 0.75rem;
+  margin: 0 0 0.85rem;
 }
 
 .pdfseal-legend {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #2f4a63;
   padding: 0 0.35rem;
 }
 
-.pdfseal-radio-row {
+/* 分段按钮（骑缝位置 / 大小 / 垂直位置） */
+.pdfseal-seg {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem 1rem;
+  width: 100%;
+  padding: 3px;
+  border-radius: 10px;
+  background: #e8eef5;
+  border: 1px solid #d0dce8;
+  gap: 3px;
 }
 
-.pdfseal-radio {
-  font-size: 0.82rem;
-  color: var(--pdfseal-text);
+.pdfseal-seg--2 .pdfseal-seg-item {
+  flex: 1;
+}
+
+.pdfseal-seg--3 .pdfseal-seg-item {
+  flex: 1;
+}
+
+.pdfseal-seg-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+}
+
+.pdfseal-seg-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.15rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #4a5f73;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pdfseal-seg-item:hover {
+  color: #1f3a52;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.pdfseal-seg-input:focus-visible + .pdfseal-seg-text {
+  outline: 2px solid var(--pdfseal-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.pdfseal-seg-input:checked + .pdfseal-seg-text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.28rem 0.2rem;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--pdfseal-primary);
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(28, 105, 194, 0.18);
+  border: 1px solid #b8d4ef;
+}
+
+.pdfseal-seg-text {
+  display: block;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
 }
 
 .pdfseal-margin-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
 .pdfseal-range {
   flex: 1;
   min-width: 0;
+  height: 0.35rem;
+  accent-color: var(--pdfseal-primary);
 }
 
 .pdfseal-number {
-  width: 4.5rem;
-  padding: 0.35rem 0.5rem;
+  width: 4rem;
+  padding: 0.32rem 0.45rem;
   border: 1px solid #ccd8e5;
   border-radius: 9px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdfseal-unit {
+  font-size: 0.78rem;
+  color: var(--pdfseal-text-sub);
+  flex-shrink: 0;
+}
+
+.pdfseal-field-outname .pdfseal-text {
+  margin-top: 0.15rem;
 }
 
 .pdfseal-text {
@@ -222,11 +343,69 @@
   box-shadow: 0 0 0 3px rgba(79, 143, 221, 0.15);
 }
 
+/* 位置示意卡片 */
+.pdfseal-schematic-card {
+  margin: 0.85rem 0 0;
+  padding: 0.65rem 0.75rem 0.75rem;
+  border: 1px dashed var(--pdfseal-border-strong);
+  border-radius: var(--pdfseal-radius-md);
+  background: linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
+}
+
+.pdfseal-schematic-title {
+  margin: 0 0 0.2rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2f4a63;
+}
+
+.pdfseal-schematic-desc {
+  margin: 0 0 0.55rem;
+  font-size: 0.7rem;
+  color: #7a8fa3;
+}
+
+.pdfseal-schematic {
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem 0;
+}
+
+.pdfseal-schematic-paper {
+  position: relative;
+  width: 112px;
+  height: 156px;
+  background: #fff;
+  border: 2px solid #b8c9db;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.pdfseal-schematic-strip {
+  position: absolute;
+  width: 14%;
+  min-width: 10px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #4a8fd9 0%, var(--pdfseal-primary) 55%, #155a9e 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+  transition: top 0.2s ease, height 0.2s ease, left 0.2s ease, right 0.2s ease;
+}
+
+.pdfseal-schematic-strip--left {
+  left: 4px;
+  right: auto;
+}
+
+.pdfseal-schematic-strip--right {
+  right: 4px;
+  left: auto;
+}
+
 .pdfseal-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.1rem;
+  gap: 0.55rem;
+  margin-top: 0.95rem;
 }
 
 .pdfseal-btn {
@@ -234,7 +413,7 @@
   font-size: 0.88rem;
   font-weight: 600;
   border-radius: 10px;
-  padding: 0.55rem 1.1rem;
+  padding: 0.52rem 1.05rem;
   border: 1px solid transparent;
   font-family: inherit;
 }
@@ -267,9 +446,9 @@
 }
 
 .pdfseal-warning {
-  margin-top: 0.85rem;
-  padding: 0.55rem 0.65rem;
-  font-size: 0.78rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.62rem;
+  font-size: 0.76rem;
   color: #856404;
   background: #fff8e6;
   border: 1px solid #f0e0a8;
@@ -277,9 +456,9 @@
 }
 
 .pdfseal-file-info {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--pdfseal-text-sub);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
   line-height: 1.5;
 }
 
@@ -289,29 +468,66 @@
 }
 
 .pdfseal-file-info p {
-  margin: 0.2rem 0;
+  margin: 0.18rem 0;
 }
 
 .pdfseal-error {
-  margin-bottom: 0.75rem;
-  padding: 0.55rem 0.65rem;
-  font-size: 0.82rem;
+  margin-bottom: 0.65rem;
+  padding: 0.5rem 0.62rem;
+  font-size: 0.8rem;
   color: #b71c1c;
   background: #ffebee;
   border: 1px solid #ffcdd2;
   border-radius: 9px;
 }
 
+/* 右侧预览区：idle / loading / canvas 分层 */
 .pdfseal-preview-wrap {
   position: relative;
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-md);
   background: #eef2f7;
   padding: 0.75rem;
-  min-height: 200px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+
+.pdfseal-preview-idle {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  max-width: 280px;
+}
+
+.pdfseal-preview-idle[hidden] {
+  display: none !important;
+}
+
+.pdfseal-preview-idle-text {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #5a7288;
+}
+
+.pdfseal-preview-idle-hint {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #8a9bab;
+  line-height: 1.45;
+}
+
+.pdfseal-preview-canvas-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdfseal-preview-canvas-wrap[hidden] {
+  display: none !important;
 }
 
 .pdfseal-preview-canvas {
@@ -324,23 +540,33 @@
 }
 
 .pdfseal-preview-note {
-  margin: 0.6rem 0 0;
-  font-size: 0.74rem;
+  margin: 0.55rem 0 0;
+  font-size: 0.72rem;
   color: var(--pdfseal-text-sub);
   text-align: center;
+  max-width: 420px;
+  line-height: 1.45;
 }
 
+/* loading：必须覆盖 flex，否则 HTML hidden 无效 */
 .pdfseal-loading {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  display: flex;
+  z-index: 3;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: var(--pdfseal-radius-md);
+}
+
+.pdfseal-loading[hidden] {
+  display: none !important;
+}
+
+.pdfseal-loading:not([hidden]) {
+  display: flex;
 }
 
 .pdfseal-spinner {
@@ -364,7 +590,7 @@
 }
 
 .pdfseal-download-wrap {
-  margin-top: 1rem;
+  margin-top: 0.85rem;
 }
 
 .pdfseal-footer {
@@ -414,4 +640,11 @@
 .pdfseal-faq dd {
   margin: 0.2rem 0 0;
   padding-left: 0;
+}
+
+@media (max-width: 600px) {
+  .pdfseal-seg-item {
+    min-height: 2.35rem;
+    font-size: 0.78rem;
+  }
 }
