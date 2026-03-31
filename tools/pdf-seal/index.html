@@ -160,6 +160,10 @@
           </div>
 
           <div class="pdfseal-download-wrap">
+            <div id="pdfseal-download-auth" class="pdfseal-download-auth" hidden>
+              <p id="pdfseal-download-hint" class="pdfseal-download-hint"></p>
+              <a id="pdfseal-link-login" class="pdfseal-link-login" href="../../account.html">去登录</a>
+            </div>
             <button type="button" id="pdfseal-btn-download" class="pdfseal-btn pdfseal-btn-primary" hidden>下载 PDF</button>
           </div>
         </section>
@@ -193,6 +197,11 @@
     </footer>
   </div>
 
+  <div id="pdfseal-toast" class="pdfseal-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../supabase-config.js"></script>
+  <script src="../../auth.js"></script>
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="pdf-seal.js"></script>

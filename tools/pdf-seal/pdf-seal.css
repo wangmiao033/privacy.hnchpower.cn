@@ -591,6 +591,73 @@
 
 .pdfseal-download-wrap {
   margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pdfseal-download-auth {
+  padding: 0.55rem 0.7rem;
+  border-radius: 9px;
+  background: #f0f5fb;
+  border: 1px solid #d0dde9;
+}
+
+.pdfseal-download-auth[hidden] {
+  display: none !important;
+}
+
+.pdfseal-download-hint {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
+  color: #5f7388;
+  line-height: 1.45;
+}
+
+.pdfseal-link-login {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pdfseal-primary);
+  text-decoration: none;
+}
+
+.pdfseal-link-login:hover {
+  text-decoration: underline;
+}
+
+.pdfseal-btn--download-guest {
+  background: #fff;
+  color: var(--pdfseal-primary);
+  border-color: #93b9e8;
+  box-shadow: none;
+}
+
+.pdfseal-btn--download-guest:hover {
+  background: #f5f9ff;
+  border-color: var(--pdfseal-primary);
+  color: var(--pdfseal-primary-hover);
+}
+
+.pdfseal-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.35rem;
+  transform: translateX(-50%);
+  z-index: 4000;
+  max-width: calc(100% - 2rem);
+  padding: 0.6rem 1.15rem;
+  font-size: 0.88rem;
+  color: #fff;
+  background: #334155;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+.pdfseal-toast[hidden] {
+  display: none !important;
 }
 
 .pdfseal-footer {

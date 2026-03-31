@@ -45,7 +45,11 @@
     previewCanvasWrap: document.getElementById('pdfseal-preview-canvas-wrap'),
     previewCanvas: document.getElementById('pdfseal-preview-canvas'),
     loading: document.getElementById('pdfseal-loading'),
-    schematicStrip: document.getElementById('pdfseal-schematic-strip')
+    schematicStrip: document.getElementById('pdfseal-schematic-strip'),
+    downloadAuth: document.getElementById('pdfseal-download-auth'),
+    downloadHint: document.getElementById('pdfseal-download-hint'),
+    linkLogin: document.getElementById('pdfseal-link-login'),
+    toast: document.getElementById('pdfseal-toast')
   };
 
   var previewBusy = false;
@@ -108,6 +112,86 @@
     } else {
       el.warning.hidden = true;
     }
+  }
+
+  /**
+   * 登录回跳路径（站点内绝对路径，不含域名），用于 account.html?return=encodeURIComponent(path)
+   */
+  function getReturnPathForLogin() {
+    var path = window.location.pathname || '/';
+    path = path.split('?')[0].split('#')[0];
+    path = path.replace(/\/index\.html?$/i, '/');
+    if (!path.endsWith('/')) {
+      var lastSlash = path.lastIndexOf('/');
+      var tail = path.slice(lastSlash + 1);
+      if (tail && tail.indexOf('.') > 0) path = path.slice(0, lastSlash + 1);
+      else path = path + '/';
+    }
+    if (!path.startsWith('/')) path = '/' + path;
+    return path;
+  }
+
+  function buildAccountLoginUrl() {
+    return '../../account.html?return=' + encodeURIComponent(getReturnPathForLogin());
+  }
+
+  async function isUserLoggedIn() {
+    try {
+      var c = window.AppSupabaseClient;
+      if (!c || !c.auth || !c.auth.getSession) return false;
+      var r = await c.auth.getSession();
+      var s = r && r.data && r.data.session;
+      return !!(s && s.access_token);
+    } catch (_e) {
+      return false;
+    }
+  }
+
+  function showPdfsealToast(msg) {
+    if (!el.toast) return;
+    el.toast.textContent = msg;
+    el.toast.hidden = false;
+    clearTimeout(showPdfsealToast._t);
+    showPdfsealToast._t = setTimeout(function () {
+      el.toast.hidden = true;
+    }, 3200);
+  }
+
+  /**
+   * 统一下载区：按钮文案/样式、提示、「去登录」显隐（不因未登录而 disabled，避免点击无反馈）
+   */
+  function updateDownloadAuthState() {
+    isUserLoggedIn().then(function (loggedIn) {
+      var hasBlob = !!state.generatedBlob;
+      if (!hasBlob) {
+        if (el.btnDownload) {
+          el.btnDownload.hidden = true;
+          el.btnDownload.className = 'pdfseal-btn pdfseal-btn-primary';
+        }
+        if (el.downloadAuth) el.downloadAuth.hidden = true;
+        return;
+      }
+      if (el.btnDownload) el.btnDownload.hidden = false;
+      if (el.linkLogin) el.linkLogin.href = buildAccountLoginUrl();
+      if (loggedIn) {
+        if (el.btnDownload) {
+          el.btnDownload.textContent = '下载 PDF';
+          el.btnDownload.className = 'pdfseal-btn pdfseal-btn-primary';
+        }
+        if (el.downloadHint) el.downloadHint.textContent = '';
+        if (el.downloadAuth) el.downloadAuth.hidden = true;
+      } else {
+        if (el.btnDownload) {
+          el.btnDownload.textContent = '下载 PDF';
+          el.btnDownload.className =
+            'pdfseal-btn pdfseal-btn-secondary pdfseal-btn--download-guest';
+        }
+        if (el.downloadHint) {
+          el.downloadHint.textContent = '登录后才可下载 PDF 到本地。您仍可点击按钮查看提示，或使用下方入口登录。';
+        }
+        if (el.downloadAuth) el.downloadAuth.hidden = false;
+      }
+    });
   }
 
   /** 同步「处理中」遮罩：解析/预览 与 应用骑缝章 任一为 true 即显示 */
@@ -714,7 +798,7 @@
     }
     setApplyBusy(true);
     state.generatedBlob = null;
-    el.btnDownload.hidden = true;
+    updateDownloadAuthState();
     try {
       var master = buildSealMasterCanvas(
         state.sealImage,
@@ -734,7 +818,7 @@
       if (!/\.pdf$/i.test(name)) name += '.pdf';
       state.generatedBlob = new Blob([out], { type: 'application/pdf' });
       state.generatedName = name;
-      el.btnDownload.hidden = false;
+      updateDownloadAuthState();
       await refreshPreview();
     } catch (e) {
       console.error('onApply', e);
@@ -752,13 +836,27 @@
 
   function onDownload() {
     if (!state.generatedBlob) return;
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(state.generatedBlob);
-    a.download = state.generatedName || 'output.pdf';
-    a.click();
-    setTimeout(function () {
-      URL.revokeObjectURL(a.href);
-    }, 2000);
+    isUserLoggedIn().then(function (loggedIn) {
+      if (!loggedIn) {
+        showPdfsealToast('登录后才可下载 PDF');
+        updateDownloadAuthState();
+        if (el.linkLogin && typeof el.linkLogin.focus === 'function') {
+          try {
+            el.linkLogin.focus({ preventScroll: true });
+          } catch (_e) {
+            el.linkLogin.focus();
+          }
+        }
+        return;
+      }
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(state.generatedBlob);
+      a.download = state.generatedName || 'output.pdf';
+      a.click();
+      setTimeout(function () {
+        URL.revokeObjectURL(a.href);
+      }, 2000);
+    });
   }
 
   function onReset() {
@@ -782,7 +880,6 @@
     el.outName.value = '';
     el.marginNum.value = '0';
     el.marginSlider.value = '0';
-    el.btnDownload.hidden = true;
     updateFileInfo();
     updateFilenameDisplay();
     updateMarginBadge();
@@ -793,6 +890,7 @@
     syncPreviewOverlay();
     setRightPanelInitial();
     updateSchematicPreview();
+    updateDownloadAuthState();
   }
 
   function syncMarginFromSlider() {
@@ -811,6 +909,20 @@
   el.btnApply.addEventListener('click', onApply);
   el.btnReset.addEventListener('click', onReset);
   el.btnDownload.addEventListener('click', onDownload);
+
+  window.addEventListener('focus', function () {
+    updateDownloadAuthState();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') updateDownloadAuthState();
+  });
+
+  var _sb = window.AppSupabaseClient;
+  if (_sb && _sb.auth && _sb.auth.onAuthStateChange) {
+    _sb.auth.onAuthStateChange(function () {
+      updateDownloadAuthState();
+    });
+  }
 
   el.marginSlider.addEventListener('input', function () {
     syncMarginFromSlider();
@@ -847,4 +959,5 @@
   setApplyBusy(false);
   setPreviewBusy(false);
   syncPreviewOverlay();
+  updateDownloadAuthState();
 })();

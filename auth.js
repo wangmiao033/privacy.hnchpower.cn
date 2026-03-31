@@ -14,6 +14,35 @@
 
   hasAuthUi = !!(statusEl && guestBox && userBox);
 
+  /** 仅允许站内相对路径，防止开放重定向 */
+  function isSafeInternalReturnPath(p) {
+    if (!p || typeof p !== "string") return false;
+    if (p.length > 512) return false;
+    if (!p.startsWith("/")) return false;
+    if (p.startsWith("//")) return false;
+    if (p.indexOf(":") !== -1) return false;
+    if (p.indexOf("\\") !== -1) return false;
+    if (p.indexOf("..") !== -1) return false;
+    return true;
+  }
+
+  /**
+   * 从 account.html?return= 读取 return（须为 decodeURIComponent 后的路径），登录成功后跳转。
+   * return 建议由调用方使用 encodeURIComponent 编码，例如 %2Ftools%2Fpdf-seal%2F
+   */
+  function tryConsumeReturnRedirect() {
+    try {
+      var path = window.location.pathname || "";
+      if (!/account\.html$/i.test(path)) return;
+      var u = new URL(window.location.href);
+      var raw = u.searchParams.get("return");
+      if (!raw) return;
+      var decoded = decodeURIComponent(raw);
+      if (!isSafeInternalReturnPath(decoded)) return;
+      window.location.replace(decoded);
+    } catch (_e) {}
+  }
+
   function initOnlyClient() {
     if (!supabaseLib || !supabaseLib.createClient) return null;
     if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY || /YOUR_/.test(cfg.SUPABASE_URL) || /YOUR_/.test(cfg.SUPABASE_ANON_KEY)) return null;
@@ -86,6 +115,7 @@
       if (user && user.email) {
         showUser(user.email);
         setStatus("当前登录：" + user.email, "is-success");
+        tryConsumeReturnRedirect();
       } else {
         showGuest();
       }
@@ -181,10 +211,13 @@
   if (btnSignIn) btnSignIn.addEventListener("click", handleSignIn);
   if (btnSignOut) btnSignOut.addEventListener("click", handleSignOut);
 
-  supabase.auth.onAuthStateChange(function (_event, session) {
+  supabase.auth.onAuthStateChange(function (event, session) {
     var user = session && session.user;
     if (user && user.email) {
       showUser(user.email);
+      if (event === "SIGNED_IN" || event === "INITIAL_SESSION") {
+        tryConsumeReturnRedirect();
+      }
     } else {
       showGuest();
       setStatus("当前未登录，可登录后发布短链。", "is-info");
