@@ -1,24 +1,28 @@
 /* PDF 骑缝章工具 — 样式限定在 .pdfseal-page 内，class 前缀 pdfseal- */
 
 .pdfseal-page {
-  --pdfseal-bg-page: #f1f5f9;
+  --pdfseal-bg-page: #eef2f6;
   --pdfseal-bg-panel: #ffffff;
+  --pdfseal-bg-muted: #fafbfc;
   --pdfseal-text: #0f172a;
   --pdfseal-text-sub: #64748b;
   --pdfseal-border: #e2e8f0;
   --pdfseal-border-strong: #cbd5e1;
   --pdfseal-primary: #2563eb;
   --pdfseal-primary-hover: #1d4ed8;
-  --pdfseal-radius-lg: 14px;
-  --pdfseal-radius-md: 10px;
-  --pdfseal-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 18px rgba(15, 23, 42, 0.06);
+  --pdfseal-radius-sm: 10px;
+  --pdfseal-radius-md: 14px;
+  --pdfseal-radius-lg: 18px;
+  --pdfseal-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --pdfseal-dur: 0.18s;
+  --pdfseal-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(15, 23, 42, 0.05);
   min-height: 100vh;
   margin: 0;
   font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 16px;
   line-height: 1.55;
   color: var(--pdfseal-text);
-  background: linear-gradient(180deg, #f8fafc 0%, var(--pdfseal-bg-page) 28%);
+  background: linear-gradient(180deg, #f8fafc 0%, var(--pdfseal-bg-page) 32%);
 }
 
 .pdfseal-page *,
@@ -28,9 +32,11 @@
 }
 
 .pdfseal-header {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--pdfseal-border);
-  padding: 0.65rem 1rem 0.75rem;
+  padding: 0.7rem 1rem 0.8rem;
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
 }
 
@@ -49,11 +55,12 @@
 }
 
 .pdfseal-title {
-  margin: 0 0 0.2rem;
-  font-size: 1.35rem;
+  margin: 0 0 0.22rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: #0f172a;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 .pdfseal-subtitle {
@@ -72,31 +79,33 @@
 
 .pdfseal-link-home {
   align-self: center;
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--pdfseal-primary);
   text-decoration: none;
   white-space: nowrap;
-  padding: 0.35rem 0.65rem;
-  border: 1px solid var(--pdfseal-border-strong);
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.85);
+  padding: 0.36rem 0.72rem;
+  border: 1px solid var(--pdfseal-border);
+  border-radius: var(--pdfseal-radius-sm);
+  background: #fff;
+  transition: border-color var(--pdfseal-dur) var(--pdfseal-ease), background var(--pdfseal-dur) var(--pdfseal-ease);
 }
 
 .pdfseal-link-home:hover {
-  background: #fff;
+  background: #fafbfc;
   border-color: var(--pdfseal-primary);
 }
 
 .pdfseal-main {
   max-width: 1180px;
   margin: 0 auto;
-  padding: 1rem 1rem 1.75rem;
+  padding: 1.15rem 1.1rem 2rem;
 }
 
 .pdfseal-layout {
   display: grid;
   grid-template-columns: minmax(288px, 400px) minmax(0, 1fr);
-  gap: 1rem;
+  gap: 1.1rem;
   align-items: start;
 }
 
@@ -107,11 +116,19 @@
 }
 
 .pdfseal-panel {
-  background: var(--pdfseal-bg-panel);
+  background: #fff;
   border: 1px solid var(--pdfseal-border);
   border-radius: var(--pdfseal-radius-lg);
   box-shadow: var(--pdfseal-shadow);
-  padding: 0.95rem 1.05rem 1.05rem;
+  padding: 1.05rem 1.1rem 1.1rem;
+}
+
+.pdfseal-panel-controls {
+  background: var(--pdfseal-bg-muted);
+}
+
+.pdfseal-panel-preview {
+  background: #fff;
 }
 
 .pdfseal-panel-title {
@@ -341,11 +358,16 @@
   font-size: 0.85rem;
 }
 
+.pdfseal-text,
+.pdfseal-number {
+  transition: border-color var(--pdfseal-dur) var(--pdfseal-ease), box-shadow var(--pdfseal-dur) var(--pdfseal-ease);
+}
+
 .pdfseal-text:focus,
 .pdfseal-number:focus {
   outline: none;
-  border-color: #4f8fdd;
-  box-shadow: 0 0 0 3px rgba(79, 143, 221, 0.15);
+  border-color: var(--pdfseal-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 /* 位置示意卡片 */
@@ -422,6 +444,9 @@
   min-height: 2.35rem;
   border: 1px solid transparent;
   font-family: inherit;
+  transition: background var(--pdfseal-dur) var(--pdfseal-ease), border-color var(--pdfseal-dur) var(--pdfseal-ease),
+    box-shadow var(--pdfseal-dur) var(--pdfseal-ease), transform var(--pdfseal-dur) var(--pdfseal-ease),
+    opacity var(--pdfseal-dur) var(--pdfseal-ease);
 }
 
 .pdfseal-btn-primary {
@@ -675,7 +700,14 @@
 }
 
 .pdfseal-footer-block {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.35rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--pdfseal-border);
+}
+
+.pdfseal-footer-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .pdfseal-footer-title {

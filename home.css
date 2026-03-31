@@ -1,8 +1,8 @@
-/* 站点工具导航首页 — 独立视觉，不影响子工具页 */
+/* 站点工具导航首页 — design token 与全站 SaaS 工具站风格对齐 */
 
 :root {
-  --home-nav-bg: rgba(15, 23, 42, 0.94);
-  --home-nav-border: rgba(148, 163, 184, 0.1);
+  --home-nav-bg: rgba(15, 23, 42, 0.9);
+  --home-nav-border: rgba(148, 163, 184, 0.12);
   --home-text: #0f172a;
   --home-muted: #64748b;
   --home-muted2: #94a3b8;
@@ -10,14 +10,19 @@
   --home-accent: #2563eb;
   --home-accent-hover: #1d4ed8;
   --home-accent-soft: #eff6ff;
-  --home-page-bg: #f1f5f9;
+  --home-tint: rgba(59, 130, 246, 0.04);
+  --home-page-bg: #eef2f6;
   --home-hero-text: #0f172a;
-  --home-radius-lg: 14px;
-  --home-radius-md: 10px;
-  --home-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --home-shadow-md: 0 4px 16px rgba(15, 23, 42, 0.07);
-  --home-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(15, 23, 42, 0.06);
-  --home-shadow-card-hover: 0 4px 20px rgba(15, 23, 42, 0.1);
+  --home-radius-sm: 10px;
+  --home-radius-md: 14px;
+  --home-radius-lg: 18px;
+  --home-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --home-dur: 0.18s;
+  --home-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --home-shadow-md: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --home-shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --home-shadow-card-hover: 0 4px 16px rgba(15, 23, 42, 0.08);
+  --home-shadow-btn: 0 1px 2px rgba(15, 23, 42, 0.05), 0 2px 6px rgba(37, 99, 235, 0.18);
 }
 
 html {
@@ -78,10 +83,10 @@ html {
 /* —— 顶栏 —— */
 .home-nav {
   background: var(--home-nav-bg);
-  backdrop-filter: saturate(1.2) blur(10px);
-  -webkit-backdrop-filter: saturate(1.2) blur(10px);
+  backdrop-filter: saturate(1.15) blur(12px);
+  -webkit-backdrop-filter: saturate(1.15) blur(12px);
   border-bottom: 1px solid var(--home-nav-border);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 1px 8px rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -104,10 +109,10 @@ html {
   gap: 0.65rem;
   text-decoration: none;
   color: #f8fafc;
-  border-radius: 10px;
+  border-radius: var(--home-radius-sm);
   padding: 0.2rem 0.35rem 0.2rem 0;
   margin: -0.2rem 0;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--home-dur) var(--home-ease);
 }
 
 .home-brand:hover {
@@ -117,7 +122,7 @@ html {
 .home-brand-mark {
   width: 2.2rem;
   height: 2.2rem;
-  border-radius: var(--home-radius-md);
+  border-radius: var(--home-radius-sm);
   background: var(--home-accent);
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18);
   flex-shrink: 0;
@@ -168,20 +173,21 @@ html {
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
-  padding: 0.45rem 0.75rem;
-  border-radius: 8px;
-  transition: color 0.15s ease, background 0.15s ease;
+  padding: 0.42rem 0.72rem;
+  border-radius: var(--home-radius-sm);
+  transition: color var(--home-dur) var(--home-ease), background var(--home-dur) var(--home-ease),
+    box-shadow var(--home-dur) var(--home-ease);
 }
 
 .home-nav-link:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .home-nav-link[aria-current="page"] {
   color: #fff;
-  background: rgba(59, 130, 246, 0.22);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: rgba(59, 130, 246, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .home-nav-link:focus-visible {
@@ -194,16 +200,16 @@ html {
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid #e2e8f0;
-  padding: 2rem 1.25rem 2.5rem;
+  padding: 2.25rem 1.25rem 2.65rem;
 }
 
 .home-hero-bg {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 55% at 10% 15%, rgba(59, 130, 246, 0.06) 0%, transparent 52%),
-    radial-gradient(ellipse 55% 45% at 92% 75%, rgba(99, 102, 241, 0.045) 0%, transparent 48%),
-    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 55%, #eef2f6 100%);
+    radial-gradient(ellipse 72% 50% at 8% 12%, rgba(59, 130, 246, 0.055) 0%, transparent 50%),
+    radial-gradient(ellipse 48% 42% at 94% 78%, rgba(99, 102, 241, 0.04) 0%, transparent 46%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 45%, var(--home-page-bg) 100%);
   pointer-events: none;
 }
 
@@ -242,20 +248,20 @@ html {
 }
 
 .home-hero-title {
-  margin: 0 0 0.6rem;
-  font-size: clamp(1.6rem, 3.8vw, 2.2rem);
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.75rem, 4vw, 2.45rem);
   font-weight: 800;
   color: var(--home-hero-text);
-  letter-spacing: -0.025em;
-  line-height: 1.18;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
 }
 
 .home-hero-lead {
   margin: 0 0 0.5rem;
-  font-size: 1rem;
+  font-size: 1.02rem;
   color: #475569;
-  line-height: 1.62;
-  max-width: 31rem;
+  line-height: 1.65;
+  max-width: 32rem;
 }
 
 .home-hero-note {
@@ -276,39 +282,40 @@ html {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 2.45rem;
-  padding: 0.5rem 1.2rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 1.25rem;
   font-size: 0.875rem;
   font-weight: 600;
   font-family: inherit;
   border-radius: var(--home-radius-md);
   text-decoration: none;
-  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease, border-color 0.16s ease;
+  transition: transform var(--home-dur) var(--home-ease), box-shadow var(--home-dur) var(--home-ease),
+    background var(--home-dur) var(--home-ease), border-color var(--home-dur) var(--home-ease);
   border: 1px solid transparent;
 }
 
 .home-btn-primary {
   background: var(--home-accent);
   color: #fff;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(37, 99, 235, 0.22);
+  box-shadow: var(--home-shadow-btn);
 }
 
 .home-btn-primary:hover {
   background: var(--home-accent-hover);
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(37, 99, 235, 0.22);
   transform: translateY(-1px);
 }
 
 .home-btn-secondary {
   background: #fff;
-  color: #1e293b;
-  border-color: #cbd5e1;
+  color: #334155;
+  border-color: var(--home-card-border);
   box-shadow: var(--home-shadow-sm);
 }
 
 .home-btn-secondary:hover {
-  border-color: #94a3b8;
-  background: #f8fafc;
+  border-color: #cbd5e1;
+  background: #fafbfc;
   transform: translateY(-1px);
   box-shadow: var(--home-shadow-md);
 }
@@ -350,7 +357,7 @@ html {
   background: #fff;
   border-radius: var(--home-radius-lg);
   border: 1px solid var(--home-card-border);
-  box-shadow: var(--home-shadow-card);
+  box-shadow: var(--home-shadow-card), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
   overflow: hidden;
 }
 
@@ -429,6 +436,7 @@ html {
   border: 1px solid var(--home-card-border);
   border-radius: var(--home-radius-md);
   box-shadow: var(--home-shadow-md);
+  transition: box-shadow var(--home-dur) var(--home-ease), transform var(--home-dur) var(--home-ease);
 }
 
 .home-mock-card-icon {
@@ -451,11 +459,11 @@ html {
 .home-main {
   max-width: 1140px;
   margin: 0 auto;
-  padding: 2.25rem 1.25rem 2.75rem;
+  padding: 2.4rem 1.25rem 3rem;
 }
 
 .home-section {
-  margin-bottom: 2.35rem;
+  margin-bottom: 2.5rem;
 }
 
 .home-section:last-of-type {
@@ -478,11 +486,12 @@ html {
 }
 
 .home-section-title {
-  margin: 0 0 0.3rem;
-  font-size: 1.2rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.28rem;
   font-weight: 800;
   color: #0f172a;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
+  line-height: 1.25;
 }
 
 .home-section-lead {
@@ -506,25 +515,27 @@ html {
 .home-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.05rem;
+  gap: 1.15rem;
 }
 
 .home-card {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  padding: 1.15rem 1.2rem 1.1rem;
-  background: #fff;
+  padding: 1.25rem 1.3rem 1.15rem;
+  background: #fafbfc;
   border: 1px solid var(--home-card-border);
   border-radius: var(--home-radius-lg);
   text-decoration: none;
   color: inherit;
   box-shadow: var(--home-shadow-card);
-  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  transition: border-color var(--home-dur) var(--home-ease), box-shadow var(--home-dur) var(--home-ease),
+    transform var(--home-dur) var(--home-ease), background var(--home-dur) var(--home-ease);
 }
 
 .home-card:hover {
-  border-color: #cbd5e1;
+  background: #fff;
+  border-color: #d1d9e3;
   box-shadow: var(--home-shadow-card-hover);
   transform: translateY(-2px);
 }
@@ -545,7 +556,7 @@ html {
 .home-card-icon {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 11px;
+  border-radius: var(--home-radius-sm);
   flex-shrink: 0;
 }
 
@@ -598,8 +609,8 @@ html {
 .home-tag {
   font-size: 0.68rem;
   font-weight: 700;
-  padding: 0.2rem 0.45rem;
-  border-radius: 6px;
+  padding: 0.22rem 0.48rem;
+  border-radius: var(--home-radius-sm);
   background: var(--home-accent-soft);
   color: var(--home-accent);
   letter-spacing: 0.02em;
@@ -646,11 +657,11 @@ html {
   font-size: 1rem;
   color: var(--home-accent);
   opacity: 0.7;
-  transition: transform 0.2s ease;
+  transition: transform var(--home-dur) var(--home-ease);
 }
 
 .home-card:hover .home-card-chevron {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* 更多区占位 */
@@ -658,7 +669,7 @@ html {
   display: flex;
   gap: 0.9rem;
   align-items: flex-start;
-  padding: 1.1rem 1.2rem;
+  padding: 1.2rem 1.3rem;
   background: #fff;
   border: 1px dashed #cbd5e1;
   border-radius: var(--home-radius-lg);
@@ -668,7 +679,7 @@ html {
 .home-placeholder-icon {
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 10px;
+  border-radius: var(--home-radius-sm);
   background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
   flex-shrink: 0;
   margin-top: 0.1rem;
@@ -708,30 +719,36 @@ html {
 /* —— 页脚 —— */
 .home-footer {
   border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
-  padding: 1.5rem 1.25rem 1.65rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 1.65rem 1.25rem 2rem;
 }
 
 .home-footer-inner {
   max-width: 1140px;
   margin: 0 auto;
   text-align: center;
-  padding: 0.35rem 0.5rem 0;
+  padding: 0.5rem 1rem;
   border-radius: var(--home-radius-md);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.65);
 }
 
 .home-footer-line {
-  margin: 0 0 0.3rem;
+  margin: 0 0 0.35rem;
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #64748b;
+  color: #475569;
+  letter-spacing: 0.01em;
 }
 
 .home-footer-sub {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: #94a3b8;
-  line-height: 1.5;
+  line-height: 1.55;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* —— 响应式 —— */

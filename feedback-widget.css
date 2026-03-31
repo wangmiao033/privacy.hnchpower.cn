@@ -69,8 +69,8 @@
   padding: 0;
   background: #fff;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.1);
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
 }
 
 .home-feedback-dialog[hidden] {
