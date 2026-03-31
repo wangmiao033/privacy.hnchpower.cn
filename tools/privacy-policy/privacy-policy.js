@@ -303,10 +303,6 @@
     if (publishedUrlInput) publishedUrlInput.value = url;
     if (publishTime) publishTime.textContent = "最近一次生成：" + nowTimeText();
     // 仅发布成功：异步写入 policy_publish_logs；失败不影响主流程
-    console.log(
-      "[policy_publish_logs][debug] 发布成功分支，将调用 logPolicyPublishDirect，函数是否存在:",
-      typeof window.logPolicyPublishDirect
-    );
     if (typeof window.logPolicyPublishDirect === "function") {
       void window.logPolicyPublishDirect({
         publish_url: url,
@@ -314,8 +310,6 @@
         app_name: values.game,
         publish_time: new Date().toISOString(),
       });
-    } else {
-      console.warn("[policy_publish_logs][debug] policy-publish-log.js 未加载，跳过写入");
     }
     window.open(url, "_blank", "noopener,noreferrer");
     copyText(url).then(
