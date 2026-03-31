@@ -1,0 +1,417 @@
+/* PDF 骑缝章工具 — 样式限定在 .pdfseal-page 内，class 前缀 pdfseal- */
+
+.pdfseal-page {
+  --pdfseal-bg-page: #f4f7fb;
+  --pdfseal-bg-panel: #ffffff;
+  --pdfseal-text: #1f2d3d;
+  --pdfseal-text-sub: #5f7388;
+  --pdfseal-border: #d8e3ef;
+  --pdfseal-border-strong: #c9d7e6;
+  --pdfseal-primary: #1c69c2;
+  --pdfseal-primary-hover: #165aa8;
+  --pdfseal-radius-lg: 14px;
+  --pdfseal-radius-md: 11px;
+  --pdfseal-shadow: 0 10px 30px rgba(21, 57, 98, 0.08);
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--pdfseal-text);
+  background: radial-gradient(1200px 420px at 50% -200px, #e3efff 0%, var(--pdfseal-bg-page) 58%);
+}
+
+.pdfseal-page *,
+.pdfseal-page *::before,
+.pdfseal-page *::after {
+  box-sizing: border-box;
+}
+
+.pdfseal-header {
+  background: linear-gradient(180deg, #eaf3ff 0%, #dfecfb 100%);
+  border-bottom: 1px solid #c8dced;
+  padding: 0.95rem 1rem 1rem;
+}
+
+.pdfseal-header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pdfseal-header-main {
+  text-align: left;
+}
+
+.pdfseal-title {
+  margin: 0 0 0.24rem;
+  font-size: 1.58rem;
+  font-weight: 700;
+  color: #0d47a1;
+  letter-spacing: 0.01em;
+}
+
+.pdfseal-subtitle {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #587086;
+}
+
+.pdfseal-privacy-tip {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  color: #6b8499;
+}
+
+.pdfseal-link-home {
+  align-self: center;
+  font-size: 0.85rem;
+  color: var(--pdfseal-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--pdfseal-border-strong);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.pdfseal-link-home:hover {
+  background: #fff;
+  border-color: var(--pdfseal-primary);
+}
+
+.pdfseal-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+}
+
+.pdfseal-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .pdfseal-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pdfseal-panel {
+  background: var(--pdfseal-bg-panel);
+  border: 1px solid var(--pdfseal-border);
+  border-radius: var(--pdfseal-radius-lg);
+  box-shadow: var(--pdfseal-shadow);
+  padding: 1.1rem 1.15rem 1.25rem;
+}
+
+.pdfseal-panel-title {
+  margin: 0 0 1rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #0d47a1;
+}
+
+.pdfseal-field {
+  margin-bottom: 1rem;
+}
+
+.pdfseal-field-inline {
+  margin-bottom: 0.75rem;
+}
+
+.pdfseal-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2f4a63;
+  margin-bottom: 0.35rem;
+}
+
+.pdfseal-hint {
+  margin: 0 0 0.4rem;
+  font-size: 0.74rem;
+  color: var(--pdfseal-text-sub);
+}
+
+.pdfseal-file-input {
+  display: block;
+  width: 100%;
+  font-size: 0.8rem;
+}
+
+.pdfseal-thumb-wrap {
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  border: 1px dashed var(--pdfseal-border-strong);
+  border-radius: var(--pdfseal-radius-md);
+  background: #fafcfe;
+  max-width: 200px;
+}
+
+.pdfseal-thumb {
+  display: block;
+  max-width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+}
+
+.pdfseal-fieldset {
+  border: 1px solid var(--pdfseal-border);
+  border-radius: var(--pdfseal-radius-md);
+  padding: 0.75rem 0.85rem 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.pdfseal-legend {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2f4a63;
+  padding: 0 0.35rem;
+}
+
+.pdfseal-radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+}
+
+.pdfseal-radio {
+  font-size: 0.82rem;
+  color: var(--pdfseal-text);
+  cursor: pointer;
+}
+
+.pdfseal-margin-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pdfseal-range {
+  flex: 1;
+  min-width: 0;
+}
+
+.pdfseal-number {
+  width: 4.5rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ccd8e5;
+  border-radius: 9px;
+  font-size: 0.85rem;
+}
+
+.pdfseal-text {
+  width: 100%;
+  padding: 0.45rem 0.62rem;
+  border: 1px solid #ccd8e5;
+  border-radius: 9px;
+  font-size: 0.85rem;
+}
+
+.pdfseal-text:focus,
+.pdfseal-number:focus {
+  outline: none;
+  border-color: #4f8fdd;
+  box-shadow: 0 0 0 3px rgba(79, 143, 221, 0.15);
+}
+
+.pdfseal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+
+.pdfseal-btn {
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid transparent;
+  font-family: inherit;
+}
+
+.pdfseal-btn-primary {
+  background: var(--pdfseal-primary);
+  color: #fff;
+  border-color: var(--pdfseal-primary);
+}
+
+.pdfseal-btn-primary:hover:not(:disabled) {
+  background: var(--pdfseal-primary-hover);
+  border-color: var(--pdfseal-primary-hover);
+}
+
+.pdfseal-btn-secondary {
+  background: #fff;
+  color: #2f4a63;
+  border-color: var(--pdfseal-border-strong);
+}
+
+.pdfseal-btn-secondary:hover:not(:disabled) {
+  border-color: var(--pdfseal-primary);
+  color: var(--pdfseal-primary);
+}
+
+.pdfseal-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pdfseal-warning {
+  margin-top: 0.85rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.78rem;
+  color: #856404;
+  background: #fff8e6;
+  border: 1px solid #f0e0a8;
+  border-radius: 9px;
+}
+
+.pdfseal-file-info {
+  font-size: 0.82rem;
+  color: var(--pdfseal-text-sub);
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.pdfseal-file-info-placeholder {
+  margin: 0;
+  color: #8a9bab;
+}
+
+.pdfseal-file-info p {
+  margin: 0.2rem 0;
+}
+
+.pdfseal-error {
+  margin-bottom: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.82rem;
+  color: #b71c1c;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 9px;
+}
+
+.pdfseal-preview-wrap {
+  position: relative;
+  border: 1px solid var(--pdfseal-border);
+  border-radius: var(--pdfseal-radius-md);
+  background: #eef2f7;
+  padding: 0.75rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdfseal-preview-canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+}
+
+.pdfseal-preview-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.74rem;
+  color: var(--pdfseal-text-sub);
+  text-align: center;
+}
+
+.pdfseal-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: var(--pdfseal-radius-md);
+}
+
+.pdfseal-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--pdfseal-border);
+  border-top-color: var(--pdfseal-primary);
+  border-radius: 50%;
+  animation: pdfseal-spin 0.75s linear infinite;
+}
+
+@keyframes pdfseal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pdfseal-loading-text {
+  font-size: 0.85rem;
+  color: var(--pdfseal-text-sub);
+}
+
+.pdfseal-download-wrap {
+  margin-top: 1rem;
+}
+
+.pdfseal-footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 1rem 2.5rem;
+}
+
+.pdfseal-footer-block {
+  margin-bottom: 1.5rem;
+}
+
+.pdfseal-footer-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0d47a1;
+  margin: 0 0 0.5rem;
+}
+
+.pdfseal-footer-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--pdfseal-text-sub);
+}
+
+.pdfseal-footer-list li {
+  margin-bottom: 0.35rem;
+}
+
+.pdfseal-faq {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--pdfseal-text-sub);
+}
+
+.pdfseal-faq dt {
+  font-weight: 600;
+  color: var(--pdfseal-text);
+  margin-top: 0.65rem;
+}
+
+.pdfseal-faq dt:first-child {
+  margin-top: 0;
+}
+
+.pdfseal-faq dd {
+  margin: 0.2rem 0 0;
+  padding-left: 0;
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF骑缝章工具</title>
+  <meta name="theme-color" content="#0b4aa2" />
+  <meta name="description" content="在浏览器本地为 PDF 加盖骑缝章，文件不上传服务器。" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="pdf-seal.css" />
+</head>
+<body>
+  <div class="pdfseal-page">
+    <header class="pdfseal-header">
+      <div class="pdfseal-header-inner">
+        <div class="pdfseal-header-main">
+          <h1 class="pdfseal-title">PDF骑缝章工具</h1>
+          <p class="pdfseal-subtitle">免费在线为电子合同/标书盖骑缝章</p>
+          <p class="pdfseal-privacy-tip">文件仅在本地浏览器处理，不上传服务器</p>
+        </div>
+        <a class="pdfseal-link-home" href="../../index.html">返回首页</a>
+      </div>
+    </header>
+
+    <main class="pdfseal-main">
+      <div class="pdfseal-layout">
+        <section class="pdfseal-panel pdfseal-panel-controls" aria-label="上传与参数">
+          <h2 class="pdfseal-panel-title">上传与设置</h2>
+
+          <div class="pdfseal-field">
+            <label class="pdfseal-label" for="pdfseal-input-seal">印章图片</label>
+            <p class="pdfseal-hint">支持 PNG / JPG / JPEG，推荐透明底 PNG</p>
+            <input type="file" id="pdfseal-input-seal" class="pdfseal-file-input" accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
+            <div id="pdfseal-seal-thumb-wrap" class="pdfseal-thumb-wrap" hidden>
+              <img id="pdfseal-seal-thumb" class="pdfseal-thumb" alt="印章预览" />
+            </div>
+          </div>
+
+          <div class="pdfseal-field">
+            <label class="pdfseal-label" for="pdfseal-input-pdf">PDF 文件</label>
+            <input type="file" id="pdfseal-input-pdf" class="pdfseal-file-input" accept=".pdf,application/pdf" />
+          </div>
+
+          <fieldset class="pdfseal-fieldset">
+            <legend class="pdfseal-legend">参数</legend>
+
+            <div class="pdfseal-field pdfseal-field-inline">
+              <span class="pdfseal-label">骑缝位置</span>
+              <div class="pdfseal-radio-row">
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-edge" value="right" checked /> 右侧</label>
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-edge" value="left" /> 左侧</label>
+              </div>
+            </div>
+
+            <div class="pdfseal-field pdfseal-field-inline">
+              <span class="pdfseal-label">印章大小</span>
+              <div class="pdfseal-radio-row">
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-size" value="small" /> 小</label>
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-size" value="medium" checked /> 中</label>
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-size" value="large" /> 大</label>
+              </div>
+            </div>
+
+            <div class="pdfseal-field pdfseal-field-inline">
+              <span class="pdfseal-label">垂直位置</span>
+              <div class="pdfseal-radio-row">
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-vpos" value="top" /> 偏上</label>
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-vpos" value="center" checked /> 居中</label>
+                <label class="pdfseal-radio"><input type="radio" name="pdfseal-vpos" value="bottom" /> 偏下</label>
+              </div>
+            </div>
+
+            <div class="pdfseal-field">
+              <label class="pdfseal-label" for="pdfseal-margin">页边距（pt）</label>
+              <div class="pdfseal-margin-row">
+                <input type="range" id="pdfseal-margin-slider" class="pdfseal-range" min="0" max="72" value="0" />
+                <input type="number" id="pdfseal-margin" class="pdfseal-number" min="0" max="144" value="0" step="1" />
+              </div>
+            </div>
+
+            <div class="pdfseal-field">
+              <label class="pdfseal-label" for="pdfseal-out-name">输出文件名</label>
+              <input type="text" id="pdfseal-out-name" class="pdfseal-text" placeholder="原文件名-骑缝章.pdf" autocomplete="off" />
+            </div>
+          </fieldset>
+
+          <div class="pdfseal-actions">
+            <button type="button" id="pdfseal-btn-apply" class="pdfseal-btn pdfseal-btn-primary">应用骑缝章</button>
+            <button type="button" id="pdfseal-btn-reset" class="pdfseal-btn pdfseal-btn-secondary">重置</button>
+          </div>
+
+          <div id="pdfseal-warning" class="pdfseal-warning" hidden></div>
+        </section>
+
+        <section class="pdfseal-panel pdfseal-panel-preview" aria-label="预览与下载">
+          <h2 class="pdfseal-panel-title">预览与导出</h2>
+
+          <div id="pdfseal-file-info" class="pdfseal-file-info" aria-live="polite">
+            <p class="pdfseal-file-info-placeholder">请先上传 PDF 与印章图片</p>
+          </div>
+
+          <div id="pdfseal-error" class="pdfseal-error" role="alert" hidden></div>
+
+          <div class="pdfseal-preview-wrap">
+            <div id="pdfseal-loading" class="pdfseal-loading" hidden>
+              <span class="pdfseal-spinner" aria-hidden="true"></span>
+              <span class="pdfseal-loading-text">处理中…</span>
+            </div>
+            <canvas id="pdfseal-preview-canvas" class="pdfseal-preview-canvas" width="400" height="560"></canvas>
+            <p class="pdfseal-preview-note">以上为第一页预览（含骑缝章示意）</p>
+          </div>
+
+          <div class="pdfseal-download-wrap">
+            <button type="button" id="pdfseal-btn-download" class="pdfseal-btn pdfseal-btn-primary" hidden>下载 PDF</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="pdfseal-footer">
+      <section class="pdfseal-footer-block">
+        <h3 class="pdfseal-footer-title">使用教程</h3>
+        <ol class="pdfseal-footer-list">
+          <li>准备一枚横向印章图（PNG 透明底效果更佳），整图将按页数竖向等分为多片。</li>
+          <li>上传 PDF 与印章图，选择骑缝在左侧或右侧、大小与垂直位置。</li>
+          <li>点击「应用骑缝章」生成新文件，再在右侧「下载 PDF」保存。</li>
+        </ol>
+      </section>
+      <section class="pdfseal-footer-block">
+        <h3 class="pdfseal-footer-title">常见问题</h3>
+        <dl class="pdfseal-faq">
+          <dt>为什么预览只有第一页？</dt>
+          <dd>为兼顾速度与兼容，第一版仅完整渲染第一页示意；导出会处理全部页面。</dd>
+          <dt>单页 PDF 怎么盖？</dt>
+          <dd>只有一页时会在该页边缘盖完整印章，不切分。</dd>
+          <dt>加密 PDF 能用吗？</dt>
+          <dd>受密码保护或无法解析的 PDF 无法在浏览器内处理，请解密后再试。</dd>
+          <dt>印章看起来很糊？</dt>
+          <dd>请尽量使用高分辨率 PNG；页数越多，每片越窄，对原图宽度要求越高。</dd>
+          <dt>数据会上传吗？</dt>
+          <dd>不会。所有步骤均在您本机浏览器完成，本站不接收您的文件。</dd>
+        </dl>
+      </section>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="pdf-seal.js"></script>
+</body>
+</html>
