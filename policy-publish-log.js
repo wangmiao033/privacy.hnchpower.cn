@@ -19,11 +19,27 @@
       return;
     }
     try {
+      // 发布短链已用 getSession() 拿到 token；此处优先 getUser，失败则回退 session.user，避免「能发布但写库时无用户」
       var res = await client.auth.getUser();
       var user = res && res.data && res.data.user;
-      console.log("[policy_publish_logs][debug] getUser 结果 user.id / email:", user && user.id, user && user.email);
+      var userSource = "getUser";
       if (!user || !user.id) {
-        console.error("[policy_publish_logs] 未获取到登录用户");
+        var sres = await client.auth.getSession();
+        var session = sres && sres.data && sres.data.session;
+        user = session && session.user;
+        userSource = "getSession";
+      }
+      console.log(
+        "[policy_publish_logs][debug] 用户来源:",
+        user && user.id ? userSource : "(无)",
+        "user.id / email:",
+        user && user.id,
+        user && user.email,
+        "getUser.error:",
+        res && res.error
+      );
+      if (!user || !user.id) {
+        console.error("[policy_publish_logs] 未获取到登录用户（getUser 与 getSession 均无有效 user）");
         return;
       }
       var row = {
