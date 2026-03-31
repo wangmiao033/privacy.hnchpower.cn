@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- 旧版入口备份：根目录「隐私政策生成与发布」单页，与 tools/privacy-policy/ 功能等价；需恢复旧入口时可改名为 index.html 或自行引用 -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隐私政策生成与发布</title>
+  <meta name="theme-color" content="#0b4aa2" />
+  <meta name="description" content="纯静态隐私政策生成与发布工具，支持一键生成正式链接。" />
+  <meta property="og:title" content="隐私政策生成与发布" />
+  <meta property="og:description" content="纯静态隐私政策生成与发布工具，支持一键生成正式链接。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/icons/og-image.png" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="page-generator">
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="site-header-main">
+        <h1 class="site-title">隐私政策生成与发布</h1>
+        <p class="site-subtitle">填写信息，实时预览，一键生成正式链接</p>
+      </div>
+      <div class="header-actions">
+        <a id="account-entry-link" class="btn btn-secondary btn-account-entry" href="account.html">登录 / 注册</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrap">
+    <div class="generator-layout">
+      <section class="panel panel-form" aria-label="信息填写">
+        <h2 class="panel-title">填写信息</h2>
+        <p class="panel-subtitle">按顺序填写后，右侧将实时更新正式预览</p>
+        <form id="gen-form" class="gen-form" novalidate>
+          <div class="field">
+            <label for="field-date">更新日期</label>
+            <input type="date" id="field-date" name="date" required />
+            <span class="field-hint" id="hint-date"></span>
+          </div>
+          <div class="field">
+            <label for="field-company">公司名称</label>
+            <input type="text" id="field-company" name="company" placeholder="请输入公司全称" required autocomplete="organization" />
+            <span class="field-hint" id="hint-company"></span>
+          </div>
+          <div class="field">
+            <label for="field-game">游戏 / 应用名称</label>
+            <input type="text" id="field-game" name="game" placeholder="请输入产品名称" required />
+            <span class="field-hint" id="hint-game"></span>
+          </div>
+          <div class="field">
+            <label for="field-email">联系邮箱</label>
+            <input type="email" id="field-email" name="email" placeholder="privacy@example.com" required autocomplete="email" />
+            <span class="field-hint" id="hint-email"></span>
+          </div>
+        </form>
+        <p class="form-tip">公司名称和联系邮箱使用默认值时，生成链接会更短。</p>
+      </section>
+
+      <section class="panel panel-preview" aria-label="实时预览">
+        <div class="preview-toolbar">
+          <div class="preview-title-wrap">
+            <h2 class="panel-title">实时预览</h2>
+            <p class="panel-subtitle">发布前请确认正文信息准确</p>
+          </div>
+          <div class="publish-cta">
+            <button type="button" id="btn-publish" class="btn btn-primary">一键发布</button>
+            <p class="publish-login-tip">需登录后发布短链</p>
+          </div>
+        </div>
+        <div id="preview-box" class="preview-box" tabindex="0"></div>
+        <div class="preview-actions">
+          <button type="button" id="btn-copy-preview" class="btn btn-secondary">复制预览文字</button>
+          <button type="button" id="btn-print" class="btn btn-secondary">打印 / 另存为 PDF</button>
+        </div>
+        <div class="publish-result" aria-label="正式链接结果">
+          <label for="published-url" class="publish-result-label">正式链接（可复制）</label>
+          <div class="publish-result-row">
+            <span class="publish-link-icon" aria-hidden="true">🔗</span>
+            <input type="text" id="published-url" class="publish-result-input" readonly />
+            <button type="button" id="btn-copy-link" class="btn btn-secondary">复制链接</button>
+          </div>
+          <p id="publish-time" class="publish-time">最近一次生成：尚未生成</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="header-account-link.js"></script>
+  <script src="template.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

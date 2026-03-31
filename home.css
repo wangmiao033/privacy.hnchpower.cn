@@ -1,0 +1,247 @@
+/* 站点工具导航首页 — 独立视觉，不影响子工具页 */
+
+:root {
+  --home-nav-bg: #151d2b;
+  --home-nav-border: #243044;
+  --home-text: #1a2332;
+  --home-muted: #5c6b7e;
+  --home-card-border: #dde4ec;
+  --home-card-hover: #e8eef6;
+  --home-accent: #2563eb;
+  --home-accent-hover: #1d4ed8;
+  --home-page-bg: #f4f6f9;
+}
+
+.home-page {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--home-text);
+  background: var(--home-page-bg);
+}
+
+.home-page *,
+.home-page *::before,
+.home-page *::after {
+  box-sizing: border-box;
+}
+
+.home-skip {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.home-skip:focus {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 2000;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  border: 2px solid var(--home-accent);
+  border-radius: 8px;
+}
+
+/* 顶栏 */
+.home-nav {
+  background: var(--home-nav-bg);
+  border-bottom: 1px solid var(--home-nav-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.home-nav-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home-brand {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.home-brand:hover {
+  color: #fff;
+}
+
+.home-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 1.25rem;
+}
+
+.home-nav-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.home-nav-links a:hover {
+  color: #fff;
+}
+
+/* Banner */
+.home-banner {
+  background: linear-gradient(165deg, #eef2f7 0%, #e2e8f0 45%, #f4f6f9 100%);
+  border-bottom: 1px solid #d8dee8;
+  padding: 2.25rem 1.25rem 2.5rem;
+}
+
+.home-banner-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.home-banner-title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.45rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: 0.02em;
+}
+
+.home-banner-sub {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  color: var(--home-muted);
+  max-width: 36rem;
+}
+
+.home-banner-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.88rem;
+  color: #64748b;
+}
+
+/* 主体 */
+.home-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.home-section {
+  margin-bottom: 2.5rem;
+}
+
+.home-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.home-section-head {
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #d8dee8;
+}
+
+.home-section-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.home-section-desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--home-muted);
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.1rem;
+}
+
+.home-card {
+  display: block;
+  padding: 1.15rem 1.2rem 1.2rem;
+  background: #fff;
+  border: 1px solid var(--home-card-border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.home-card:hover {
+  border-color: #b8c5d6;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+.home-card-title {
+  margin: 0 0 0.45rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.home-card-title span {
+  color: var(--home-accent);
+}
+
+.home-card-desc {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--home-muted);
+  line-height: 1.5;
+}
+
+.home-card-arrow {
+  display: inline-block;
+  margin-top: 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--home-accent);
+}
+
+.home-placeholder {
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px dashed #c5ced9;
+  border-radius: 12px;
+  color: var(--home-muted);
+  font-size: 0.88rem;
+}
+
+/* 页脚 */
+.home-footer {
+  border-top: 1px solid #dde4ec;
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  background: #eef1f5;
+}
+
+@media (max-width: 600px) {
+  .home-nav-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .home-nav-links {
+    width: 100%;
+  }
+}

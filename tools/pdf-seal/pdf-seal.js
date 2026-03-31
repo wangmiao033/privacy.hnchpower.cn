@@ -45,13 +45,34 @@
     sealImage: null,
     sealObjectUrl: null,
     pdfFile: null,
+    /** 与 file.arrayBuffer() 一致的 PDF 二进制副本；勿传入 pdf.js worker 以免 buffer 被 detach */
     pdfBytes: null,
-    pdfBaseName: '',
     pdfPageCount: 0,
+    /** { pageCount, firstPageSizePt }，与 pdfBytes 同源一次解析 */
+    pdfMeta: null,
+    pdfBaseName: '',
     firstPageSizePt: { width: 0, height: 0 },
     generatedBlob: null,
     generatedName: ''
   };
+
+  /** 供 pdf.js 使用：独立拷贝，避免 worker transferable 剥离主线程缓存的 ArrayBuffer */
+  function clonePdfBytesForWorker(pdfBytes) {
+    if (!pdfBytes || !pdfBytes.length) return null;
+    return pdfBytes.slice();
+  }
+
+  /** 检测是否为 PDF 文件头 %PDF- */
+  function hasPdfHeader(bytes) {
+    if (!bytes || bytes.length < 5) return false;
+    return (
+      bytes[0] === 0x25 &&
+      bytes[1] === 0x50 &&
+      bytes[2] === 0x44 &&
+      bytes[3] === 0x46 &&
+      bytes[4] === 0x2d
+    );
+  }
 
   function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -109,15 +130,41 @@
     return state.pdfBaseName + '-骑缝章.pdf';
   }
 
+  /** 将内部错误码转换为用户可见文案；读取逻辑类错误已在调用处 console.error */
+  function userMessageForPdfCode(code) {
+    if (code === 'ENCRYPTED_PDF') return '该 PDF 可能已加密，暂不支持处理';
+    if (code === 'INVALID_PDF') return '当前文件不是有效 PDF，或文件内容异常';
+    if (code === 'READ_LOGIC') {
+      return '处理 PDF 时出现内部错误，请打开开发者工具（F12）查看控制台中的详细日志。';
+    }
+    return '当前文件不是有效 PDF，或文件内容异常';
+  }
+
   /**
-   * 从文件读取 PDF 页数与首页尺寸（PDF 点）；加密或损坏则抛错
+   * 从 Uint8Array 读取页数与首页尺寸（PDF 点）；仅接受原始 PDF 二进制，不用文本方式解析
    */
   async function readPdfMeta(pdfBytes) {
+    if (!(pdfBytes instanceof Uint8Array)) {
+      console.error('readPdfMeta: 期望 Uint8Array，实际为', pdfBytes);
+      throw new Error('READ_LOGIC');
+    }
+    if (!hasPdfHeader(pdfBytes)) {
+      throw new Error('INVALID_PDF');
+    }
     if (typeof PDFLib === 'undefined') throw new Error('pdf-lib 未加载，请检查网络或刷新重试。');
-    var pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    var pdfDoc;
+    try {
+      pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    } catch (err) {
+      console.error('readPdfMeta PDFDocument.load', err);
+      var msg = (err && err.message) || String(err);
+      if (/password|encrypt/i.test(msg)) throw new Error('ENCRYPTED_PDF');
+      if (/No PDF header|header/i.test(msg)) throw new Error('INVALID_PDF');
+      throw new Error('INVALID_PDF');
+    }
     var pages = pdfDoc.getPages();
     var n = pages.length;
-    if (n < 1) throw new Error('PDF 没有页面。');
+    if (n < 1) throw new Error('INVALID_PDF');
     var first = pages[0];
     var size = first.getSize();
     return {
@@ -198,16 +245,24 @@
    * 将切片 PNG 嵌入每一页对应边缘
    */
   async function generateSealedPdf(pdfBytes, slicePngBytesList, options) {
+    if (!(pdfBytes instanceof Uint8Array)) {
+      console.error('generateSealedPdf: 期望 Uint8Array', pdfBytes);
+      throw new Error('READ_LOGIC');
+    }
     var PDFDocument = PDFLib.PDFDocument;
     var pdfDoc;
     try {
       pdfDoc = await PDFDocument.load(pdfBytes);
     } catch (err) {
+      console.error('generateSealedPdf PDFDocument.load', err);
       var msg = (err && err.message) || String(err);
       if (/password|encrypt/i.test(msg)) {
-        throw new Error('该 PDF 已加密或需要密码，无法在本地自动加盖骑缝章。');
+        throw new Error('ENCRYPTED_PDF');
       }
-      throw new Error('无法读取 PDF（可能已加密、损坏或格式异常）：' + msg);
+      if (/No PDF header|header/i.test(msg)) {
+        throw new Error('INVALID_PDF');
+      }
+      throw new Error('INVALID_PDF');
     }
     var pages = pdfDoc.getPages();
     var N = pages.length;
@@ -255,8 +310,13 @@
    */
   async function renderPdfFirstPageOnly(pdfBytes, canvasEl) {
     if (typeof pdfjsLib === 'undefined') throw new Error('pdf.js 未加载。');
+    var data = clonePdfBytesForWorker(pdfBytes);
+    if (!data || !hasPdfHeader(data)) {
+      console.error('renderPdfFirstPageOnly: 无效的 pdfBytes', pdfBytes && pdfBytes.length, pdfBytes && pdfBytes[0]);
+      throw new Error('READ_LOGIC');
+    }
     var maxW = Math.min(720, window.innerWidth - 48);
-    var pdf = await pdfjsLib.getDocument({ data: pdfBytes }).promise;
+    var pdf = await pdfjsLib.getDocument({ data: data }).promise;
     var pdfPage = await pdf.getPage(1);
     var baseVp = pdfPage.getViewport({ scale: 1 });
     var pwPt = baseVp.width;
@@ -276,8 +336,13 @@
    */
   async function renderFirstPagePreview(pdfBytes, masterSealCanvas, pageCount, options, canvasEl) {
     if (typeof pdfjsLib === 'undefined') throw new Error('pdf.js 未加载。');
+    var data = clonePdfBytesForWorker(pdfBytes);
+    if (!data || !hasPdfHeader(data)) {
+      console.error('renderFirstPagePreview: 无效的 pdfBytes', pdfBytes && pdfBytes.length);
+      throw new Error('READ_LOGIC');
+    }
     var maxW = Math.min(720, window.innerWidth - 48);
-    var loadingTask = pdfjsLib.getDocument({ data: pdfBytes });
+    var loadingTask = pdfjsLib.getDocument({ data: data });
     var pdf = await loadingTask.promise;
     var pdfPage = await pdf.getPage(1);
     var baseVp = pdfPage.getViewport({ scale: 1 });
@@ -408,7 +473,16 @@
         el.previewCanvas
       );
     } catch (e) {
-      showError('预览失败：' + ((e && e.message) || String(e)));
+      console.error('refreshPreview', e);
+      var msg = (e && e.message) || String(e);
+      var code = e && e.message;
+      if (code === 'ENCRYPTED_PDF' || code === 'INVALID_PDF' || code === 'READ_LOGIC') {
+        showError(userMessageForPdfCode(code));
+      } else if (/No PDF header|Failed to parse PDF/i.test(msg)) {
+        showError(userMessageForPdfCode('INVALID_PDF'));
+      } else {
+        showError('预览失败：' + msg);
+      }
     }
   }
 
@@ -454,6 +528,7 @@
     state.pdfFile = null;
     state.pdfBytes = null;
     state.pdfPageCount = 0;
+    state.pdfMeta = null;
     state.firstPageSizePt = { width: 0, height: 0 };
     state.pdfBaseName = '';
     el.outName.value = '';
@@ -468,12 +543,16 @@
       return;
     }
     try {
-      var buf = await file.arrayBuffer();
-      var bytes = new Uint8Array(buf);
-      var meta = await readPdfMeta(bytes);
+      var pdfBuffer = await file.arrayBuffer();
+      var rawBytes = new Uint8Array(pdfBuffer);
+      var pdfBytes = new Uint8Array(rawBytes.length);
+      pdfBytes.set(rawBytes);
+
+      var meta = await readPdfMeta(pdfBytes);
       state.pdfFile = file;
-      state.pdfBytes = bytes;
+      state.pdfBytes = pdfBytes;
       state.pdfPageCount = meta.pageCount;
+      state.pdfMeta = meta;
       state.firstPageSizePt = meta.firstPageSizePt;
       state.pdfBaseName = file.name.replace(/\.pdf$/i, '');
       if (!el.outName.value.trim()) el.outName.value = defaultOutputName();
@@ -483,11 +562,20 @@
       }
       await refreshPreview();
     } catch (e) {
-      var m = (e && e.message) || String(e);
-      if (/encrypt|password|Encrypted/i.test(m)) {
-        showError('该 PDF 已加密或需要密码，请解密后再试。');
+      console.error('onPdfChange', e);
+      state.pdfFile = null;
+      state.pdfBytes = null;
+      state.pdfPageCount = 0;
+      state.pdfMeta = null;
+      state.firstPageSizePt = { width: 0, height: 0 };
+      state.pdfBaseName = '';
+      var code = e && e.message;
+      if (code === 'ENCRYPTED_PDF' || code === 'INVALID_PDF' || code === 'READ_LOGIC') {
+        showError(userMessageForPdfCode(code));
+      } else if (/encrypt|password|Encrypted/i.test((e && e.message) || '')) {
+        showError(userMessageForPdfCode('ENCRYPTED_PDF'));
       } else {
-        showError('无法读取 PDF：' + m);
+        showError(userMessageForPdfCode('INVALID_PDF'));
       }
       updateFileInfo();
     }
@@ -528,7 +616,14 @@
       el.btnDownload.hidden = false;
       await refreshPreview();
     } catch (e) {
-      showError((e && e.message) || String(e));
+      console.error('onApply', e);
+      var code = e && e.message;
+      if (code === 'ENCRYPTED_PDF' || code === 'INVALID_PDF' || code === 'READ_LOGIC') {
+        showError(userMessageForPdfCode(code));
+      } else {
+        console.error('onApply 未分类错误', e);
+        showError((e && e.message) || String(e));
+      }
     } finally {
       setLoading(false);
     }
@@ -557,6 +652,7 @@
     state.pdfFile = null;
     state.pdfBytes = null;
     state.pdfPageCount = 0;
+    state.pdfMeta = null;
     state.firstPageSizePt = { width: 0, height: 0 };
     state.pdfBaseName = '';
     state.generatedBlob = null;
