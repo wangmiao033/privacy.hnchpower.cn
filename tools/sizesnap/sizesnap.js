@@ -16,10 +16,28 @@
     { filename: "1920x500.jpg", w: 1920, h: 500, format: "jpeg" },
     { filename: "1920x1080.jpg", w: 1920, h: 1080, format: "jpeg" },
   ];
+  var COMMON_ICON_FILES = {
+    "128x128.gif": true,
+    "128x128.png": true,
+    "128x128_blank.gif": true,
+    "128x128_blank.png": true,
+    "512x512.gif": true,
+    "512x512.png": true,
+    "512x512_blank.gif": true,
+    "512x512_blank.png": true,
+    "984x984.jpg": true,
+  };
+  var COMMON_WIDE_FILES = {
+    "691x350.jpg": true,
+    "1280x720.jpg": true,
+    "1920x500.jpg": true,
+    "1920x1080.jpg": true,
+  };
 
   var state = {
     resizeFiles: [],
     iconFile: null,
+    selectedIconFiles: {},
   };
 
   var tabResize = document.getElementById("tab-resize");
@@ -46,6 +64,11 @@
   var iconStatus = document.getElementById("iconStatus");
   var iconProgressBar = document.getElementById("iconProgressBar");
   var iconExportList = document.getElementById("iconExportList");
+  var iconExportTitle = document.getElementById("iconExportTitle");
+  var iconSelectAllBtn = document.getElementById("iconSelectAllBtn");
+  var iconSelectNoneBtn = document.getElementById("iconSelectNoneBtn");
+  var iconSelectCommonIconBtn = document.getElementById("iconSelectCommonIconBtn");
+  var iconSelectCommonWideBtn = document.getElementById("iconSelectCommonWideBtn");
 
   function setProgress(el, v) {
     el.style.width = Math.max(0, Math.min(100, v)) + "%";
@@ -296,6 +319,13 @@
       iconStatus.textContent = "请先上传 icon。";
       return;
     }
+    var selectedItems = ICON_EXPORTS.filter(function (item) {
+      return Boolean(state.selectedIconFiles[item.filename]);
+    });
+    if (!selectedItems.length) {
+      iconStatus.textContent = "请至少选择一个导出尺寸。";
+      return;
+    }
     iconGenerateBtn.disabled = true;
     setProgress(iconProgressBar, 0);
     iconStatus.textContent = "正在生成 Icon ZIP……";
@@ -303,24 +333,24 @@
     try {
       var zip = new JSZip();
       var image = await loadImage(state.iconFile.file);
-      for (var i = 0; i < ICON_EXPORTS.length; i++) {
-        var item = ICON_EXPORTS[i];
+      for (var i = 0; i < selectedItems.length; i++) {
+        var item = selectedItems[i];
         iconStatus.textContent = "正在生成 " + item.filename;
         var canvas = drawImageToCanvas(image, item.w, item.h, "cover");
         var blob = await canvasToBlob(canvas, item.format);
         zip.file(item.filename, blob);
-        setProgress(iconProgressBar, ((i + 1) / ICON_EXPORTS.length) * 100);
+        setProgress(iconProgressBar, ((i + 1) / selectedItems.length) * 100);
       }
       var zipBlob = await zip.generateAsync({ type: "blob" }, function (meta) {
         setProgress(iconProgressBar, meta.percent);
       });
       downloadBlob(zipBlob, "icon_batch_output.zip");
       setProgress(iconProgressBar, 100);
-      iconStatus.textContent = "已完成，共生成 13 个文件。";
+      iconStatus.textContent = "已完成，共生成 " + selectedItems.length + " 个文件。";
     } catch (err) {
       iconStatus.textContent = err && err.message ? err.message : "处理失败：请稍后重试。";
     } finally {
-      iconGenerateBtn.disabled = false;
+      updateIconSelectionSummary();
     }
   }
 
@@ -342,13 +372,72 @@
     });
   }
 
+  function countSelectedIconFiles() {
+    var count = 0;
+    for (var i = 0; i < ICON_EXPORTS.length; i++) {
+      if (state.selectedIconFiles[ICON_EXPORTS[i].filename]) count += 1;
+    }
+    return count;
+  }
+
+  function updateIconSelectionSummary() {
+    var selected = countSelectedIconFiles();
+    iconExportTitle.textContent = "导出文件清单（已选 " + selected + " / " + ICON_EXPORTS.length + "）";
+    iconGenerateBtn.disabled = selected === 0;
+  }
+
+  function applyIconSelectionMap(map) {
+    for (var i = 0; i < ICON_EXPORTS.length; i++) {
+      var filename = ICON_EXPORTS[i].filename;
+      state.selectedIconFiles[filename] = Boolean(map[filename]);
+    }
+    renderIconExportList();
+    updateIconSelectionSummary();
+  }
+
+  function selectAllIconFiles() {
+    var map = {};
+    for (var i = 0; i < ICON_EXPORTS.length; i++) {
+      map[ICON_EXPORTS[i].filename] = true;
+    }
+    applyIconSelectionMap(map);
+  }
+
+  function clearAllIconFiles() {
+    applyIconSelectionMap({});
+  }
+
   function renderIconExportList() {
     iconExportList.innerHTML = "";
     ICON_EXPORTS.forEach(function (item) {
       var row = document.createElement("div");
       row.className = "sizesnap-export-item";
-      row.innerHTML = "<span>" + item.filename + "</span><span>" + item.w + "x" + item.h + "</span>";
+      var checked = state.selectedIconFiles[item.filename] ? "checked" : "";
+      row.innerHTML =
+        '<label class="sizesnap-export-item-label">' +
+        '<input type="checkbox" data-icon-file="' +
+        item.filename +
+        '" ' +
+        checked +
+        ">" +
+        '<span class="sizesnap-export-item-name">' +
+        item.filename +
+        "</span>" +
+        '<span class="sizesnap-export-item-size">' +
+        item.w +
+        "x" +
+        item.h +
+        "</span>" +
+        "</label>";
       iconExportList.appendChild(row);
+    });
+    var checkboxes = iconExportList.querySelectorAll("input[type='checkbox'][data-icon-file]");
+    checkboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+        var filename = checkbox.getAttribute("data-icon-file");
+        state.selectedIconFiles[filename] = checkbox.checked;
+        updateIconSelectionSummary();
+      });
     });
   }
 
@@ -389,6 +478,14 @@
     iconStatus.textContent = "已清空。";
   });
   iconGenerateBtn.addEventListener("click", generateIconZip);
+  iconSelectAllBtn.addEventListener("click", selectAllIconFiles);
+  iconSelectNoneBtn.addEventListener("click", clearAllIconFiles);
+  iconSelectCommonIconBtn.addEventListener("click", function () {
+    applyIconSelectionMap(COMMON_ICON_FILES);
+  });
+  iconSelectCommonWideBtn.addEventListener("click", function () {
+    applyIconSelectionMap(COMMON_WIDE_FILES);
+  });
 
-  renderIconExportList();
+  selectAllIconFiles();
 })();

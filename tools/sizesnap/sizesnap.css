@@ -305,19 +305,61 @@ input[type="file"] {
   display: grid;
   gap: 7px;
   max-height: 360px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
 }
 
 .sizesnap-export-item {
   border: 1px solid #dbe3ee;
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 0;
   font-size: 13px;
   color: #334155;
   background: #f8fafc;
+}
+
+.sizesnap-export-item-label {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.sizesnap-export-item-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.sizesnap-export-item-name {
+  min-width: 0;
+  font-weight: 600;
+  color: #334155;
+  word-break: break-all;
+}
+
+.sizesnap-export-item-size {
+  margin-left: auto;
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.sizesnap-batch-actions {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+}
+
+.sizesnap-batch-actions .sizesnap-btn {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
 }
 
 @media (max-width: 960px) {
@@ -339,5 +381,9 @@ input[type="file"] {
   .sizesnap-main {
     padding-left: 12px;
     padding-right: 12px;
+  }
+
+  .sizesnap-batch-actions {
+    grid-template-columns: 1fr;
   }
 }

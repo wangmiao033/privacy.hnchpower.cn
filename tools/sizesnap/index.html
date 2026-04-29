@@ -103,7 +103,13 @@
         </section>
 
         <aside class="sizesnap-card sizesnap-side-card">
-          <h2>导出文件清单（13个）</h2>
+          <h2 id="iconExportTitle">导出文件清单（已选 13 / 13）</h2>
+          <div class="sizesnap-batch-actions">
+            <button id="iconSelectAllBtn" type="button" class="sizesnap-btn sizesnap-btn-light">全选</button>
+            <button id="iconSelectNoneBtn" type="button" class="sizesnap-btn sizesnap-btn-light">全不选</button>
+            <button id="iconSelectCommonIconBtn" type="button" class="sizesnap-btn sizesnap-btn-light">常用 Icon</button>
+            <button id="iconSelectCommonWideBtn" type="button" class="sizesnap-btn sizesnap-btn-light">常用横版</button>
+          </div>
           <div id="iconExportList" class="sizesnap-export-list"></div>
           <button id="iconGenerateBtn" type="button" class="sizesnap-btn sizesnap-btn-primary">生成 Icon ZIP</button>
           <div class="sizesnap-progress"><div id="iconProgressBar"></div></div>
