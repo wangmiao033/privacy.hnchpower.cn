@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>图尺快裁 SizeSnap - 批量图片尺寸生成工具</title>
+  <meta name="description" content="免费在线批量生成图片多尺寸版本，支持游戏素材、商店图、广告图和 Icon 批量导出，所有图片仅在浏览器本地处理，不上传服务器。" />
+  <meta name="keywords" content="图片尺寸生成, 批量改尺寸, 游戏素材尺寸, Icon 批量生成, 广告图裁切, 商店图工具, SizeSnap" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/sizesnap/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="sizesnap.css" />
+</head>
+<body class="sizesnap-page">
+  <header class="sizesnap-header">
+    <div class="sizesnap-header-inner">
+      <div>
+        <h1>图尺快裁 SizeSnap</h1>
+        <p class="sizesnap-subtitle">批量生成游戏素材、商店图、广告图和 Icon 多尺寸版本，全部在浏览器本地处理。</p>
+      </div>
+      <a class="sizesnap-back-link" href="../../index.html">返回首页</a>
+    </div>
+  </header>
+
+  <main class="sizesnap-main">
+    <div class="sizesnap-notice">所有图片仅在当前浏览器中处理，不会上传服务器。</div>
+
+    <div class="sizesnap-tabs" role="tablist" aria-label="功能切换">
+      <button id="tab-resize" class="sizesnap-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-resize">批量图片尺寸</button>
+      <button id="tab-icon" class="sizesnap-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-icon">批量 Icon 出图</button>
+    </div>
+
+    <section id="panel-resize" class="sizesnap-panel is-active" role="tabpanel" aria-labelledby="tab-resize">
+      <div class="sizesnap-grid">
+        <section class="sizesnap-card">
+          <label id="resizeUploadBox" class="sizesnap-upload" for="resizeFileInput">
+            <strong>点击上传图片 / 拖拽图片到这里</strong>
+            <span>支持 JPG、PNG、WEBP，支持多张上传。</span>
+          </label>
+          <input id="resizeFileInput" type="file" accept="image/*" multiple />
+          <div class="sizesnap-card-head">
+            <h2>图片预览</h2>
+            <button id="resizeClearBtn" type="button" class="sizesnap-btn sizesnap-btn-light">清空</button>
+          </div>
+          <div id="resizePreviewList" class="sizesnap-preview-list"></div>
+        </section>
+
+        <aside class="sizesnap-card sizesnap-side-card">
+          <h2>导出设置</h2>
+          <label class="sizesnap-label" for="resizeSizeInput">目标尺寸</label>
+          <textarea id="resizeSizeInput">360x640
+370x625
+375x625
+480x800
+480x835
+608x1080
+640x960
+720x1280
+750x1250
+750x1350
+960x1600
+1080x1920</textarea>
+          <div class="sizesnap-row">
+            <label for="resizeMode">处理方式</label>
+            <select id="resizeMode">
+              <option value="cover">居中裁切填满</option>
+              <option value="contain">完整保留加留白</option>
+              <option value="stretch">强制拉伸</option>
+            </select>
+          </div>
+          <div class="sizesnap-row">
+            <label for="resizeFormat">导出格式</label>
+            <select id="resizeFormat">
+              <option value="jpeg">JPG</option>
+              <option value="png">PNG</option>
+              <option value="webp">WEBP</option>
+            </select>
+          </div>
+          <button id="resizeGenerateBtn" type="button" class="sizesnap-btn sizesnap-btn-primary">生成 ZIP</button>
+          <div class="sizesnap-progress"><div id="resizeProgressBar"></div></div>
+          <div id="resizeStatus" class="sizesnap-status">等待上传图片。</div>
+          <p class="sizesnap-footnote">下载文件名：resized_images_all_sizes.zip（按尺寸分文件夹）</p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="panel-icon" class="sizesnap-panel" role="tabpanel" aria-labelledby="tab-icon">
+      <div class="sizesnap-grid">
+        <section class="sizesnap-card">
+          <label id="iconUploadBox" class="sizesnap-upload" for="iconFileInput">
+            <strong>点击上传 Icon / 拖拽图片到这里</strong>
+            <span>若上传多张，Icon 模式仅使用第一张图片。</span>
+          </label>
+          <input id="iconFileInput" type="file" accept="image/*" multiple />
+          <div class="sizesnap-card-head">
+            <h2>Icon 预览</h2>
+            <button id="iconClearBtn" type="button" class="sizesnap-btn sizesnap-btn-light">清空</button>
+          </div>
+          <div id="iconPreviewBox" class="sizesnap-icon-preview"></div>
+        </section>
+
+        <aside class="sizesnap-card sizesnap-side-card">
+          <h2>导出文件清单（13个）</h2>
+          <div id="iconExportList" class="sizesnap-export-list"></div>
+          <button id="iconGenerateBtn" type="button" class="sizesnap-btn sizesnap-btn-primary">生成 Icon ZIP</button>
+          <div class="sizesnap-progress"><div id="iconProgressBar"></div></div>
+          <div id="iconStatus" class="sizesnap-status">等待上传 icon。</div>
+          <p class="sizesnap-footnote">下载文件名：icon_batch_output.zip（ZIP 根目录直接放 13 个文件）</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gifenc@1.0.3/dist/gifenc.min.js"></script>
+  <script src="sizesnap.js"></script>
+</body>
+</html>
