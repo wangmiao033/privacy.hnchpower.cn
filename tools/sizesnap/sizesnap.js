@@ -39,6 +39,7 @@
     iconFile: null,
     selectedIconFiles: {},
   };
+  var gifencApi = null;
 
   var tabResize = document.getElementById("tab-resize");
   var tabIcon = document.getElementById("tab-icon");
@@ -156,26 +157,37 @@
   }
 
   function canvasToGifBlob(canvas) {
-    try {
-      if (!window.gifenc || typeof window.gifenc.GIFEncoder !== "function") {
-        throw new Error("gifenc 未正确加载。");
-      }
+    return ensureGifenc()
+      .then(function (api) {
+        var ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("当前浏览器不支持 Canvas。");
 
-      var ctx = canvas.getContext("2d");
-      if (!ctx) throw new Error("当前浏览器不支持 Canvas。");
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var rgba = new Uint8Array(imageData.data);
+        var palette = api.quantize(rgba, 256);
+        var indexed = api.applyPalette(rgba, palette);
+        var gif = api.GIFEncoder();
+        gif.writeFrame(indexed, canvas.width, canvas.height, { palette: palette, repeat: -1 });
+        gif.finish();
+        var bytes = gif.bytes();
+        return new Blob([bytes], { type: "image/gif" });
+      })
+      .catch(function () {
+        throw new Error("GIF 编码失败（gifenc）。请检查图片尺寸或重试。");
+      });
+  }
 
-      var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      var rgba = new Uint8Array(imageData.data);
-      var palette = window.gifenc.quantize(rgba, 256);
-      var indexed = window.gifenc.applyPalette(rgba, palette);
-      var gif = window.gifenc.GIFEncoder();
-      gif.writeFrame(indexed, canvas.width, canvas.height, { palette: palette, repeat: -1 });
-      gif.finish();
-      var bytes = gif.bytes();
-      return Promise.resolve(new Blob([bytes], { type: "image/gif" }));
-    } catch (err) {
-      return Promise.reject(new Error("GIF 编码失败（gifenc）。请检查图片尺寸或重试。"));
+  function ensureGifenc() {
+    if (gifencApi && typeof gifencApi.GIFEncoder === "function") {
+      return Promise.resolve(gifencApi);
     }
+    return import("https://cdn.jsdelivr.net/npm/gifenc@1.0.3/+esm").then(function (mod) {
+      gifencApi = mod;
+      if (!gifencApi || typeof gifencApi.GIFEncoder !== "function") {
+        throw new Error("gifenc 模块加载异常。");
+      }
+      return gifencApi;
+    });
   }
 
   function downloadBlob(blob, filename) {
