@@ -50,8 +50,15 @@
 
         <aside class="sizesnap-card sizesnap-side-card">
           <h2>导出设置</h2>
-          <label class="sizesnap-label" for="resizeSizeInput">目标尺寸</label>
-          <textarea id="resizeSizeInput">360x640
+          <label class="sizesnap-label">目标尺寸</label>
+          <h3 id="resizeSizeTitle" class="sizesnap-mini-title">尺寸清单（已选 12 / 12）</h3>
+          <div class="sizesnap-batch-actions sizesnap-batch-actions--resize">
+            <button id="resizeSelectAllBtn" type="button" class="sizesnap-btn sizesnap-btn-light">全选</button>
+            <button id="resizeSelectNoneBtn" type="button" class="sizesnap-btn sizesnap-btn-light">全不选</button>
+            <button id="resizeRestoreDefaultBtn" type="button" class="sizesnap-btn sizesnap-btn-light">恢复默认</button>
+          </div>
+          <div id="resizeSizeList" class="sizesnap-export-list sizesnap-export-list--resize"></div>
+          <textarea id="resizeSizeInput" class="sizesnap-hidden-input">360x640
 370x625
 375x625
 480x800

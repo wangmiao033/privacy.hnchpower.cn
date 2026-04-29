@@ -16,6 +16,20 @@
     { filename: "1920x500.jpg", w: 1920, h: 500, format: "jpeg" },
     { filename: "1920x1080.jpg", w: 1920, h: 1080, format: "jpeg" },
   ];
+  var DEFAULT_RESIZE_SIZES = [
+    "360x640",
+    "370x625",
+    "375x625",
+    "480x800",
+    "480x835",
+    "608x1080",
+    "640x960",
+    "720x1280",
+    "750x1250",
+    "750x1350",
+    "960x1600",
+    "1080x1920",
+  ];
   var COMMON_ICON_FILES = {
     "128x128.gif": true,
     "128x128.png": true,
@@ -38,6 +52,7 @@
     resizeFiles: [],
     iconFile: null,
     selectedIconFiles: {},
+    selectedResizeSizes: {},
   };
   var gifencApi = null;
 
@@ -56,6 +71,11 @@
   var resizeGenerateBtn = document.getElementById("resizeGenerateBtn");
   var resizeStatus = document.getElementById("resizeStatus");
   var resizeProgressBar = document.getElementById("resizeProgressBar");
+  var resizeSizeTitle = document.getElementById("resizeSizeTitle");
+  var resizeSizeList = document.getElementById("resizeSizeList");
+  var resizeSelectAllBtn = document.getElementById("resizeSelectAllBtn");
+  var resizeSelectNoneBtn = document.getElementById("resizeSelectNoneBtn");
+  var resizeRestoreDefaultBtn = document.getElementById("resizeRestoreDefaultBtn");
 
   var iconUploadBox = document.getElementById("iconUploadBox");
   var iconFileInput = document.getElementById("iconFileInput");
@@ -88,6 +108,86 @@
         return { w: Number(m[1]), h: Number(m[2]), name: Number(m[1]) + "x" + Number(m[2]) };
       })
       .filter(Boolean);
+  }
+
+  function updateResizeSizeInputBySelection() {
+    var selected = DEFAULT_RESIZE_SIZES.filter(function (size) {
+      return Boolean(state.selectedResizeSizes[size]);
+    });
+    resizeSizeInput.value = selected.join("\n");
+  }
+
+  function countSelectedResizeSizes() {
+    var count = 0;
+    for (var i = 0; i < DEFAULT_RESIZE_SIZES.length; i++) {
+      if (state.selectedResizeSizes[DEFAULT_RESIZE_SIZES[i]]) count += 1;
+    }
+    return count;
+  }
+
+  function updateResizeSelectionSummary() {
+    var selected = countSelectedResizeSizes();
+    resizeSizeTitle.textContent = "尺寸清单（已选 " + selected + " / " + DEFAULT_RESIZE_SIZES.length + "）";
+  }
+
+  function renderResizeSizeList() {
+    resizeSizeList.innerHTML = "";
+    DEFAULT_RESIZE_SIZES.forEach(function (sizeName) {
+      var m = sizeName.match(/^(\d+)x(\d+)$/);
+      var w = m ? m[1] : "";
+      var h = m ? m[2] : "";
+      var row = document.createElement("div");
+      row.className = "sizesnap-export-item";
+      var checked = state.selectedResizeSizes[sizeName] ? "checked" : "";
+      row.innerHTML =
+        '<label class="sizesnap-export-item-label">' +
+        '<input type="checkbox" data-resize-size="' +
+        sizeName +
+        '" ' +
+        checked +
+        ">" +
+        '<span class="sizesnap-export-item-name">' +
+        sizeName +
+        "</span>" +
+        '<span class="sizesnap-export-item-size">' +
+        w +
+        "x" +
+        h +
+        "</span>" +
+        "</label>";
+      resizeSizeList.appendChild(row);
+    });
+    var checkboxes = resizeSizeList.querySelectorAll("input[type='checkbox'][data-resize-size]");
+    checkboxes.forEach(function (checkbox) {
+      checkbox.addEventListener("change", function () {
+        var sizeName = checkbox.getAttribute("data-resize-size");
+        state.selectedResizeSizes[sizeName] = checkbox.checked;
+        updateResizeSizeInputBySelection();
+        updateResizeSelectionSummary();
+      });
+    });
+  }
+
+  function applyResizeSelectionMap(map) {
+    for (var i = 0; i < DEFAULT_RESIZE_SIZES.length; i++) {
+      var size = DEFAULT_RESIZE_SIZES[i];
+      state.selectedResizeSizes[size] = Boolean(map[size]);
+    }
+    updateResizeSizeInputBySelection();
+    renderResizeSizeList();
+    updateResizeSelectionSummary();
+  }
+
+  function selectAllResizeSizes() {
+    var map = {};
+    for (var i = 0; i < DEFAULT_RESIZE_SIZES.length; i++) {
+      map[DEFAULT_RESIZE_SIZES[i]] = true;
+    }
+    applyResizeSelectionMap(map);
+  }
+
+  function clearAllResizeSizes() {
+    applyResizeSelectionMap({});
   }
 
   function loadImage(file) {
@@ -281,7 +381,7 @@
       return;
     }
     if (!sizes.length) {
-      resizeStatus.textContent = "请填写正确尺寸，例如 720x1280。";
+      resizeStatus.textContent = "请至少选择一个导出尺寸。";
       return;
     }
 
@@ -474,6 +574,9 @@
     resizeStatus.textContent = "已清空。";
   });
   resizeGenerateBtn.addEventListener("click", generateResizeZip);
+  resizeSelectAllBtn.addEventListener("click", selectAllResizeSizes);
+  resizeSelectNoneBtn.addEventListener("click", clearAllResizeSizes);
+  resizeRestoreDefaultBtn.addEventListener("click", selectAllResizeSizes);
 
   iconFileInput.addEventListener("change", function (e) {
     setIconFileFromList(e.target.files);
@@ -499,5 +602,6 @@
     applyIconSelectionMap(COMMON_WIDE_FILES);
   });
 
+  selectAllResizeSizes();
   selectAllIconFiles();
 })();

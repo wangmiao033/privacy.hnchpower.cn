@@ -228,6 +228,16 @@ input[type="file"] {
   resize: vertical;
 }
 
+.sizesnap-hidden-input {
+  display: none;
+}
+
+.sizesnap-mini-title {
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: #334155;
+}
+
 .sizesnap-row {
   display: flex;
   justify-content: space-between;
@@ -310,6 +320,11 @@ input[type="file"] {
   padding-right: 2px;
 }
 
+.sizesnap-export-list--resize {
+  margin-top: 8px;
+  max-height: 220px;
+}
+
 .sizesnap-export-item {
   border: 1px solid #dbe3ee;
   border-radius: 8px;
@@ -356,6 +371,11 @@ input[type="file"] {
   gap: 8px;
 }
 
+.sizesnap-batch-actions--resize {
+  margin-top: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .sizesnap-batch-actions .sizesnap-btn {
   width: 100%;
   padding: 8px 10px;
@@ -384,6 +404,10 @@ input[type="file"] {
   }
 
   .sizesnap-batch-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sizesnap-batch-actions--resize {
     grid-template-columns: 1fr;
   }
 }
