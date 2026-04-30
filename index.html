@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>在线文档与 PDF 工具集 - 隐私政策生成与 PDF骑缝章</title>
+  <title>HN Tools - 运营文档链接与 PDF 工具台</title>
   <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="提供隐私政策生成与发布、PDF骑缝章等在线工具，轻量、快速、可直接使用。" />
+  <meta name="description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
   <link rel="canonical" href="https://privacy.hnchpower.cn/" />
-  <meta property="og:title" content="在线文档与 PDF 工具集 - 隐私政策生成与 PDF骑缝章" />
-  <meta property="og:description" content="提供隐私政策生成与发布、PDF骑缝章等在线工具，轻量、快速、可直接使用。" />
+  <meta property="og:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
+  <meta property="og:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://privacy.hnchpower.cn/" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="在线文档与 PDF 工具集 - 隐私政策生成与 PDF骑缝章" />
-  <meta name="twitter:description" content="提供隐私政策生成与发布、PDF骑缝章等在线工具，轻量、快速、可直接使用。" />
+  <meta name="twitter:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
+  <meta name="twitter:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" href="assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
@@ -40,6 +40,7 @@
         <a class="home-nav-link" href="#section-pdf">PDF 工具</a>
         <a class="home-nav-link" href="#section-image">图片工具</a>
         <a class="home-nav-link" href="#section-more">更多</a>
+        <a class="home-nav-primary" href="tools/document-policy/">运营发链接</a>
       </nav>
     </div>
   </header>
@@ -48,13 +49,13 @@
     <div class="home-hero-bg" aria-hidden="true"></div>
     <div class="home-hero-inner">
       <div class="home-hero-copy">
-        <p class="home-hero-eyebrow">无需安装 · 浏览器本地处理 · 打开即用</p>
-        <h1 class="home-hero-title">在线文档、PDF 与图片工具集</h1>
-        <p class="home-hero-lead">隐私政策生成、PDF 骑缝章、图片尺寸处理等常用工具，均可在浏览器中快速完成。轻量、安全、即开即用。</p>
-        <p class="home-hero-note">工具页独立加载，减少互相影响，适合日常办公和上架素材处理场景。</p>
+        <p class="home-hero-eyebrow">运营首选 · 上传文档生成链接 · 上架资料处理</p>
+        <h1 class="home-hero-title">运营文档链接与上架工具台</h1>
+        <p class="home-hero-lead">把 Word 隐私协议、合规文档、PDF 和图片处理入口集中在一个页面。运营上传文档后即可生成正式链接，适合应用上架、官网展示和日常素材处理。</p>
+        <p class="home-hero-note">不需要找代码、不需要手动改页面；常用工具独立加载，流程清楚，打开就能处理。</p>
         <div class="home-hero-cta">
-          <a class="home-btn home-btn-primary" href="#section-policy">立即使用</a>
-          <a class="home-btn home-btn-secondary" href="#section-image">查看图片工具</a>
+          <a class="home-btn home-btn-primary" href="tools/document-policy/">上传文档生成链接</a>
+          <a class="home-btn home-btn-secondary" href="#section-policy">查看全部政策工具</a>
         </div>
       </div>
       <div class="home-hero-visual" aria-hidden="true">
@@ -65,12 +66,12 @@
             <div class="home-mock-body">
               <div class="home-mock-panel-title">Tool Console</div>
               <div class="home-mock-panel-list">
-                <div class="home-mock-panel-item"><span>Privacy Policy</span><em>Ready</em></div>
-                <div class="home-mock-panel-item"><span>PDF Seal</span><em>Local</em></div>
-                <div class="home-mock-panel-item"><span>SizeSnap</span><em>Batch</em></div>
-                <div class="home-mock-panel-item"><span>Local Processing</span><em>Safe</em></div>
+                <div class="home-mock-panel-item home-mock-panel-item--active"><span>Word 上传生成链接</span><em>推荐</em></div>
+                <div class="home-mock-panel-item"><span>隐私政策填表生成</span><em>备用</em></div>
+                <div class="home-mock-panel-item"><span>PDF 骑缝章</span><em>本地</em></div>
+                <div class="home-mock-panel-item"><span>图片尺寸处理</span><em>批量</em></div>
               </div>
-              <div class="home-mock-badge">Online</div>
+              <div class="home-mock-badge">Link Ready</div>
             </div>
           </div>
           <div class="home-mock-card home-mock-card--float">
@@ -87,38 +88,44 @@
       <header class="home-section-head">
         <div class="home-section-head-text">
           <h2 id="policy-heading" class="home-section-title">政策文档</h2>
-          <p class="home-section-lead">面向产品合规与上架场景，在线生成可分享的正式链接。</p>
+          <p class="home-section-lead">运营优先使用「上传文档生成链接」；只有需要从模板填信息时，再使用旧的填表生成工具。</p>
         </div>
-        <p class="home-section-desc">生成与发布类工具</p>
+        <p class="home-section-desc">运营最常用</p>
       </header>
-      <div class="home-grid">
-        <a class="home-card" href="tools/privacy-policy/">
+      <div class="home-policy-layout">
+        <a class="home-card home-card-featured" href="tools/document-policy/">
+          <span class="home-card-ribbon">运营推荐</span>
           <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--doc" aria-hidden="true"></span>
+            <span class="home-card-icon home-card-icon--upload" aria-hidden="true"></span>
             <div class="home-card-tags">
-              <span class="home-tag">在线生成</span>
-              <span class="home-tag home-tag--muted">常用</span>
+              <span class="home-tag home-tag--strong">上传 Word</span>
+              <span class="home-tag home-tag--muted">生成正式链接</span>
             </div>
           </div>
-          <h3 class="home-card-title">隐私政策生成与发布</h3>
-          <p class="home-card-desc">填写信息、实时预览，一键生成短链与正式展示页。</p>
+          <h3 class="home-card-title">上传隐私协议文档，直接生成链接</h3>
+          <p class="home-card-desc">运营拿到 Word 文档后，上传或粘贴正文，确认预览，一键生成可复制的正式隐私链接。</p>
+          <div class="home-card-steps" aria-hidden="true">
+            <span>1 上传文档</span>
+            <span>2 预览核对</span>
+            <span>3 复制链接</span>
+          </div>
           <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
+            <span class="home-card-arrow">现在上传生成</span>
             <span class="home-card-chevron" aria-hidden="true">→</span>
           </span>
         </a>
-        <a class="home-card" href="tools/document-policy/">
+        <a class="home-card home-card-secondary-tool" href="tools/privacy-policy/">
           <div class="home-card-top">
             <span class="home-card-icon home-card-icon--doc" aria-hidden="true"></span>
             <div class="home-card-tags">
-              <span class="home-tag">上传文档</span>
-              <span class="home-tag home-tag--muted">运营</span>
+              <span class="home-tag">填表生成</span>
+              <span class="home-tag home-tag--muted">模板</span>
             </div>
           </div>
-          <h3 class="home-card-title">文档隐私链接生成</h3>
-          <p class="home-card-desc">上传 Word 文档或粘贴协议正文，自动生成正式展示链接。</p>
+          <h3 class="home-card-title">隐私政策生成与发布</h3>
+          <p class="home-card-desc">没有现成文档时，填写公司、产品、邮箱等信息，从模板生成隐私政策链接。</p>
           <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
+            <span class="home-card-arrow">进入填表工具</span>
             <span class="home-card-chevron" aria-hidden="true">→</span>
           </span>
         </a>
