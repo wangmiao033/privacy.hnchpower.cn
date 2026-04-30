@@ -110,6 +110,63 @@
   font-weight: 700;
 }
 
+.docaging-effects {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.docaging-effects button {
+  border: 1px solid #c9bfa9;
+  border-radius: 8px;
+  padding: 7px 8px;
+  background: #fffaf0;
+  color: #594e40;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.docaging-effects button.is-active {
+  border-color: #88704a;
+  background: #efe5d3;
+  font-weight: 700;
+}
+
+.docaging-microlevels {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.docaging-microlevels-label {
+  font-size: 12px;
+  color: #6f6453;
+  margin-right: 4px;
+}
+
+.docaging-microlevels button {
+  border: 1px solid #c9bfa9;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: #fffaf0;
+  color: #594e40;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.docaging-microlevels button.is-active {
+  border-color: #88704a;
+  background: #efe5d3;
+  font-weight: 700;
+}
+
+.docaging-microlevels.is-hidden {
+  display: none;
+}
+
 .docaging-control {
   margin-top: 10px;
 }
@@ -190,7 +247,7 @@
 }
 
 .docaging-preview-old {
-  background: #ece3cf;
+  background: #f3efe6;
 }
 
 .docaging-preview img {
