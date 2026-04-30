@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>扫描做旧工具 - 一键生成旧文档/扫描件风格</title>
+  <meta name="description" content="上传图片，一键生成做旧纸张风格或扫描件风格。支持本地处理，不上传服务器。" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/doc-aging/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="doc-aging.css" />
+</head>
+<body class="docaging-page">
+  <header class="docaging-header">
+    <div class="docaging-header-inner">
+      <div>
+        <h1>扫描做旧工具</h1>
+        <p>上传文件图片，快速生成「稍旧风格」或「扫描件风格」，适合备案说明、合同截图、内部留档图。</p>
+      </div>
+      <a href="../../index.html">返回首页</a>
+    </div>
+  </header>
+
+  <main class="docaging-main">
+    <p class="docaging-privacy">图片仅在本地浏览器处理，不会上传服务器。</p>
+    <section class="docaging-grid">
+      <article class="docaging-card">
+        <h2>上传与设置</h2>
+        <label id="docagingDropZone" class="docaging-dropzone" for="docagingFileInput">
+          <strong>点击上传 / 拖拽上传</strong>
+          <span>支持 png、jpg、jpeg、webp，单图不超过 10MB</span>
+        </label>
+        <input id="docagingFileInput" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+
+        <div class="docaging-presets">
+          <button type="button" data-preset="aged" class="is-active">稍微做旧</button>
+          <button type="button" data-preset="scan">扫描件灰度</button>
+          <button type="button" data-preset="bw">黑白扫描</button>
+        </div>
+
+        <div class="docaging-control">
+          <label for="docagingIntensity">效果强度 <span id="docagingIntensityValue">35</span></label>
+          <input id="docagingIntensity" type="range" min="0" max="100" value="35" />
+        </div>
+        <div class="docaging-control">
+          <label for="docagingContrast">对比度 <span id="docagingContrastValue">18</span></label>
+          <input id="docagingContrast" type="range" min="-40" max="80" value="18" />
+        </div>
+        <label class="docaging-toggle">
+          <input id="docagingTextureToggle" type="checkbox" checked />
+          <span>启用纸张折痕/污点纹理</span>
+        </label>
+        <div class="docaging-control docaging-control-texture">
+          <label for="docagingTextureStrength">纹理强度 <span id="docagingTextureStrengthValue">45</span></label>
+          <input id="docagingTextureStrength" type="range" min="0" max="100" value="45" />
+        </div>
+
+        <div class="docaging-actions">
+          <button id="docagingDownloadBtn" type="button" disabled>导出 PNG</button>
+          <button id="docagingResetBtn" type="button" class="light">清空</button>
+        </div>
+
+        <dl class="docaging-meta">
+          <div><dt>图片尺寸</dt><dd id="docagingMetaSize">-</dd></div>
+          <div><dt>文件体积</dt><dd id="docagingMetaFile">-</dd></div>
+          <div><dt>状态</dt><dd id="docagingMetaStatus">等待上传图片</dd></div>
+        </dl>
+      </article>
+
+      <article class="docaging-card">
+        <h2>原图预览</h2>
+        <div class="docaging-preview">
+          <img id="docagingOriginalPreview" hidden alt="原图预览" />
+          <p id="docagingOriginalPlaceholder">上传后显示原图</p>
+        </div>
+      </article>
+
+      <article class="docaging-card">
+        <h2>效果预览</h2>
+        <div class="docaging-preview docaging-preview-old">
+          <img id="docagingResultPreview" hidden alt="做旧结果预览" />
+          <p id="docagingResultPlaceholder">处理后显示做旧/扫描效果</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <canvas id="docagingSourceCanvas" hidden></canvas>
+  <canvas id="docagingOutputCanvas" hidden></canvas>
+  <script src="doc-aging.js"></script>
+</body>
+</html>
