@@ -1,0 +1,272 @@
+.sealcut-page {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #0f172a;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  min-height: 100vh;
+}
+
+.sealcut-header {
+  border-bottom: 1px solid #dbe4ff;
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
+}
+
+.sealcut-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sealcut-title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.sealcut-subtitle {
+  margin: 10px 0 0;
+  max-width: 860px;
+  color: #334155;
+  line-height: 1.6;
+}
+
+.sealcut-back-link {
+  flex-shrink: 0;
+  text-decoration: none;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.sealcut-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 22px 20px 40px;
+}
+
+.sealcut-privacy {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #1e3a8a;
+  font-size: 14px;
+}
+
+.sealcut-layout {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sealcut-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.sealcut-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.sealcut-dropzone {
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  min-height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.sealcut-dropzone:hover,
+.sealcut-dropzone.is-dragover {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.sealcut-dropzone strong {
+  font-size: 16px;
+}
+
+.sealcut-dropzone span {
+  color: #475569;
+  font-size: 13px;
+}
+
+.sealcut-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sealcut-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sealcut-btn {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sealcut-btn-primary {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.sealcut-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sealcut-btn-light {
+  background: #fff;
+  color: #334155;
+}
+
+.sealcut-meta-list {
+  margin: 0;
+  padding: 0;
+}
+
+.sealcut-meta-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px 0;
+}
+
+.sealcut-meta-item:last-child {
+  border-bottom: none;
+}
+
+.sealcut-meta-item dt {
+  color: #64748b;
+}
+
+.sealcut-meta-item dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.sealcut-tuning-tip {
+  margin: 0 0 10px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sealcut-presets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.sealcut-preset-btn {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #334155;
+  padding: 8px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sealcut-preset-btn.is-active {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.sealcut-control {
+  margin-top: 10px;
+}
+
+.sealcut-control-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.sealcut-control-head label {
+  color: #334155;
+  font-weight: 600;
+}
+
+.sealcut-control-head span {
+  color: #dc2626;
+  font-variant-numeric: tabular-nums;
+}
+
+.sealcut-control input[type="range"] {
+  width: 100%;
+}
+
+.sealcut-preview-box {
+  min-height: 270px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sealcut-result-bg {
+  background-image:
+    linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
+    linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f1f5f9 75%),
+    linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+
+.sealcut-preview-box img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  display: block;
+}
+
+.sealcut-placeholder {
+  margin: 0;
+  color: #64748b;
+}
+
+@media (max-width: 900px) {
+  .sealcut-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sealcut-header-inner {
+    flex-direction: column;
+  }
+}

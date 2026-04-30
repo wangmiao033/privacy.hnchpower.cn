@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>红章快速扣图 - 本地提取红色印章导出透明 PNG</title>
+  <meta name="description" content="上传合同、扫描件或截图，自动提取红色印章，去除纸张背景和黑字干扰，导出透明 PNG。全程浏览器本地处理，不上传服务器。" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/seal-cutout/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="seal-cutout.css" />
+</head>
+<body class="sealcut-page">
+  <header class="sealcut-header">
+    <div class="sealcut-header-inner">
+      <div>
+        <h1 class="sealcut-title">红章快速扣图</h1>
+        <p class="sealcut-subtitle">上传合同、扫描件或截图，自动提取红色印章，去除纸张背景与黑字干扰，一键导出透明 PNG。</p>
+      </div>
+      <a class="sealcut-back-link" href="../../index.html">返回首页</a>
+    </div>
+  </header>
+
+  <main class="sealcut-main">
+    <p class="sealcut-privacy">图片仅在你的浏览器本地处理，不会上传到服务器。</p>
+
+    <section class="sealcut-layout" aria-label="红章扣图工具">
+      <div class="sealcut-card sealcut-card-upload">
+        <h2>上传图片</h2>
+        <label id="sealcutDropZone" class="sealcut-dropzone" for="sealcutFileInput">
+          <strong>点击上传 / 拖拽上传</strong>
+          <span>支持 png、jpg、jpeg、webp，单张不超过 10MB</span>
+        </label>
+        <input id="sealcutFileInput" class="sealcut-file-input" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+        <div class="sealcut-actions">
+          <button id="sealcutDownloadBtn" class="sealcut-btn sealcut-btn-primary" type="button" disabled>导出透明 PNG</button>
+          <button id="sealcutResetBtn" class="sealcut-btn sealcut-btn-light" type="button">清空</button>
+        </div>
+      </div>
+
+      <div class="sealcut-card sealcut-card-meta">
+        <h2>处理信息</h2>
+        <dl class="sealcut-meta-list">
+          <div class="sealcut-meta-item"><dt>图片尺寸</dt><dd id="sealcutMetaDimension">-</dd></div>
+          <div class="sealcut-meta-item"><dt>文件大小</dt><dd id="sealcutMetaSize">-</dd></div>
+          <div class="sealcut-meta-item"><dt>处理状态</dt><dd id="sealcutMetaStatus">等待上传图片</dd></div>
+        </dl>
+      </div>
+
+      <div class="sealcut-card sealcut-card-tuning">
+        <h2>高级参数</h2>
+        <p class="sealcut-tuning-tip">调大阈值可减少误检，调小阈值可保留更多浅红细节。</p>
+        <div class="sealcut-presets" aria-label="参数预设">
+          <button class="sealcut-preset-btn is-active" type="button" data-preset="scan">扫描件增强</button>
+          <button class="sealcut-preset-btn" type="button" data-preset="screenshot">截图增强</button>
+          <button class="sealcut-preset-btn" type="button" data-preset="conservative">保守提取</button>
+          <button class="sealcut-preset-btn" type="button" data-preset="aggressive">激进提取</button>
+        </div>
+        <div class="sealcut-control">
+          <div class="sealcut-control-head">
+            <label for="sealcutMinRed">minRed</label>
+            <span id="sealcutMinRedValue">72</span>
+          </div>
+          <input id="sealcutMinRed" type="range" min="40" max="180" step="1" value="72" />
+        </div>
+        <div class="sealcut-control">
+          <div class="sealcut-control-head">
+            <label for="sealcutRedDiff">redDiff</label>
+            <span id="sealcutRedDiffValue">22</span>
+          </div>
+          <input id="sealcutRedDiff" type="range" min="8" max="80" step="1" value="22" />
+        </div>
+        <div class="sealcut-control">
+          <div class="sealcut-control-head">
+            <label for="sealcutMinSaturation">minSaturation</label>
+            <span id="sealcutMinSaturationValue">0.16</span>
+          </div>
+          <input id="sealcutMinSaturation" type="range" min="0.05" max="0.6" step="0.01" value="0.16" />
+        </div>
+      </div>
+
+      <div class="sealcut-card sealcut-card-preview">
+        <h2>原图预览</h2>
+        <div class="sealcut-preview-box">
+          <img id="sealcutOriginalPreview" alt="原图预览" hidden />
+          <p id="sealcutOriginalPlaceholder" class="sealcut-placeholder">上传后在此显示原图</p>
+        </div>
+      </div>
+
+      <div class="sealcut-card sealcut-card-preview">
+        <h2>扣图结果预览</h2>
+        <div class="sealcut-preview-box sealcut-result-bg">
+          <img id="sealcutResultPreview" alt="红章扣图结果预览" hidden />
+          <p id="sealcutResultPlaceholder" class="sealcut-placeholder">处理后在此显示透明 PNG 结果</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="sealcutWorkingCanvas" hidden></canvas>
+  <canvas id="sealcutResultCanvas" hidden></canvas>
+
+  <script src="seal-cutout.js"></script>
+</body>
+</html>
