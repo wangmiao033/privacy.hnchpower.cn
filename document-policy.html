@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隐私协议文档</title>
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="隐私协议文档正式展示页。" />
+  <meta property="og:title" content="隐私协议文档" />
+  <meta property="og:description" content="隐私协议文档正式展示页。" />
+  <meta property="og:type" content="article" />
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <style>
+    * { box-sizing: border-box; }
+    html {
+      background: #f6f7f9;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+    }
+    body { margin: 0; }
+    .doc-shell {
+      width: min(920px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0 56px;
+    }
+    .doc-header,
+    .doc-article,
+    .doc-error {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
+    }
+    .doc-header {
+      margin-bottom: 18px;
+      padding: 28px 30px;
+    }
+    .doc-kicker {
+      margin: 0 0 8px;
+      color: #64748b;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .doc-title {
+      margin: 0;
+      color: #0f172a;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.25;
+      letter-spacing: 0;
+      word-break: break-word;
+    }
+    .doc-meta {
+      margin: 12px 0 0;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .doc-article {
+      padding: 30px;
+    }
+    .doc-article p,
+    .doc-article li {
+      font-size: 16px;
+      line-height: 1.9;
+      color: #111827;
+    }
+    .doc-article p { margin: 0 0 12px; }
+    .doc-article h1,
+    .doc-article h2,
+    .doc-article h3,
+    .doc-article h4 {
+      color: #0f172a;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+    .doc-article table {
+      width: 100%;
+      margin: 18px 0;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .doc-article th,
+    .doc-article td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      vertical-align: top;
+      font-size: 15px;
+      line-height: 1.75;
+      word-break: break-word;
+    }
+    .doc-error {
+      padding: 28px 30px;
+    }
+    .doc-error h1 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+    .doc-error p {
+      margin: 0 0 8px;
+      color: #475569;
+      line-height: 1.8;
+    }
+    @media (max-width: 640px) {
+      .doc-shell {
+        width: min(100% - 20px, 920px);
+        padding: 16px 0 32px;
+      }
+      .doc-header,
+      .doc-article,
+      .doc-error {
+        padding: 20px 16px;
+        border-radius: 10px;
+      }
+      .doc-article p,
+      .doc-article li {
+        font-size: 15px;
+        line-height: 1.85;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="doc-shell">
+    <header class="doc-header">
+      <p class="doc-kicker">隐私协议文档</p>
+      <h1 id="doc-title" class="doc-title">正在加载...</h1>
+      <p id="doc-meta" class="doc-meta">请稍候</p>
+    </header>
+    <article id="doc-article" class="doc-article">
+      <p>正在加载文档内容...</p>
+    </article>
+  </main>
+
+  <script src="supabase-config.js"></script>
+  <script src="page-visit-log.js"></script>
+  <script src="document-policy.js"></script>
+</body>
+</html>
