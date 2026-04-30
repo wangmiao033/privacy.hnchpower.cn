@@ -6,3 +6,9 @@ verify_jwt = false
 
 [functions.get-my-policy-links]
 verify_jwt = false
+
+[functions.create-document-policy-link]
+verify_jwt = false
+
+[functions.get-document-policy-link]
+verify_jwt = false
