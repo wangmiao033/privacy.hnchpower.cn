@@ -106,6 +106,7 @@ function handleFile(file) {
 async function removeBackground(file) {
   processBtn.disabled = true;
   downloadBtn.disabled = true;
+  resetResult();
   setStatus("正在上传并处理图片...");
 
   try {
@@ -137,7 +138,8 @@ async function removeBackground(file) {
     downloadBtn.disabled = false;
     setStatus("抠图完成，可以下载透明 PNG。");
   } catch (error) {
-    setStatus(error.message || "抠图失败，请检查后端服务。", true);
+    resetResult();
+    setStatus(getFriendlyErrorMessage(error), true);
   } finally {
     processBtn.disabled = !currentFile;
   }
@@ -188,6 +190,14 @@ async function readErrorMessage(response) {
 
 function trimTrailingSlash(value) {
   return value.replace(/\/+$/, "");
+}
+
+function getFriendlyErrorMessage(error) {
+  const message = error && error.message ? error.message : "";
+  if (message === "Failed to fetch" || message.includes("NetworkError")) {
+    return `无法连接抠图后端：请确认 ${API_BASE_URL} 已启动，或上线后把 API 地址改为公网服务。`;
+  }
+  return message || "抠图失败，请检查后端服务。";
 }
 
 function formatBytes(bytes) {
