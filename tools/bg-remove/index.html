@@ -37,8 +37,15 @@
         <input id="bgremoveFileInput" class="bgremove-file-input" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
         <fieldset class="bgremove-mode-group">
           <legend>抠图模式</legend>
+          <label class="bgremove-mode-option bgremove-mode-option-recommended">
+            <input type="radio" name="bgremoveMode" value="anime" checked />
+            <span>
+              <strong>插画海报</strong>
+              <em>推荐：二次元、游戏素材</em>
+            </span>
+          </label>
           <label class="bgremove-mode-option">
-            <input type="radio" name="bgremoveMode" value="standard" checked />
+            <input type="radio" name="bgremoveMode" value="standard" />
             <span>
               <strong>标准</strong>
               <em>通用图片，速度较快</em>
@@ -48,17 +55,11 @@
             <input type="radio" name="bgremoveMode" value="fine" />
             <span>
               <strong>精细边缘</strong>
-              <em>发丝、半透明边缘</em>
-            </span>
-          </label>
-          <label class="bgremove-mode-option">
-            <input type="radio" name="bgremoveMode" value="anime" />
-            <span>
-              <strong>插画海报</strong>
-              <em>二次元、游戏素材</em>
+              <em>真人发丝、半透明边缘</em>
             </span>
           </label>
         </fieldset>
+        <p class="bgremove-mode-tip">游戏海报、复杂光效、双人物图片优先用“插画海报”；“精细边缘”更适合真人照片，可能会误删插画细节。</p>
         <fieldset class="bgremove-format-group">
           <legend>下载格式</legend>
           <label class="bgremove-format-option">

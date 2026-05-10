@@ -145,7 +145,7 @@ async function removeBackground(file) {
     resultPlaceholder.hidden = true;
     downloadBtn.disabled = false;
     updateDownloadButtonText();
-    setStatus(`抠图完成（${getSelectedModeLabel()}），可以下载 ${getSelectedFormatLabel()}。`);
+    setStatus(getCompletionMessage());
   } catch (error) {
     resetResult();
     setStatus(getFriendlyErrorMessage(error), true);
@@ -220,6 +220,18 @@ function getSelectedModeLabel() {
   const label = checkedInput ? checkedInput.closest("label") : null;
   const title = label ? label.querySelector("strong") : null;
   return title ? title.textContent : "标准";
+}
+
+function getCompletionMessage() {
+  const mode = getSelectedMode();
+  const formatLabel = getSelectedFormatLabel();
+  if (mode === "fine") {
+    return `抠图完成（精细边缘）。如果插画、海报细节被误删，请改用“插画海报”重新处理。可以下载 ${formatLabel}。`;
+  }
+  if (mode === "standard") {
+    return `抠图完成（标准）。如果是游戏海报或二次元图片，建议再试“插画海报”。可以下载 ${formatLabel}。`;
+  }
+  return `抠图完成（插画海报），可以下载 ${formatLabel}。`;
 }
 
 async function downloadResult() {
