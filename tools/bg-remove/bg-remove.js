@@ -8,6 +8,8 @@ const dropZone = document.getElementById("bgremoveDropZone");
 const processBtn = document.getElementById("bgremoveProcessBtn");
 const downloadBtn = document.getElementById("bgremoveDownloadBtn");
 const resetBtn = document.getElementById("bgremoveResetBtn");
+const convertBtn = document.getElementById("bgremoveConvertBtn");
+const convertFormatSelect = document.getElementById("bgremoveConvertFormat");
 const originalPreview = document.getElementById("bgremoveOriginalPreview");
 const resultPreview = document.getElementById("bgremoveResultPreview");
 const originalPlaceholder = document.getElementById("bgremoveOriginalPlaceholder");
@@ -71,6 +73,18 @@ downloadBtn.addEventListener("click", async () => {
 
 resetBtn.addEventListener("click", resetTool);
 
+convertBtn.addEventListener("click", async () => {
+  if (!currentFile) {
+    return;
+  }
+
+  try {
+    await convertOriginalImage();
+  } catch (error) {
+    setStatus(error.message || "图片格式转换失败，请换一张图片重试。", true);
+  }
+});
+
 formatInputs.forEach((input) => {
   input.addEventListener("change", updateDownloadButtonText);
 });
@@ -99,6 +113,7 @@ function handleFile(file) {
   originalPreview.hidden = false;
   originalPlaceholder.hidden = true;
   processBtn.disabled = false;
+  convertBtn.disabled = false;
 
   const image = new Image();
   image.onload = () => {
@@ -160,6 +175,7 @@ function resetTool() {
   dimensionEl.textContent = "-";
   sizeEl.textContent = "-";
   processBtn.disabled = true;
+  convertBtn.disabled = true;
   resetResult();
 
   if (originalObjectUrl) {
@@ -249,6 +265,15 @@ async function downloadResult() {
   triggerDownload(resultObjectUrl, `${baseName}_transparent.png`, false);
 }
 
+async function convertOriginalImage() {
+  const format = convertFormatSelect.value;
+  const output = await convertImageBlob(currentFile, format);
+  const baseName = currentFile ? currentFile.name.replace(/\.[^.]+$/, "") : "converted";
+  const suffix = format === "jpg" ? "jpg" : format;
+  triggerDownload(URL.createObjectURL(output.blob), `${baseName}_converted.${suffix}`, true);
+  setStatus(`已转换为 ${output.label} 并开始下载。`);
+}
+
 function triggerDownload(url, filename, shouldRevoke) {
   const link = document.createElement("a");
   link.href = url;
@@ -283,6 +308,49 @@ async function convertPngBlobToJpg(blob) {
         reject(new Error("JPG 生成失败。"));
       }
     }, "image/jpeg", 0.92);
+  });
+}
+
+async function convertImageBlob(blob, format) {
+  if (!blob) {
+    throw new Error("请先上传图片。");
+  }
+
+  const mimeTypeMap = {
+    jpg: "image/jpeg",
+    png: "image/png",
+    webp: "image/webp",
+  };
+  const labelMap = {
+    jpg: "JPG",
+    png: "PNG",
+    webp: "WEBP",
+  };
+  const mimeType = mimeTypeMap[format] || "image/jpeg";
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const context = canvas.getContext("2d");
+
+  if (format === "jpg") {
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  context.drawImage(bitmap, 0, 0);
+  bitmap.close();
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((convertedBlob) => {
+      if (convertedBlob) {
+        resolve({ blob: convertedBlob, label: labelMap[format] || "JPG" });
+      } else {
+        reject(new Error("图片格式转换失败。"));
+      }
+    }, mimeType, format === "png" ? undefined : 0.92);
   });
 }
 

@@ -198,6 +198,50 @@
   line-height: 1.5;
 }
 
+.bgremove-convert-box {
+  margin-top: 14px;
+  border: 1px solid #d7e2ea;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fbfdff;
+}
+
+.bgremove-convert-head h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.bgremove-convert-head p {
+  margin: 5px 0 12px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.bgremove-select-label {
+  display: block;
+  margin-bottom: 6px;
+  color: #425466;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bgremove-convert-row {
+  display: flex;
+  gap: 10px;
+}
+
+.bgremove-select {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid #cbd8e2;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  color: #122033;
+  font-size: 14px;
+}
+
 .bgremove-format-group {
   border: 0;
   margin: 14px 0 0;
@@ -353,6 +397,10 @@
   }
 
   .bgremove-actions {
+    flex-direction: column;
+  }
+
+  .bgremove-convert-row {
     flex-direction: column;
   }
 

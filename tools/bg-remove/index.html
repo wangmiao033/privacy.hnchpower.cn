@@ -60,8 +60,23 @@
           </label>
         </fieldset>
         <p class="bgremove-mode-tip">游戏海报、复杂光效、双人物图片优先用“插画海报”；“精细边缘”更适合真人照片，可能会误删插画细节。</p>
+        <div class="bgremove-convert-box">
+          <div class="bgremove-convert-head">
+            <h3>图片格式转换</h3>
+            <p>不抠图，直接把当前上传图片转换为指定格式。</p>
+          </div>
+          <label class="bgremove-select-label" for="bgremoveConvertFormat">目标格式</label>
+          <div class="bgremove-convert-row">
+            <select id="bgremoveConvertFormat" class="bgremove-select">
+              <option value="jpg">JPG 白色背景</option>
+              <option value="png">PNG 保留透明</option>
+              <option value="webp">WEBP 保留透明</option>
+            </select>
+            <button id="bgremoveConvertBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>转换下载</button>
+          </div>
+        </div>
         <fieldset class="bgremove-format-group">
-          <legend>下载格式</legend>
+          <legend>抠图结果下载格式</legend>
           <label class="bgremove-format-option">
             <input type="radio" name="bgremoveDownloadFormat" value="png" checked />
             <span>PNG 透明背景</span>
