@@ -214,6 +214,11 @@
   display: block;
 }
 
+.bgremove-preview-box img[hidden],
+.bgremove-preview-box .bgremove-placeholder[hidden] {
+  display: none;
+}
+
 .bgremove-placeholder {
   margin: 0;
   padding: 0 16px;
