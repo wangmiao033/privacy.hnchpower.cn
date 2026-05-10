@@ -113,7 +113,31 @@
 
       <section class="bgremove-card bgremove-card-preview">
         <h2>抠图结果</h2>
+        <div class="bgremove-editor" aria-label="抠图结果修补工具">
+          <div class="bgremove-editor-row">
+            <span class="bgremove-editor-label">预览背景</span>
+            <div class="bgremove-chip-group" role="group" aria-label="预览背景">
+              <button class="bgremove-chip is-active" type="button" data-preview-bg="checker">透明</button>
+              <button class="bgremove-chip" type="button" data-preview-bg="white">白底</button>
+              <button class="bgremove-chip" type="button" data-preview-bg="black">黑底</button>
+              <button class="bgremove-chip" type="button" data-preview-bg="gray">灰底</button>
+            </div>
+          </div>
+          <div class="bgremove-editor-row">
+            <span class="bgremove-editor-label">手动修补</span>
+            <div class="bgremove-chip-group" role="group" aria-label="手动修补模式">
+              <button id="bgremoveRestoreBrushBtn" class="bgremove-chip is-active" type="button" data-brush-mode="restore" disabled>保留</button>
+              <button id="bgremoveEraseBrushBtn" class="bgremove-chip" type="button" data-brush-mode="erase" disabled>擦除</button>
+            </div>
+          </div>
+          <div class="bgremove-editor-row bgremove-editor-row-range">
+            <label class="bgremove-editor-label" for="bgremoveBrushSize">画笔</label>
+            <input id="bgremoveBrushSize" class="bgremove-range" type="range" min="8" max="120" step="2" value="36" disabled />
+            <button id="bgremoveResetEditsBtn" class="bgremove-chip" type="button" disabled>还原结果</button>
+          </div>
+        </div>
         <div class="bgremove-preview-box bgremove-result-bg">
+          <canvas id="bgremoveResultCanvas" class="bgremove-result-canvas" hidden></canvas>
           <img id="bgremoveResultPreview" alt="抠图结果预览" hidden />
           <p id="bgremoveResultPlaceholder" class="bgremove-placeholder">处理后在此显示透明 PNG 结果</p>
         </div>
