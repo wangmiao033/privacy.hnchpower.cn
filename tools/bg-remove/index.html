@@ -35,6 +35,30 @@
           <span>支持 png、jpg、jpeg、webp，单张不超过 12MB</span>
         </label>
         <input id="bgremoveFileInput" class="bgremove-file-input" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+        <fieldset class="bgremove-mode-group">
+          <legend>抠图模式</legend>
+          <label class="bgremove-mode-option">
+            <input type="radio" name="bgremoveMode" value="standard" checked />
+            <span>
+              <strong>标准</strong>
+              <em>通用图片，速度较快</em>
+            </span>
+          </label>
+          <label class="bgremove-mode-option">
+            <input type="radio" name="bgremoveMode" value="fine" />
+            <span>
+              <strong>精细边缘</strong>
+              <em>发丝、半透明边缘</em>
+            </span>
+          </label>
+          <label class="bgremove-mode-option">
+            <input type="radio" name="bgremoveMode" value="anime" />
+            <span>
+              <strong>插画海报</strong>
+              <em>二次元、游戏素材</em>
+            </span>
+          </label>
+        </fieldset>
         <div class="bgremove-actions">
           <button id="bgremoveProcessBtn" class="bgremove-btn bgremove-btn-primary" type="button" disabled>开始抠图</button>
           <button id="bgremoveDownloadBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>下载 PNG</button>

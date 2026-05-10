@@ -121,6 +121,59 @@
   margin-top: 14px;
 }
 
+.bgremove-mode-group {
+  border: 0;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bgremove-mode-group legend {
+  margin-bottom: 8px;
+  color: #425466;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.bgremove-mode-option {
+  border: 1px solid #d7e2ea;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+  background: #fbfdff;
+}
+
+.bgremove-mode-option:has(input:checked) {
+  border-color: #0f766e;
+  background: #ecfdf5;
+}
+
+.bgremove-mode-option input {
+  margin-top: 3px;
+  accent-color: #0f766e;
+}
+
+.bgremove-mode-option span {
+  display: grid;
+  gap: 3px;
+}
+
+.bgremove-mode-option strong {
+  font-size: 14px;
+}
+
+.bgremove-mode-option em {
+  color: #64748b;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.35;
+}
+
 .bgremove-btn {
   border: 1px solid #cbd8e2;
   border-radius: 10px;
@@ -237,6 +290,10 @@
 
   .bgremove-actions {
     flex-direction: column;
+  }
+
+  .bgremove-mode-group {
+    grid-template-columns: 1fr;
   }
 
   .bgremove-btn {

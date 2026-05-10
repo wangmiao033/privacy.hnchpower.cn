@@ -16,6 +16,7 @@ const apiBaseEl = document.getElementById("bgremoveApiBase");
 const dimensionEl = document.getElementById("bgremoveMetaDimension");
 const sizeEl = document.getElementById("bgremoveMetaSize");
 const statusEl = document.getElementById("bgremoveMetaStatus");
+const modeInputs = Array.from(document.querySelectorAll("input[name='bgremoveMode']"));
 
 let currentFile = null;
 let originalObjectUrl = "";
@@ -112,6 +113,7 @@ async function removeBackground(file) {
   try {
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("mode", getSelectedMode());
 
     const response = await fetch(`${trimTrailingSlash(API_BASE_URL)}/api/remove-background`, {
       method: "POST",
@@ -136,7 +138,7 @@ async function removeBackground(file) {
     resultPreview.hidden = false;
     resultPlaceholder.hidden = true;
     downloadBtn.disabled = false;
-    setStatus("抠图完成，可以下载透明 PNG。");
+    setStatus(`抠图完成（${getSelectedModeLabel()}），可以下载透明 PNG。`);
   } catch (error) {
     resetResult();
     setStatus(getFriendlyErrorMessage(error), true);
@@ -198,6 +200,18 @@ function getFriendlyErrorMessage(error) {
     return `无法连接抠图后端：请确认 ${API_BASE_URL} 已启动，或上线后把 API 地址改为公网服务。`;
   }
   return message || "抠图失败，请检查后端服务。";
+}
+
+function getSelectedMode() {
+  const checkedInput = modeInputs.find((input) => input.checked);
+  return checkedInput ? checkedInput.value : "standard";
+}
+
+function getSelectedModeLabel() {
+  const checkedInput = modeInputs.find((input) => input.checked);
+  const label = checkedInput ? checkedInput.closest("label") : null;
+  const title = label ? label.querySelector("strong") : null;
+  return title ? title.textContent : "标准";
 }
 
 function formatBytes(bytes) {

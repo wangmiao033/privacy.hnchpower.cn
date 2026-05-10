@@ -23,8 +23,15 @@ curl http://localhost:8000/health
 ```bash
 curl -X POST http://localhost:8000/api/remove-background \
   -F "file=@/path/to/image.png" \
+  -F "mode=standard" \
   --output bg-removed.png
 ```
+
+`mode` 可选：
+
+- `standard`：通用图片，速度较快。
+- `fine`：启用 alpha matting，适合发丝、半透明边缘。
+- `anime`：插画/二次元/游戏海报素材优先。
 
 ## Docker 启动
 
