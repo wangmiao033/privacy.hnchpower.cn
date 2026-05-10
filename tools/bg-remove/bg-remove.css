@@ -1,0 +1,240 @@
+.bgremove-page {
+  margin: 0;
+  min-height: 100vh;
+  color: #122033;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef6f3 100%);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.bgremove-header {
+  border-bottom: 1px solid #dbe7ee;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+}
+
+.bgremove-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bgremove-title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.bgremove-subtitle {
+  margin: 10px 0 0;
+  max-width: 860px;
+  color: #425466;
+  line-height: 1.6;
+}
+
+.bgremove-back-link {
+  flex-shrink: 0;
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.bgremove-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 22px 20px 40px;
+}
+
+.bgremove-notice {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border: 1px solid #bfe7dd;
+  border-radius: 10px;
+  color: #115e59;
+  background: #ecfdf5;
+  font-size: 14px;
+}
+
+.bgremove-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.bgremove-card {
+  border: 1px solid #dde7ee;
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(18, 32, 51, 0.05);
+}
+
+.bgremove-card h2 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.bgremove-dropzone {
+  min-height: 148px;
+  border: 2px dashed #cbd8e2;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.bgremove-dropzone:hover,
+.bgremove-dropzone.is-dragover {
+  border-color: #0f766e;
+  background: #f0fdfa;
+}
+
+.bgremove-dropzone strong {
+  font-size: 16px;
+}
+
+.bgremove-dropzone span {
+  color: #5f7082;
+  font-size: 13px;
+}
+
+.bgremove-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bgremove-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bgremove-btn {
+  border: 1px solid #cbd8e2;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.bgremove-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.bgremove-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.bgremove-btn-primary {
+  border-color: #0f766e;
+  background: #0f766e;
+  color: #fff;
+}
+
+.bgremove-btn-light {
+  background: #fff;
+  color: #0f766e;
+  font-weight: 700;
+}
+
+.bgremove-btn-ghost {
+  background: #f8fafc;
+  color: #425466;
+}
+
+.bgremove-meta-list {
+  margin: 0;
+  padding: 0;
+}
+
+.bgremove-meta-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #edf2f7;
+  padding: 10px 0;
+}
+
+.bgremove-meta-item:last-child {
+  border-bottom: 0;
+}
+
+.bgremove-meta-item dt {
+  color: #64748b;
+}
+
+.bgremove-meta-item dd {
+  margin: 0;
+  max-width: 68%;
+  overflow-wrap: anywhere;
+  text-align: right;
+  font-weight: 700;
+}
+
+.bgremove-preview-box {
+  min-height: 320px;
+  border: 1px solid #dde7ee;
+  border-radius: 12px;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bgremove-result-bg {
+  background-image:
+    linear-gradient(45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(-45deg, #e2e8f0 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e2e8f0 75%),
+    linear-gradient(-45deg, transparent 75%, #e2e8f0 75%);
+  background-size: 18px 18px;
+  background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+}
+
+.bgremove-preview-box img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  display: block;
+}
+
+.bgremove-placeholder {
+  margin: 0;
+  padding: 0 16px;
+  color: #6b7b8c;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .bgremove-header-inner {
+    flex-direction: column;
+  }
+
+  .bgremove-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .bgremove-actions {
+    flex-direction: column;
+  }
+
+  .bgremove-btn {
+    width: 100%;
+  }
+}

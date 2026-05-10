@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>在线抠图 - 图片背景移除工具</title>
+  <meta name="description" content="上传人物、商品或证件照图片，调用独立后端服务移除背景，导出透明 PNG。前端静态部署，后端服务单独部署。" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/bg-remove/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="bg-remove.css" />
+</head>
+<body class="bgremove-page">
+  <header class="bgremove-header">
+    <div class="bgremove-header-inner">
+      <div>
+        <h1 class="bgremove-title">在线抠图</h1>
+        <p class="bgremove-subtitle">上传人物、商品或证件照图片，移除背景并导出透明 PNG。前端页面静态部署，抠图能力由独立后端服务提供。</p>
+      </div>
+      <a class="bgremove-back-link" href="../../index.html">返回首页</a>
+    </div>
+  </header>
+
+  <main class="bgremove-main">
+    <p class="bgremove-notice">图片会发送到当前配置的抠图 API 处理；请不要上传无授权或敏感图片。</p>
+
+    <section class="bgremove-layout" aria-label="在线抠图工具">
+      <section class="bgremove-card bgremove-card-upload">
+        <h2>上传图片</h2>
+        <label id="bgremoveDropZone" class="bgremove-dropzone" for="bgremoveFileInput">
+          <strong>点击上传 / 拖拽上传</strong>
+          <span>支持 png、jpg、jpeg、webp，单张不超过 12MB</span>
+        </label>
+        <input id="bgremoveFileInput" class="bgremove-file-input" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
+        <div class="bgremove-actions">
+          <button id="bgremoveProcessBtn" class="bgremove-btn bgremove-btn-primary" type="button" disabled>开始抠图</button>
+          <button id="bgremoveDownloadBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>下载 PNG</button>
+          <button id="bgremoveResetBtn" class="bgremove-btn bgremove-btn-ghost" type="button">清空</button>
+        </div>
+      </section>
+
+      <aside class="bgremove-card bgremove-card-meta">
+        <h2>处理信息</h2>
+        <dl class="bgremove-meta-list">
+          <div class="bgremove-meta-item"><dt>API 地址</dt><dd id="bgremoveApiBase">-</dd></div>
+          <div class="bgremove-meta-item"><dt>图片尺寸</dt><dd id="bgremoveMetaDimension">-</dd></div>
+          <div class="bgremove-meta-item"><dt>文件大小</dt><dd id="bgremoveMetaSize">-</dd></div>
+          <div class="bgremove-meta-item"><dt>处理状态</dt><dd id="bgremoveMetaStatus">等待上传图片</dd></div>
+        </dl>
+      </aside>
+
+      <section class="bgremove-card bgremove-card-preview">
+        <h2>原图预览</h2>
+        <div class="bgremove-preview-box">
+          <img id="bgremoveOriginalPreview" alt="原图预览" hidden />
+          <p id="bgremoveOriginalPlaceholder" class="bgremove-placeholder">上传后在此显示原图</p>
+        </div>
+      </section>
+
+      <section class="bgremove-card bgremove-card-preview">
+        <h2>抠图结果</h2>
+        <div class="bgremove-preview-box bgremove-result-bg">
+          <img id="bgremoveResultPreview" alt="抠图结果预览" hidden />
+          <p id="bgremoveResultPlaceholder" class="bgremove-placeholder">处理后在此显示透明 PNG 结果</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="bg-remove.js"></script>
+</body>
+</html>
