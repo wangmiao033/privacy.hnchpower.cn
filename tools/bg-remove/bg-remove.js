@@ -10,12 +10,22 @@ const downloadBtn = document.getElementById("bgremoveDownloadBtn");
 const resetBtn = document.getElementById("bgremoveResetBtn");
 const convertBtn = document.getElementById("bgremoveConvertBtn");
 const convertFormatSelect = document.getElementById("bgremoveConvertFormat");
+const extractTextBtn = document.getElementById("bgremoveExtractTextBtn");
+const downloadTextBtn = document.getElementById("bgremoveDownloadTextBtn");
+const textRegionSelect = document.getElementById("bgremoveTextRegion");
+const textPresetSelect = document.getElementById("bgremoveTextPreset");
+const textStrengthInput = document.getElementById("bgremoveTextStrength");
+const textStrengthValue = document.getElementById("bgremoveTextStrengthValue");
+const textGlowInput = document.getElementById("bgremoveTextGlow");
+const textGlowValue = document.getElementById("bgremoveTextGlowValue");
 const originalPreview = document.getElementById("bgremoveOriginalPreview");
 const resultPreview = document.getElementById("bgremoveResultPreview");
 const resultCanvas = document.getElementById("bgremoveResultCanvas");
+const textCanvas = document.getElementById("bgremoveTextCanvas");
 const resultPreviewBox = resultCanvas.closest(".bgremove-preview-box");
 const originalPlaceholder = document.getElementById("bgremoveOriginalPlaceholder");
 const resultPlaceholder = document.getElementById("bgremoveResultPlaceholder");
+const textPlaceholder = document.getElementById("bgremoveTextPlaceholder");
 const apiBaseEl = document.getElementById("bgremoveApiBase");
 const dimensionEl = document.getElementById("bgremoveMetaDimension");
 const sizeEl = document.getElementById("bgremoveMetaSize");
@@ -35,6 +45,7 @@ let originalBitmap = null;
 let resultBaseBitmap = null;
 let brushMode = "restore";
 let isPainting = false;
+let hasTextExtraction = false;
 
 apiBaseEl.textContent = API_BASE_URL;
 
@@ -83,6 +94,39 @@ downloadBtn.addEventListener("click", async () => {
 
 resetBtn.addEventListener("click", resetTool);
 resetEditsBtn.addEventListener("click", resetCanvasEdits);
+textStrengthInput.addEventListener("input", () => {
+  textStrengthValue.textContent = textStrengthInput.value;
+});
+textGlowInput.addEventListener("input", () => {
+  textGlowValue.textContent = textGlowInput.value;
+});
+
+extractTextBtn.addEventListener("click", async () => {
+  if (!currentFile) {
+    return;
+  }
+
+  try {
+    await extractTextLayer();
+  } catch (error) {
+    setStatus(error.message || "文字提取失败，请调整参数后重试。", true);
+  }
+});
+
+downloadTextBtn.addEventListener("click", async () => {
+  if (!hasTextExtraction) {
+    return;
+  }
+
+  try {
+    const blob = await textCanvasToBlob();
+    const baseName = currentFile ? currentFile.name.replace(/\.[^.]+$/, "") : "text-layer";
+    triggerDownload(URL.createObjectURL(blob), `${baseName}_text_logo.png`, true);
+    setStatus("文字 / Logo PNG 已开始下载。");
+  } catch (error) {
+    setStatus(error.message || "文字结果下载失败。", true);
+  }
+});
 
 previewBgButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -163,6 +207,7 @@ function handleFile(file) {
   originalPlaceholder.hidden = true;
   processBtn.disabled = false;
   convertBtn.disabled = false;
+  extractTextBtn.disabled = false;
 
   const image = new Image();
   image.onload = () => {
@@ -228,6 +273,8 @@ function resetTool() {
   sizeEl.textContent = "-";
   processBtn.disabled = true;
   convertBtn.disabled = true;
+  extractTextBtn.disabled = true;
+  resetTextExtraction();
   resetResult();
 
   if (originalObjectUrl) {
@@ -254,6 +301,17 @@ function resetResult() {
   clearResultCanvas();
   resultCanvas.hidden = true;
   resultPlaceholder.hidden = false;
+}
+
+function resetTextExtraction() {
+  hasTextExtraction = false;
+  downloadTextBtn.disabled = true;
+  const context = textCanvas.getContext("2d");
+  context.clearRect(0, 0, textCanvas.width || 1, textCanvas.height || 1);
+  textCanvas.width = 0;
+  textCanvas.height = 0;
+  textCanvas.hidden = true;
+  textPlaceholder.hidden = false;
 }
 
 function setStatus(message, isError = false) {
@@ -329,6 +387,124 @@ async function convertOriginalImage() {
   const suffix = format === "jpg" ? "jpg" : format;
   triggerDownload(URL.createObjectURL(output.blob), `${baseName}_converted.${suffix}`, true);
   setStatus(`已转换为 ${output.label} 并开始下载。`);
+}
+
+async function extractTextLayer() {
+  const bitmap = await createImageBitmap(currentFile);
+  const sourceCanvas = document.createElement("canvas");
+  sourceCanvas.width = bitmap.width;
+  sourceCanvas.height = bitmap.height;
+  const sourceContext = sourceCanvas.getContext("2d");
+  sourceContext.drawImage(bitmap, 0, 0);
+  bitmap.close();
+
+  const sourceData = sourceContext.getImageData(0, 0, sourceCanvas.width, sourceCanvas.height);
+  const outputData = sourceContext.createImageData(sourceCanvas.width, sourceCanvas.height);
+  const regionMask = getTextRegionMask(sourceCanvas.width, sourceCanvas.height, textRegionSelect.value);
+  const strength = Number(textStrengthInput.value);
+  const glow = Number(textGlowInput.value);
+  const preset = textPresetSelect.value;
+
+  for (let index = 0; index < sourceData.data.length; index += 4) {
+    const pixelIndex = index / 4;
+    const x = pixelIndex % sourceCanvas.width;
+    const y = Math.floor(pixelIndex / sourceCanvas.width);
+    const regionWeight = regionMask(x, y);
+    if (regionWeight <= 0) {
+      continue;
+    }
+
+    const red = sourceData.data[index];
+    const green = sourceData.data[index + 1];
+    const blue = sourceData.data[index + 2];
+    const alpha = sourceData.data[index + 3];
+    const score = getTextPixelScore(red, green, blue, preset);
+    const threshold = strength / 100;
+    const softness = Math.max(0.04, glow / 100);
+    const maskAlpha = clamp((score - threshold) / softness, 0, 1) * regionWeight;
+
+    if (maskAlpha > 0.01) {
+      outputData.data[index] = red;
+      outputData.data[index + 1] = green;
+      outputData.data[index + 2] = blue;
+      outputData.data[index + 3] = Math.round(alpha * maskAlpha);
+    }
+  }
+
+  textCanvas.width = sourceCanvas.width;
+  textCanvas.height = sourceCanvas.height;
+  const textContext = textCanvas.getContext("2d");
+  textContext.clearRect(0, 0, textCanvas.width, textCanvas.height);
+  textContext.putImageData(outputData, 0, 0);
+  textCanvas.hidden = false;
+  textPlaceholder.hidden = true;
+  hasTextExtraction = true;
+  downloadTextBtn.disabled = false;
+  setStatus("文字 / Logo 已提取。可调整区域、文字类型和强度后重新提取。");
+}
+
+function getTextRegionMask(width, height, region) {
+  const regions = {
+    top: [[0.52, 0, 1, 0.22]],
+    title: [[0, 0.58, 1, 0.88]],
+    bottom: [[0, 0.82, 1, 0.97]],
+    poster: [
+      [0.5, 0, 1, 0.22],
+      [0, 0.58, 1, 0.88],
+      [0, 0.82, 1, 0.97],
+    ],
+    all: [[0, 0, 1, 1]],
+  };
+  const selectedRegions = regions[region] || regions.poster;
+
+  return (x, y) => {
+    const nx = x / width;
+    const ny = y / height;
+    for (const [left, top, right, bottom] of selectedRegions) {
+      if (nx >= left && nx <= right && ny >= top && ny <= bottom) {
+        return 1;
+      }
+    }
+    return 0;
+  };
+}
+
+function getTextPixelScore(red, green, blue, preset) {
+  const max = Math.max(red, green, blue) / 255;
+  const min = Math.min(red, green, blue) / 255;
+  const luminance = (0.2126 * red + 0.7152 * green + 0.0722 * blue) / 255;
+  const saturation = max === 0 ? 0 : (max - min) / max;
+  const warmth = Math.max(0, red - blue) / 255;
+  const gold = Math.max(0, red * 1.08 + green * 0.78 - blue * 1.35) / 255;
+  const redness = Math.max(0, red - Math.max(green, blue) * 0.85) / 255;
+  const darkness = 1 - luminance;
+
+  if (preset === "gold") {
+    return clamp(luminance * 0.48 + saturation * 0.2 + warmth * 0.24 + gold * 0.32, 0, 1);
+  }
+  if (preset === "red") {
+    return clamp(redness * 0.72 + saturation * 0.18 + luminance * 0.16, 0, 1);
+  }
+  if (preset === "dark") {
+    return clamp(darkness * 0.7 + saturation * 0.16, 0, 1);
+  }
+  return clamp(luminance * 0.82 + saturation * 0.12 + max * 0.15, 0, 1);
+}
+
+function textCanvasToBlob() {
+  if (!hasTextExtraction || !textCanvas.width || !textCanvas.height) {
+    throw new Error("没有可下载的文字结果。");
+  }
+
+  return new Promise((resolve, reject) => {
+    textCanvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob);
+      } else {
+        reject(new Error("文字结果导出失败。"));
+      }
+    }, "image/png");
+  });
 }
 
 function triggerDownload(url, filename, shouldRevoke) {

@@ -103,11 +103,55 @@
         </dl>
       </aside>
 
+      <section class="bgremove-card bgremove-card-text">
+        <h2>文字 / Logo 提取</h2>
+        <p class="bgremove-tool-desc">从当前上传图片里提取标题字、Logo、宣传语，导出透明 PNG。适合海报文字粗提取，复杂背景建议分区域多试几次。</p>
+        <div class="bgremove-text-grid">
+          <label class="bgremove-select-label" for="bgremoveTextRegion">提取区域</label>
+          <select id="bgremoveTextRegion" class="bgremove-select">
+            <option value="poster">海报文字组合</option>
+            <option value="top">顶部 Logo</option>
+            <option value="title">主标题区域</option>
+            <option value="bottom">底部文案</option>
+            <option value="all">全图</option>
+          </select>
+          <label class="bgremove-select-label" for="bgremoveTextPreset">文字类型</label>
+          <select id="bgremoveTextPreset" class="bgremove-select">
+            <option value="bright">亮色 / 白字</option>
+            <option value="gold">金色 / 暖色字</option>
+            <option value="red">红色字</option>
+            <option value="dark">深色字</option>
+          </select>
+        </div>
+        <div class="bgremove-text-controls">
+          <div class="bgremove-control">
+            <label for="bgremoveTextStrength">提取强度 <span id="bgremoveTextStrengthValue">62</span></label>
+            <input id="bgremoveTextStrength" type="range" min="35" max="90" step="1" value="62" />
+          </div>
+          <div class="bgremove-control">
+            <label for="bgremoveTextGlow">保留光效 <span id="bgremoveTextGlowValue">18</span></label>
+            <input id="bgremoveTextGlow" type="range" min="0" max="50" step="1" value="18" />
+          </div>
+        </div>
+        <div class="bgremove-actions">
+          <button id="bgremoveExtractTextBtn" class="bgremove-btn bgremove-btn-primary" type="button" disabled>提取文字</button>
+          <button id="bgremoveDownloadTextBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>下载文字 PNG</button>
+        </div>
+      </section>
+
       <section class="bgremove-card bgremove-card-preview">
         <h2>原图预览</h2>
         <div class="bgremove-preview-box">
           <img id="bgremoveOriginalPreview" alt="原图预览" hidden />
           <p id="bgremoveOriginalPlaceholder" class="bgremove-placeholder">上传后在此显示原图</p>
+        </div>
+      </section>
+
+      <section class="bgremove-card bgremove-card-preview">
+        <h2>文字 / Logo 结果</h2>
+        <div class="bgremove-preview-box bgremove-result-bg">
+          <canvas id="bgremoveTextCanvas" class="bgremove-result-canvas" hidden></canvas>
+          <p id="bgremoveTextPlaceholder" class="bgremove-placeholder">提取后在此显示透明文字 PNG 结果</p>
         </div>
       </section>
 

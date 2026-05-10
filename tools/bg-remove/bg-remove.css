@@ -218,6 +218,46 @@
   line-height: 1.45;
 }
 
+.bgremove-tool-desc {
+  margin: 0 0 12px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.bgremove-text-grid {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.bgremove-text-controls {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.bgremove-control label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #425466;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.bgremove-control span {
+  color: #0f766e;
+  font-variant-numeric: tabular-nums;
+}
+
+.bgremove-control input {
+  width: 100%;
+  margin-top: 7px;
+  accent-color: #0f766e;
+}
+
 .bgremove-select-label {
   display: block;
   margin-bottom: 6px;
@@ -478,6 +518,10 @@
 
   .bgremove-convert-row {
     flex-direction: column;
+  }
+
+  .bgremove-text-grid {
+    grid-template-columns: 1fr;
   }
 
   .bgremove-mode-group {
