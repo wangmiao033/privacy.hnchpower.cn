@@ -17,10 +17,12 @@ const dimensionEl = document.getElementById("bgremoveMetaDimension");
 const sizeEl = document.getElementById("bgremoveMetaSize");
 const statusEl = document.getElementById("bgremoveMetaStatus");
 const modeInputs = Array.from(document.querySelectorAll("input[name='bgremoveMode']"));
+const formatInputs = Array.from(document.querySelectorAll("input[name='bgremoveDownloadFormat']"));
 
 let currentFile = null;
 let originalObjectUrl = "";
 let resultObjectUrl = "";
+let resultBlob = null;
 
 apiBaseEl.textContent = API_BASE_URL;
 
@@ -55,19 +57,23 @@ processBtn.addEventListener("click", () => {
   }
 });
 
-downloadBtn.addEventListener("click", () => {
+downloadBtn.addEventListener("click", async () => {
   if (!resultObjectUrl) {
     return;
   }
 
-  const link = document.createElement("a");
-  const baseName = currentFile ? currentFile.name.replace(/\.[^.]+$/, "") : "bg-removed";
-  link.href = resultObjectUrl;
-  link.download = `${baseName}_transparent.png`;
-  link.click();
+  try {
+    await downloadResult();
+  } catch (error) {
+    setStatus(error.message || "下载失败，请重新生成后再试。", true);
+  }
 });
 
 resetBtn.addEventListener("click", resetTool);
+
+formatInputs.forEach((input) => {
+  input.addEventListener("change", updateDownloadButtonText);
+});
 
 function handleFile(file) {
   if (!ACCEPTED_TYPES.has(file.type)) {
@@ -125,20 +131,21 @@ async function removeBackground(file) {
       throw new Error(message || `处理失败，HTTP ${response.status}`);
     }
 
-    const blob = await response.blob();
-    if (blob.size === 0) {
+    resultBlob = await response.blob();
+    if (resultBlob.size === 0) {
       throw new Error("后端返回了空文件。");
     }
 
     if (resultObjectUrl) {
       URL.revokeObjectURL(resultObjectUrl);
     }
-    resultObjectUrl = URL.createObjectURL(blob);
+    resultObjectUrl = URL.createObjectURL(resultBlob);
     resultPreview.src = resultObjectUrl;
     resultPreview.hidden = false;
     resultPlaceholder.hidden = true;
     downloadBtn.disabled = false;
-    setStatus(`抠图完成（${getSelectedModeLabel()}），可以下载透明 PNG。`);
+    updateDownloadButtonText();
+    setStatus(`抠图完成（${getSelectedModeLabel()}），可以下载 ${getSelectedFormatLabel()}。`);
   } catch (error) {
     resetResult();
     setStatus(getFriendlyErrorMessage(error), true);
@@ -167,6 +174,7 @@ function resetTool() {
 
 function resetResult() {
   downloadBtn.disabled = true;
+  resultBlob = null;
   if (resultObjectUrl) {
     URL.revokeObjectURL(resultObjectUrl);
     resultObjectUrl = "";
@@ -212,6 +220,71 @@ function getSelectedModeLabel() {
   const label = checkedInput ? checkedInput.closest("label") : null;
   const title = label ? label.querySelector("strong") : null;
   return title ? title.textContent : "标准";
+}
+
+async function downloadResult() {
+  const format = getSelectedFormat();
+  const baseName = currentFile ? currentFile.name.replace(/\.[^.]+$/, "") : "bg-removed";
+
+  if (format === "jpg") {
+    setStatus("正在生成 JPG 白底图片...");
+    const jpgBlob = await convertPngBlobToJpg(resultBlob);
+    triggerDownload(URL.createObjectURL(jpgBlob), `${baseName}_white_bg.jpg`, true);
+    setStatus("JPG 已生成并开始下载。");
+    return;
+  }
+
+  triggerDownload(resultObjectUrl, `${baseName}_transparent.png`, false);
+}
+
+function triggerDownload(url, filename, shouldRevoke) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+
+  if (shouldRevoke) {
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+}
+
+async function convertPngBlobToJpg(blob) {
+  if (!blob) {
+    throw new Error("没有可下载的抠图结果。");
+  }
+
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const context = canvas.getContext("2d");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.drawImage(bitmap, 0, 0);
+  bitmap.close();
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((jpgBlob) => {
+      if (jpgBlob) {
+        resolve(jpgBlob);
+      } else {
+        reject(new Error("JPG 生成失败。"));
+      }
+    }, "image/jpeg", 0.92);
+  });
+}
+
+function getSelectedFormat() {
+  const checkedInput = formatInputs.find((input) => input.checked);
+  return checkedInput ? checkedInput.value : "png";
+}
+
+function getSelectedFormatLabel() {
+  return getSelectedFormat() === "jpg" ? "JPG" : "透明 PNG";
+}
+
+function updateDownloadButtonText() {
+  downloadBtn.textContent = `下载 ${getSelectedFormat() === "jpg" ? "JPG" : "PNG"}`;
 }
 
 function formatBytes(bytes) {
