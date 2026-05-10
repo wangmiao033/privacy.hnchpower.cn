@@ -109,6 +109,7 @@
         <div class="bgremove-text-grid">
           <label class="bgremove-select-label" for="bgremoveTextRegion">提取区域</label>
           <select id="bgremoveTextRegion" class="bgremove-select">
+            <option value="custom">自定义框选</option>
             <option value="poster">海报文字组合</option>
             <option value="top">顶部 Logo</option>
             <option value="title">主标题区域</option>
@@ -135,14 +136,16 @@
         </div>
         <div class="bgremove-actions">
           <button id="bgremoveExtractTextBtn" class="bgremove-btn bgremove-btn-primary" type="button" disabled>提取文字</button>
+          <button id="bgremoveSelectTextRegionBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>框选文字区域</button>
           <button id="bgremoveDownloadTextBtn" class="bgremove-btn bgremove-btn-light" type="button" disabled>下载文字 PNG</button>
         </div>
       </section>
 
       <section class="bgremove-card bgremove-card-preview">
         <h2>原图预览</h2>
-        <div class="bgremove-preview-box">
+        <div id="bgremoveOriginalPreviewBox" class="bgremove-preview-box">
           <img id="bgremoveOriginalPreview" alt="原图预览" hidden />
+          <div id="bgremoveSelectionRect" class="bgremove-selection-rect" hidden></div>
           <p id="bgremoveOriginalPlaceholder" class="bgremove-placeholder">上传后在此显示原图</p>
         </div>
       </section>

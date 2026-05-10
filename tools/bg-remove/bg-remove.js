@@ -11,6 +11,7 @@ const resetBtn = document.getElementById("bgremoveResetBtn");
 const convertBtn = document.getElementById("bgremoveConvertBtn");
 const convertFormatSelect = document.getElementById("bgremoveConvertFormat");
 const extractTextBtn = document.getElementById("bgremoveExtractTextBtn");
+const selectTextRegionBtn = document.getElementById("bgremoveSelectTextRegionBtn");
 const downloadTextBtn = document.getElementById("bgremoveDownloadTextBtn");
 const textRegionSelect = document.getElementById("bgremoveTextRegion");
 const textPresetSelect = document.getElementById("bgremoveTextPreset");
@@ -23,6 +24,8 @@ const resultPreview = document.getElementById("bgremoveResultPreview");
 const resultCanvas = document.getElementById("bgremoveResultCanvas");
 const textCanvas = document.getElementById("bgremoveTextCanvas");
 const resultPreviewBox = resultCanvas.closest(".bgremove-preview-box");
+const originalPreviewBox = document.getElementById("bgremoveOriginalPreviewBox");
+const selectionRect = document.getElementById("bgremoveSelectionRect");
 const originalPlaceholder = document.getElementById("bgremoveOriginalPlaceholder");
 const resultPlaceholder = document.getElementById("bgremoveResultPlaceholder");
 const textPlaceholder = document.getElementById("bgremoveTextPlaceholder");
@@ -46,6 +49,9 @@ let resultBaseBitmap = null;
 let brushMode = "restore";
 let isPainting = false;
 let hasTextExtraction = false;
+let isSelectingTextRegion = false;
+let selectionStart = null;
+let customTextRegion = null;
 
 apiBaseEl.textContent = API_BASE_URL;
 
@@ -111,6 +117,54 @@ extractTextBtn.addEventListener("click", async () => {
   } catch (error) {
     setStatus(error.message || "文字提取失败，请调整参数后重试。", true);
   }
+});
+
+selectTextRegionBtn.addEventListener("click", () => {
+  if (!currentFile) {
+    return;
+  }
+  isSelectingTextRegion = true;
+  textRegionSelect.value = "custom";
+  originalPreviewBox.classList.add("is-selecting");
+  setStatus("在原图预览上拖拽框选要提取的文字区域。");
+});
+
+originalPreviewBox.addEventListener("pointerdown", (event) => {
+  if (!isSelectingTextRegion || originalPreview.hidden) {
+    return;
+  }
+  event.preventDefault();
+  selectionStart = getOriginalImagePoint(event);
+  originalPreviewBox.setPointerCapture(event.pointerId);
+  updateSelectionRect(selectionStart, selectionStart);
+});
+
+originalPreviewBox.addEventListener("pointermove", (event) => {
+  if (!isSelectingTextRegion || !selectionStart) {
+    return;
+  }
+  event.preventDefault();
+  updateSelectionRect(selectionStart, getOriginalImagePoint(event));
+});
+
+originalPreviewBox.addEventListener("pointerup", (event) => {
+  if (!isSelectingTextRegion || !selectionStart) {
+    return;
+  }
+  event.preventDefault();
+  const end = getOriginalImagePoint(event);
+  customTextRegion = normalizeImageRegion(selectionStart, end);
+  selectionStart = null;
+  isSelectingTextRegion = false;
+  originalPreviewBox.classList.remove("is-selecting");
+  textRegionSelect.value = "custom";
+  setStatus("已框选文字区域，可以点击“提取文字”。");
+});
+
+originalPreviewBox.addEventListener("pointercancel", () => {
+  selectionStart = null;
+  isSelectingTextRegion = false;
+  originalPreviewBox.classList.remove("is-selecting");
 });
 
 downloadTextBtn.addEventListener("click", async () => {
@@ -208,6 +262,7 @@ function handleFile(file) {
   processBtn.disabled = false;
   convertBtn.disabled = false;
   extractTextBtn.disabled = false;
+  selectTextRegionBtn.disabled = false;
 
   const image = new Image();
   image.onload = () => {
@@ -274,6 +329,9 @@ function resetTool() {
   processBtn.disabled = true;
   convertBtn.disabled = true;
   extractTextBtn.disabled = true;
+  selectTextRegionBtn.disabled = true;
+  customTextRegion = null;
+  selectionRect.hidden = true;
   resetTextExtraction();
   resetResult();
 
@@ -444,6 +502,14 @@ async function extractTextLayer() {
 }
 
 function getTextRegionMask(width, height, region) {
+  if (region === "custom" && customTextRegion) {
+    const left = customTextRegion.left / width;
+    const top = customTextRegion.top / height;
+    const right = customTextRegion.right / width;
+    const bottom = customTextRegion.bottom / height;
+    return createRegionMask([[left, top, right, bottom]], width, height);
+  }
+
   const regions = {
     top: [[0.52, 0, 1, 0.22]],
     title: [[0, 0.58, 1, 0.88]],
@@ -456,7 +522,10 @@ function getTextRegionMask(width, height, region) {
     all: [[0, 0, 1, 1]],
   };
   const selectedRegions = regions[region] || regions.poster;
+  return createRegionMask(selectedRegions, width, height);
+}
 
+function createRegionMask(selectedRegions, width, height) {
   return (x, y) => {
     const nx = x / width;
     const ny = y / height;
@@ -466,6 +535,42 @@ function getTextRegionMask(width, height, region) {
       }
     }
     return 0;
+  };
+}
+
+function getOriginalImagePoint(event) {
+  const imageRect = originalPreview.getBoundingClientRect();
+  const x = clamp(event.clientX - imageRect.left, 0, imageRect.width);
+  const y = clamp(event.clientY - imageRect.top, 0, imageRect.height);
+  return {
+    displayX: x,
+    displayY: y,
+    imageX: (x / imageRect.width) * originalPreview.naturalWidth,
+    imageY: (y / imageRect.height) * originalPreview.naturalHeight,
+    imageRect,
+  };
+}
+
+function updateSelectionRect(start, end) {
+  const imageRect = originalPreview.getBoundingClientRect();
+  const boxRect = originalPreviewBox.getBoundingClientRect();
+  const left = Math.min(start.displayX, end.displayX);
+  const top = Math.min(start.displayY, end.displayY);
+  const width = Math.abs(start.displayX - end.displayX);
+  const height = Math.abs(start.displayY - end.displayY);
+  selectionRect.style.left = `${imageRect.left - boxRect.left + left}px`;
+  selectionRect.style.top = `${imageRect.top - boxRect.top + top}px`;
+  selectionRect.style.width = `${width}px`;
+  selectionRect.style.height = `${height}px`;
+  selectionRect.hidden = false;
+}
+
+function normalizeImageRegion(start, end) {
+  return {
+    left: Math.max(0, Math.min(start.imageX, end.imageX)),
+    top: Math.max(0, Math.min(start.imageY, end.imageY)),
+    right: Math.min(originalPreview.naturalWidth, Math.max(start.imageX, end.imageX)),
+    bottom: Math.min(originalPreview.naturalHeight, Math.max(start.imageY, end.imageY)),
   };
 }
 
