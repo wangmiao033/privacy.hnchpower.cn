@@ -11,6 +11,10 @@ export default {
       if (url.pathname === "/health") {
         return json({ ok: true, service: "asset-manager-worker" }, cors);
       }
+      const publicAssetMatch = url.pathname.match(/^\/assets\/(.+)$/);
+      if (publicAssetMatch && request.method === "GET") {
+        return servePublicAsset(publicAssetMatch[1], env, cors);
+      }
       if (url.pathname === "/api/assets" && request.method === "GET") {
         return listAssets(request, env, cors);
       }
@@ -48,7 +52,8 @@ async function uploadAsset(request, env, cors) {
   const gameSlug = slugify(form.get("gameName") || "unknown-game");
   const assetId = `asset_${crypto.randomUUID()}`;
   const key = `${gameSlug}/${category}/${now.getUTCFullYear()}/${formatKeyDate(now)}-${randomPart()}.${extension || "bin"}`;
-  const publicUrl = `${String(env.R2_PUBLIC_BASE_URL || "").replace(/\/+$/, "")}/${key}`;
+  const publicBaseUrl = String(env.R2_PUBLIC_BASE_URL || new URL(request.url).origin).replace(/\/+$/, "");
+  const publicUrl = `${publicBaseUrl}/assets/${key}`;
 
   await env.ASSETS_BUCKET.put(key, file.stream(), {
     httpMetadata: { contentType: file.type || "application/octet-stream" },
@@ -81,6 +86,20 @@ async function uploadAsset(request, env, cors) {
   });
 
   return json({ ok: true, asset: metadata }, cors);
+}
+
+async function servePublicAsset(encodedKey, env, cors) {
+  const key = decodeURIComponent(encodedKey);
+  if (!key || key.startsWith(META_PREFIX) || key.startsWith(THUMB_PREFIX)) {
+    throw httpError("Not found", 404);
+  }
+  const object = await env.ASSETS_BUCKET.get(key);
+  if (!object) throw httpError("Asset not found", 404);
+  const headers = new Headers(cors);
+  object.writeHttpMetadata(headers);
+  headers.set("etag", object.httpEtag);
+  headers.set("Cache-Control", "public, max-age=31536000, immutable");
+  return new Response(object.body, { headers });
 }
 
 async function listAssets(request, env, cors) {

@@ -1,2 +1,4 @@
 supabase/.temp/
 backend-bg-remove/.venv/
+workers/wrangler.toml
+workers/.wrangler/
