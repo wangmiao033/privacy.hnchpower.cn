@@ -1,4 +1,19 @@
-const API_BASE_URL = window.BG_REMOVE_API_BASE_URL || "http://localhost:8000";
+function resolveBgRemoveApiBaseUrl() {
+  var raw = typeof window !== "undefined" ? window.BG_REMOVE_API_BASE_URL : undefined;
+  if (typeof raw === "string" && raw.trim()) {
+    return raw.trim().replace(/\/+$/, "");
+  }
+  var host = "";
+  try {
+    host = typeof location !== "undefined" ? location.hostname || "" : "";
+  } catch (_e) {}
+  if (host === "localhost" || host === "127.0.0.1") {
+    return "http://localhost:8000";
+  }
+  return "";
+}
+
+const API_BASE_URL = resolveBgRemoveApiBaseUrl();
 
 const MAX_FILE_SIZE = 12 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
@@ -53,7 +68,7 @@ let isSelectingTextRegion = false;
 let selectionStart = null;
 let customTextRegion = null;
 
-apiBaseEl.textContent = API_BASE_URL;
+apiBaseEl.textContent = API_BASE_URL || "未配置（请编辑 bg-remove-config.js）";
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files && fileInput.files[0];
@@ -275,6 +290,13 @@ function handleFile(file) {
 }
 
 async function removeBackground(file) {
+  if (!API_BASE_URL) {
+    setStatus(
+      "当前为公网访问但未配置抠图 API。请先部署 backend-bg-remove，再在 bg-remove-config.js 中设置 BG_REMOVE_API_BASE_URL（HTTPS 根地址）。",
+      true
+    );
+    return;
+  }
   processBtn.disabled = true;
   downloadBtn.disabled = true;
   resetResult();
@@ -393,7 +415,10 @@ function trimTrailingSlash(value) {
 function getFriendlyErrorMessage(error) {
   const message = error && error.message ? error.message : "";
   if (message === "Failed to fetch" || message.includes("NetworkError")) {
-    return `无法连接抠图后端：请确认 ${API_BASE_URL} 已启动，或上线后把 API 地址改为公网服务。`;
+    if (!API_BASE_URL) {
+      return "未配置抠图 API：请在 bg-remove-config.js 中填写公网服务地址（浏览器无法访问你电脑上的 localhost）。";
+    }
+    return `无法连接抠图后端：请确认 ${API_BASE_URL} 已部署且可公网访问（本地开发请先启动 uvicorn 端口 8000）。`;
   }
   return message || "抠图失败，请检查后端服务。";
 }

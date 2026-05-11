@@ -31,6 +31,7 @@
         <h2>上传一次，完成抠图、格式转换和文字提取</h2>
       </div>
       <p class="bgremove-notice">图片会发送到当前配置的抠图 API 处理；请不要上传无授权或敏感图片。</p>
+      <p class="bgremove-notice bgremove-notice--secondary">公网访问需在仓库 <code>tools/bg-remove/bg-remove-config.js</code> 中填写已部署的抠图服务地址（参见 <code>backend-bg-remove/README.md</code>）。本地开发可先启动 <code>backend-bg-remove</code> 默认端口 8000。</p>
     </section>
 
     <section class="bgremove-layout" aria-label="在线抠图工具">
@@ -231,6 +232,7 @@
     </section>
   </main>
 
+  <script src="bg-remove-config.js"></script>
   <script src="bg-remove.js"></script>
 </body>
 </html>

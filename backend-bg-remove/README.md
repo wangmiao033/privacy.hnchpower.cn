@@ -44,15 +44,10 @@ docker run --rm -p 8000:8000 hn-bg-remove
 ## 部署说明
 
 - 静态站继续部署到 `privacy.hnchpower.cn`。
-- 本目录需要单独部署到 Render、Koyeb、Railway 或 Docker 服务器。
-- 前端 API 地址配置在 `tools/bg-remove/bg-remove.js` 顶部：
+- 本目录需要单独部署到 **Render、Koyeb、Railway、自有 VPS + Docker** 等，并确保公网 **HTTPS** 可访问健康检查 `GET /health`。
+- 部署完成后，在静态站仓库里编辑 **`tools/bg-remove/bg-remove-config.js`**，将 `BG_REMOVE_API_BASE_URL` 设为你的服务根地址（无末尾斜杠），例如 `https://hn-bg-remove.onrender.com`。
+- 公网用户浏览器**不能**访问你个人电脑上的 `http://localhost:8000`；未配置时，线上页面会显示「未配置」而不是误连本机。
 
-```js
-const API_BASE_URL = window.BG_REMOVE_API_BASE_URL || "http://localhost:8000";
-```
+### 同域反代（可选）
 
-上线后可以改成：
-
-```js
-const API_BASE_URL = window.BG_REMOVE_API_BASE_URL || "https://bgapi.hnchpower.cn";
-```
+若希望 API 与主站同域（如 `https://privacy.hnchpower.cn/bg-api`），在 Nginx 等反代到本服务后，将 `bg-remove-config.js` 中地址写成该前缀即可（仍须为 HTTPS）。

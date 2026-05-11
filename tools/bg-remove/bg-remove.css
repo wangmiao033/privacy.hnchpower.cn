@@ -87,6 +87,21 @@
   font-size: 14px;
 }
 
+.bgremove-notice--secondary {
+  margin-top: 8px;
+  max-width: min(720px, 100%);
+  font-size: 13px;
+  line-height: 1.55;
+  border-color: #94a3b8;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.bgremove-notice--secondary code {
+  font-size: 0.9em;
+  word-break: break-all;
+}
+
 .bgremove-layout {
   display: grid;
   grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
