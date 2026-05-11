@@ -77,3 +77,11 @@ docker run --rm -p 8000:8000 hn-bg-remove
 ### 同域反代（可选）
 
 若希望 API 与主站同域（如 `https://privacy.hnchpower.cn/bg-api`），在 Nginx 等反代到本服务后，将 `bg-remove-config.js` 中地址写成该前缀即可（仍须为 HTTPS）。
+
+### 浏览器报 CORS，控制台又有 502？
+
+**502 Bad Gateway** 表示请求往往还没进到 FastAPI（容器未就绪、崩溃或内存不足等），网关返回的错误页**不带** `Access-Control-Allow-Origin`，浏览器会同时报「被 CORS 拦截」。应先排除 Render 侧问题，而不是只改 CORS。
+
+1. 新标签打开：`https://你的服务.onrender.com/health`，应得到 `{"status":"ok"}`；若此处也是 502，打开 Render → **Logs** 看启动/崩溃原因（常见：内存不够、首次拉模型超时）。
+2. 确认镜像入口为 **`uvicorn main:app`**，且进程监听 **`PORT`**（见根目录 `Dockerfile`）。
+3. 前端发起的抠图地址应为 **`{API根}/api/remove-background`**，API 根不要带多余路径。

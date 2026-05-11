@@ -5,6 +5,7 @@ from app import app
 
 ALLOWED_ORIGINS = [
     "https://privacy.hnchpower.cn",
+    "https://www.privacy.hnchpower.cn",
     "https://privacy.hnchpower-cn.onrender.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
