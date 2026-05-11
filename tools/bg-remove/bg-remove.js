@@ -73,6 +73,7 @@ let selectionStart = null;
 let customTextRegion = null;
 
 apiBaseEl.textContent = API_BASE_URL || "未配置（请编辑 bg-remove-config.js）";
+warmupBackend();
 
 fileInput.addEventListener("change", () => {
   const file = fileInput.files && fileInput.files[0];
@@ -254,6 +255,20 @@ convertBtn.addEventListener("click", async () => {
 formatInputs.forEach((input) => {
   input.addEventListener("change", updateDownloadButtonText);
 });
+
+async function warmupBackend() {
+  if (!API_BASE_URL || API_BASE_URL.includes("localhost")) {
+    return;
+  }
+  try {
+    await fetch(`${trimTrailingSlash(API_BASE_URL)}/api/warmup?mode=${encodeURIComponent(getSelectedMode())}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+  } catch {
+    // Warmup is best-effort. The real request still reports user-facing errors.
+  }
+}
 
 function handleFile(file) {
   if (!ACCEPTED_TYPES.has(file.type)) {

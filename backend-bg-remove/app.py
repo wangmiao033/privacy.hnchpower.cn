@@ -34,6 +34,15 @@ SESSION_CACHE = {}
 app = FastAPI(title="HN Tools Background Remove API")
 
 
+@app.get("/api/warmup")
+def warmup(mode: str = "standard"):
+    config = MODE_CONFIG.get(mode)
+    if not config:
+        raise HTTPException(status_code=400, detail="Unsupported warmup mode.")
+    get_session(config["model"])
+    return {"status": "ready", "mode": mode, "model": config["model"]}
+
+
 @app.post("/api/remove-background")
 async def remove_background(file: UploadFile = File(...), mode: str = Form("standard")):
     if file.content_type not in ALLOWED_CONTENT_TYPES:
