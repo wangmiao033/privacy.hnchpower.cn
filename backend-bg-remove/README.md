@@ -41,6 +41,22 @@ docker build -t hn-bg-remove .
 docker run --rm -p 8000:8000 hn-bg-remove
 ```
 
+## Render 一键部署（推荐）
+
+仓库根目录已有 **`render.yaml`**（Blueprint）。
+
+1. 打开 [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**。
+2. 连接 GitHub 仓库 **`wangmiao033/privacy.hnchpower.cn`**（或你 fork 的地址），选中分支 **`main`**。
+3. **Apply**，等待 Docker 构建完毕（首次约 10～20 分钟，镜像较大）。
+4. 服务就绪后会得到 **`https://xxxx.onrender.com`**，浏览器访问 `https://xxxx.onrender.com/health` 应看见 `{"status":"ok"}`。
+5. 打开本站 **`tools/bg-remove/bg-remove-config.js`**，设置：
+   ```javascript
+   global.BG_REMOVE_API_BASE_URL = "https://xxxx.onrender.com";
+   ```
+6. 提交并部署静态站；抠图页即可使用该 API。
+
+说明：免费实例冷启动可能较慢；首次抠图会下载 ONNX 模型，有可能超时，可多试一次。
+
 ## 部署说明
 
 - 静态站继续部署到 `privacy.hnchpower.cn`。

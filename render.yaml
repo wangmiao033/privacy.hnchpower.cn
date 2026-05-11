@@ -1,0 +1,11 @@
+# Render Blueprint：Dashboard → New → Blueprint → 连接本仓库 → Apply
+# 上线后把下发 URL 写入 tools/bg-remove/bg-remove-config.js
+services:
+  - type: web
+    name: hn-bg-remove-api
+    runtime: docker
+    rootDir: backend-bg-remove
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: singapore
+    healthCheckPath: /health
