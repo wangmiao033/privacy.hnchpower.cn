@@ -16,9 +16,11 @@ export default {
         return servePublicAsset(publicAssetMatch[1], env, cors);
       }
       if (url.pathname === "/api/assets" && request.method === "GET") {
+        requireAuth(request, env);
         return listAssets(request, env, cors);
       }
       if (url.pathname === "/api/assets/stats" && request.method === "GET") {
+        requireAuth(request, env);
         return assetStats(env, cors);
       }
       if (url.pathname === "/api/assets/upload" && request.method === "POST") {
