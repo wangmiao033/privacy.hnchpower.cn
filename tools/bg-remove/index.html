@@ -25,11 +25,23 @@
   </header>
 
   <main class="bgremove-main">
-    <p class="bgremove-notice">图片会发送到当前配置的抠图 API 处理；请不要上传无授权或敏感图片。</p>
+    <section class="bgremove-workbench-head" aria-label="工具概览">
+      <div>
+        <p class="bgremove-kicker">图片处理工作台</p>
+        <h2>上传一次，完成抠图、格式转换和文字提取</h2>
+      </div>
+      <p class="bgremove-notice">图片会发送到当前配置的抠图 API 处理；请不要上传无授权或敏感图片。</p>
+    </section>
 
     <section class="bgremove-layout" aria-label="在线抠图工具">
-      <section class="bgremove-card bgremove-card-upload">
-        <h2>上传图片</h2>
+      <section class="bgremove-card bgremove-card-upload bgremove-control-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">01 输入</p>
+            <h2>上传图片</h2>
+          </div>
+          <span class="bgremove-card-badge">单张处理</span>
+        </div>
         <label id="bgremoveDropZone" class="bgremove-dropzone" for="bgremoveFileInput">
           <strong>点击上传 / 拖拽上传</strong>
           <span>支持 png、jpg、jpeg、webp，单张不超过 12MB</span>
@@ -93,8 +105,13 @@
         </div>
       </section>
 
-      <aside class="bgremove-card bgremove-card-meta">
-        <h2>处理信息</h2>
+      <aside class="bgremove-card bgremove-card-meta bgremove-info-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">状态</p>
+            <h2>处理信息</h2>
+          </div>
+        </div>
         <dl class="bgremove-meta-list">
           <div class="bgremove-meta-item"><dt>API 地址</dt><dd id="bgremoveApiBase">-</dd></div>
           <div class="bgremove-meta-item"><dt>图片尺寸</dt><dd id="bgremoveMetaDimension">-</dd></div>
@@ -103,8 +120,14 @@
         </dl>
       </aside>
 
-      <section class="bgremove-card bgremove-card-text">
-        <h2>文字 / Logo 提取</h2>
+      <section class="bgremove-card bgremove-card-text bgremove-text-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">02 扩展</p>
+            <h2>文字 / Logo 提取</h2>
+          </div>
+          <span class="bgremove-card-badge">本地处理</span>
+        </div>
         <p class="bgremove-tool-desc">从当前上传图片里提取标题字、Logo、宣传语，导出透明 PNG。适合海报文字粗提取，复杂背景建议分区域多试几次。</p>
         <div class="bgremove-text-grid">
           <label class="bgremove-select-label" for="bgremoveTextRegion">提取区域</label>
@@ -141,8 +164,13 @@
         </div>
       </section>
 
-      <section class="bgremove-card bgremove-card-preview">
-        <h2>原图预览</h2>
+      <section class="bgremove-card bgremove-card-preview bgremove-original-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">预览</p>
+            <h2>原图预览</h2>
+          </div>
+        </div>
         <div id="bgremoveOriginalPreviewBox" class="bgremove-preview-box">
           <img id="bgremoveOriginalPreview" alt="原图预览" hidden />
           <div id="bgremoveSelectionRect" class="bgremove-selection-rect" hidden></div>
@@ -150,16 +178,27 @@
         </div>
       </section>
 
-      <section class="bgremove-card bgremove-card-preview">
-        <h2>文字 / Logo 结果</h2>
+      <section class="bgremove-card bgremove-card-preview bgremove-text-result-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">输出</p>
+            <h2>文字 / Logo 结果</h2>
+          </div>
+        </div>
         <div class="bgremove-preview-box bgremove-result-bg">
           <canvas id="bgremoveTextCanvas" class="bgremove-result-canvas" hidden></canvas>
           <p id="bgremoveTextPlaceholder" class="bgremove-placeholder">提取后在此显示透明文字 PNG 结果</p>
         </div>
       </section>
 
-      <section class="bgremove-card bgremove-card-preview">
-        <h2>抠图结果</h2>
+      <section class="bgremove-card bgremove-card-preview bgremove-result-panel">
+        <div class="bgremove-card-head">
+          <div>
+            <p class="bgremove-card-eyebrow">03 精修</p>
+            <h2>抠图结果</h2>
+          </div>
+          <span class="bgremove-card-badge">可手动修补</span>
+        </div>
         <div class="bgremove-editor" aria-label="抠图结果修补工具">
           <div class="bgremove-editor-row">
             <span class="bgremove-editor-label">预览背景</span>
