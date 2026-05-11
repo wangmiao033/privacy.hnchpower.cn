@@ -280,6 +280,14 @@
       var url = buildUrl(code);
       urlEl.value = url;
       timeEl.textContent = "最近一次生成：" + new Date().toLocaleTimeString("zh-CN", { hour12: false });
+      if (typeof window.logPolicyPublishDirect === "function") {
+        void window.logPolicyPublishDirect({
+          publish_url: url,
+          company_name: null,
+          app_name: titleEl.value.trim(),
+          publish_time: new Date().toISOString(),
+        });
+      }
       window.open(url, "_blank", "noopener,noreferrer");
       copyText(url).then(
         function () { showToast("发布成功，正式链接已复制"); },

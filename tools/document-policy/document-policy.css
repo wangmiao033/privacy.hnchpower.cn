@@ -211,6 +211,13 @@ body.doc-tool-page {
   font-size: 0.78rem;
 }
 
+.doc-publish-account-hint a {
+  color: #1d4ed8;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .doc-result {
   display: grid;
   gap: 0.4rem;

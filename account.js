@@ -32,10 +32,21 @@
     return y + "-" + m + "-" + day + " " + hh + ":" + mm;
   }
 
-  function buildShortLink(code) {
-    var url = new URL("agreement.html", window.location.href);
-    url.searchParams.set("id", code);
+  function buildShortLink(row) {
+    var page = row.kind === "document" ? "document-policy.html" : "agreement.html";
+    var url = new URL(page, window.location.href);
+    url.searchParams.set("id", row.short_code);
     return url.href;
+  }
+
+  function rowDisplayTitle(row) {
+    if (row.kind === "document") return row.title || "未命名文档";
+    return row.game || "未命名应用";
+  }
+
+  function rowMetaLine(row) {
+    if (row.kind === "document") return "类型：文档隐私链接（document-policy）";
+    return "公司：" + escapeHtml(row.company || "-");
   }
 
   function renderRows(rows) {
@@ -43,20 +54,22 @@
       emptyEl.hidden = false;
       listEl.hidden = true;
       listEl.innerHTML = "";
+      emptyEl.textContent = "暂无短链记录，去首页生成第一条吧。";
       return;
     }
     emptyEl.hidden = true;
     listEl.hidden = false;
 
     listEl.innerHTML = rows.map(function (row) {
-      var link = buildShortLink(row.short_code);
+      var normalized = row.kind ? row : { kind: "agreement", short_code: row.short_code, company: row.company, game: row.game, created_at: row.created_at };
+      var link = buildShortLink(normalized);
       return (
         '<article class="link-item">' +
           '<div class="link-item-top">' +
-            '<h3 class="link-item-title">' + escapeHtml(row.game || "未命名应用") + "</h3>" +
+            '<h3 class="link-item-title">' + escapeHtml(rowDisplayTitle(normalized)) + "</h3>" +
             '<span class="link-item-time">' + escapeHtml(formatCreatedAt(row.created_at)) + "</span>" +
           "</div>" +
-          '<p class="link-item-company">公司：' + escapeHtml(row.company || "-") + "</p>" +
+          '<p class="link-item-company">' + rowMetaLine(normalized) + "</p>" +
           '<div class="link-item-url">' +
             '<input class="link-item-input" type="text" readonly value="' + escapeAttr(link) + '" />' +
           "</div>" +

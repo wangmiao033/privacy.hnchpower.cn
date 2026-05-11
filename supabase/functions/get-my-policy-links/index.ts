@@ -33,13 +33,59 @@ Deno.serve(async (req) => {
   const userId = userRes.data.user?.id;
   if (userRes.error || !userId) return json({ error: "Invalid user token" }, 401);
 
-  const result = await admin
+  const policyResult = await admin
     .from("policy_links")
     .select("short_code, company, game, created_at, created_by")
     .eq("created_by", userId)
     .order("created_at", { ascending: false })
     .limit(100);
 
-  if (result.error) return json({ error: result.error.message || "Query failed" }, 500);
-  return json({ data: result.data || [] });
+  if (policyResult.error) return json({ error: policyResult.error.message || "Query failed" }, 500);
+
+  const docResult = await admin
+    .from("document_policy_links")
+    .select("short_code, title, created_at, created_by")
+    .eq("created_by", userId)
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (docResult.error) return json({ error: docResult.error.message || "Query failed" }, 500);
+
+  type Row =
+    | {
+        kind: "agreement";
+        short_code: string;
+        company: string;
+        game: string;
+        created_at: string;
+      }
+    | {
+        kind: "document";
+        short_code: string;
+        title: string;
+        created_at: string;
+      };
+
+  const agreementRows: Row[] = (policyResult.data || []).map((r) => ({
+    kind: "agreement" as const,
+    short_code: r.short_code,
+    company: r.company,
+    game: r.game,
+    created_at: r.created_at,
+  }));
+
+  const documentRows: Row[] = (docResult.data || []).map((r) => ({
+    kind: "document" as const,
+    short_code: r.short_code,
+    title: r.title,
+    created_at: r.created_at,
+  }));
+
+  const merged = [...agreementRows, ...documentRows].sort((a, b) => {
+    const ta = new Date(a.created_at).getTime();
+    const tb = new Date(b.created_at).getTime();
+    return tb - ta;
+  }).slice(0, 100);
+
+  return json({ data: merged });
 });
