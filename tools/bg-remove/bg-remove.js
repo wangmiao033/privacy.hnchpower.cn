@@ -444,7 +444,11 @@ function getFriendlyErrorMessage(error) {
     if (!API_BASE_URL) {
       return "未配置抠图 API：请在 bg-remove-config.js 中填写公网服务地址（浏览器无法访问你电脑上的 localhost）。";
     }
-    return `无法连接抠图后端：请确认 ${API_BASE_URL} 已部署且可公网访问（本地开发请先启动 uvicorn 端口 8000）。`;
+    return (
+      "连接失败：若控制台同时有 CORS 与 502，多为网关错误（未到 Python）。Render 免费 512MB 跑 rembg 抠图易 OOM；" +
+      "请到 Logs 确认并升级实例内存（建议≥1GB），先用「标准」模式与小图重试。API：" +
+      API_BASE_URL
+    );
   }
   return message || "抠图失败，请检查后端服务。";
 }
