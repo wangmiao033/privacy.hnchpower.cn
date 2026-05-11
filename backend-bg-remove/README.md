@@ -85,3 +85,15 @@ docker run --rm -p 8000:8000 hn-bg-remove
 1. 新标签打开：`https://你的服务.onrender.com/health`，应得到 `{"status":"ok"}`；若此处也是 502，打开 Render → **Logs** 看启动/崩溃原因（常见：内存不够、首次拉模型超时）。
 2. 确认镜像入口为 **`uvicorn main:app`**，且进程监听 **`PORT`**（见根目录 `Dockerfile`）。
 3. 前端发起的抠图地址应为 **`{API根}/api/remove-background`**，API 根不要带多余路径。
+
+### Render 部署「要等很久」？
+
+正常现象：**Docker 镜像**里要 `apt` 装系统库、`pip` 装 **rembg / onnxruntime** 等，镜像体积大，**单次构建常需十几分钟**。首次或缓存失效时更明显。
+
+**注意**：若 Git 提交只改了 **`tools/bg-remove/`、`account.js` 等前端静态文件**，一般**只需让 Vercel（或你的静态托管）重新部署前端**，**不必**在 Render 上反复手动 Deploy 抠图后端——否则每次都完整跑一遍 Docker 构建，体感就会「一直卡在部署」。
+
+只有改了 **`backend-bg-remove/`**（Python、Dockerfile、依赖）时，才需要重新部署 Render 服务。
+
+### 内存不足（Events 里提示超过 512MB）
+
+免费 Web 实例多为 **512MB**，加载 **rembg** 模型与推理时容易 **OOM**，表现为实例重启、502、抠图一直转圈。建议在 Render 中将该服务 **升级实例规格**（更高内存），或换用付费档 / 自建 VPS。
