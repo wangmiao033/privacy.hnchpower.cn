@@ -2,5 +2,6 @@ node_modules/
 
 supabase/.temp/
 backend-bg-remove/.venv/
+backend-bg-remove/__pycache__/
 workers/wrangler.toml
 workers/.wrangler/
