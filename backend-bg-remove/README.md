@@ -57,6 +57,16 @@ docker run --rm -p 8000:8000 hn-bg-remove
 
 说明：免费实例冷启动可能较慢；首次抠图会下载 ONNX 模型，有可能超时，可多试一次。
 
+### Vercel 托管前端时（推荐做法）
+
+仓库根目录已提供 **`npm run build`**（执行 `scripts/inject-bg-remove-config.js`），构建时会按环境变量写入抠图 API 地址。
+
+1. 在 [Vercel](https://vercel.com) 打开本项目 → **Settings → Environment Variables**。
+2. 新增 **`BG_REMOVE_API_BASE_URL`**，值为抠图服务的 HTTPS 根地址（无末尾 `/`），作用域勾选 **Production**（Preview 如需单独测试可再加）。
+3. **Save** 后在 **Deployments** 里对最新部署 **Redeploy**。
+
+勿把带真实 API 地址的 `bg-remove-config.js` 生成结果误提交到 Git；本地跑 `npm run build` 前若未设置该变量，会写入空字符串（与开发默认一致）。
+
 ## 部署说明
 
 - 静态站继续部署到 `privacy.hnchpower.cn`。

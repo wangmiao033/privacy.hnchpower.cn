@@ -1,3 +1,5 @@
+node_modules/
+
 supabase/.temp/
 backend-bg-remove/.venv/
 workers/wrangler.toml
