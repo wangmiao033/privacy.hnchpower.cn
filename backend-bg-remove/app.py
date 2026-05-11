@@ -1,7 +1,6 @@
 from io import BytesIO
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
 from PIL import Image, UnidentifiedImageError
 from rembg import new_session, remove
@@ -33,14 +32,6 @@ SESSION_CACHE = {}
 
 
 app = FastAPI(title="HN Tools Background Remove API")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
-)
 
 
 @app.post("/api/remove-background")
