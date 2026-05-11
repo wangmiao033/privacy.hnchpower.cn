@@ -15,6 +15,10 @@ function resolveBgRemoveApiBaseUrl() {
 
 const API_BASE_URL = resolveBgRemoveApiBaseUrl();
 
+/** Render 冷启动 + rembg 首次拉模型 + CPU 抠大图可能很慢；超时后再提示用户 */
+const BG_REMOVE_FETCH_TIMEOUT_MS = 480000;
+const BG_REMOVE_WAIT_HINT_INTERVAL_MS = 45000;
+
 const MAX_FILE_SIZE = 12 * 1024 * 1024;
 const ACCEPTED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 
@@ -300,7 +304,19 @@ async function removeBackground(file) {
   processBtn.disabled = true;
   downloadBtn.disabled = true;
   resetResult();
-  setStatus("正在上传并处理图片...");
+  setStatus(
+    "正在上传并处理图片…（远程服务冷启动或首次下载模型时可能需数分钟，请耐心等待）"
+  );
+
+  const abortController = new AbortController();
+  const abortTimer = setTimeout(function () {
+    abortController.abort();
+  }, BG_REMOVE_FETCH_TIMEOUT_MS);
+  const waitHintTimer = setInterval(function () {
+    setStatus(
+      "仍在处理中：抠图在服务端运行，免费实例唤醒较慢属正常；若超过约 8 分钟仍未完成将自动中止，你可稍后重试。"
+    );
+  }, BG_REMOVE_WAIT_HINT_INTERVAL_MS);
 
   try {
     const formData = new FormData();
@@ -310,6 +326,7 @@ async function removeBackground(file) {
     const response = await fetch(`${trimTrailingSlash(API_BASE_URL)}/api/remove-background`, {
       method: "POST",
       body: formData,
+      signal: abortController.signal,
     });
 
     if (!response.ok) {
@@ -339,6 +356,8 @@ async function removeBackground(file) {
     resetResult();
     setStatus(getFriendlyErrorMessage(error), true);
   } finally {
+    clearTimeout(abortTimer);
+    clearInterval(waitHintTimer);
     processBtn.disabled = !currentFile;
   }
 }
@@ -413,6 +432,13 @@ function trimTrailingSlash(value) {
 }
 
 function getFriendlyErrorMessage(error) {
+  if (error && error.name === "AbortError") {
+    return (
+      "抠图请求已超时（约 " +
+      Math.round(BG_REMOVE_FETCH_TIMEOUT_MS / 60000) +
+      " 分钟）。常见于远端实例冷启动、内存不足或图片过大；请稍后重试、换「标准」模式或缩小图片。"
+    );
+  }
   const message = error && error.message ? error.message : "";
   if (message === "Failed to fetch" || message.includes("NetworkError")) {
     if (!API_BASE_URL) {
