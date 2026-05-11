@@ -43,11 +43,6 @@ app.add_middleware(
 )
 
 
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
 @app.post("/api/remove-background")
 async def remove_background(file: UploadFile = File(...), mode: str = Form("standard")):
     if file.content_type not in ALLOWED_CONTENT_TYPES:
