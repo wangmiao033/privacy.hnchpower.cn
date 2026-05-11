@@ -81,6 +81,7 @@ function init() {
   els.apiBaseInput.value = localStorage.getItem(ASSET_MANAGER_CONFIG.apiBaseStorageKey) || ASSET_MANAGER_CONFIG.apiBaseUrl;
   els.tokenInput.value = localStorage.getItem(ASSET_MANAGER_CONFIG.tokenStorageKey) || "";
   bindEvents();
+  setView("table");
   updateModeBanner();
   loadRemoteAssets();
   render();
