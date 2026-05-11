@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>素材管理 - 图片素材自动归类与台账</title>
+  <meta name="description" content="批量上传图片、PSD 等素材，自动识别尺寸、大小、文件种类、素材分类、名称和渠道名称，生成可筛选导出的素材台账。" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/asset-manager/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="asset-manager.css" />
+</head>
+<body class="asset-page">
+  <header class="asset-header">
+    <div class="asset-header-inner">
+      <div>
+        <p class="asset-kicker">素材台账</p>
+        <h1>素材管理</h1>
+        <p class="asset-subtitle">批量上传素材，自动读取尺寸、大小、种类，并按名称与规格推断素材分类和渠道名称。</p>
+      </div>
+      <a class="asset-back-link" href="../../index.html">返回首页</a>
+    </div>
+  </header>
+
+  <main class="asset-main">
+    <section id="assetModeBanner" class="asset-mode-banner" aria-live="polite"></section>
+
+    <section class="asset-config" aria-label="API 配置">
+      <div>
+        <h2>Cloudflare R2 配置</h2>
+        <p>未配置 Worker API 时自动进入本地演示模式，素材只在当前浏览器临时展示。</p>
+      </div>
+      <label>
+        <span>Worker API 地址</span>
+        <input id="assetApiBaseInput" type="url" placeholder="https://asset-manager-worker.example.workers.dev" />
+      </label>
+      <label>
+        <span>管理 Token</span>
+        <input id="assetTokenInput" type="password" placeholder="请输入素材管理 Token" />
+      </label>
+      <div class="asset-config-actions">
+        <button id="assetSaveConfigBtn" class="asset-btn asset-btn-light" type="button">保存配置</button>
+        <button id="assetClearConfigBtn" class="asset-btn asset-btn-ghost" type="button">清除配置</button>
+      </div>
+    </section>
+
+    <section class="asset-toolbar" aria-label="素材上传与统计">
+      <label id="assetDropZone" class="asset-dropzone" for="assetFileInput">
+        <strong>点击上传素材 / 拖拽文件到这里</strong>
+        <span>支持 PNG、JPG、WEBP、GIF、SVG、PSD、ZIP、RAR、7Z、MP4、MOV、PDF，单文件不超过 50MB。</span>
+      </label>
+      <input id="assetFileInput" class="asset-file-input" type="file" multiple accept=".png,.jpg,.jpeg,.webp,.gif,.psd,.svg,.pdf,.zip,.rar,.7z,.mp4,.mov,image/png,image/jpeg,image/webp,image/gif,image/svg+xml,application/pdf,video/mp4,video/quicktime" />
+      <input id="assetFolderInput" class="asset-file-input" type="file" multiple webkitdirectory />
+
+      <div class="asset-upload-form" aria-label="上传元数据">
+        <label><span>游戏名</span><input id="assetGameInput" type="text" placeholder="例如：仙帝神兵" /></label>
+        <label><span>渠道名</span><input id="assetChannelInput" type="text" placeholder="例如：九游 / TapTap" /></label>
+        <label>
+          <span>默认分类</span>
+          <select id="assetUploadCategoryInput">
+            <option value="">自动识别</option>
+            <option>未分类</option><option>Logo</option><option>Icon</option><option>Banner</option><option>闪屏</option><option>宣传图</option><option>商店图</option><option>截图</option><option>视频</option><option>PSD源文件</option><option>压缩包</option><option>其他</option>
+          </select>
+        </label>
+        <label><span>标签</span><input id="assetTagsInput" type="text" placeholder="1080x450, 九游, 首页banner" /></label>
+        <label class="asset-form-wide"><span>备注</span><input id="assetNoteInput" type="text" placeholder="素材用途、投放位置、版本说明" /></label>
+        <label class="asset-checkbox"><input id="assetPublicInput" type="checkbox" checked /> <span>公开访问</span></label>
+      </div>
+
+      <div class="asset-actions">
+        <button id="assetFolderBtn" class="asset-btn asset-btn-light" type="button">上传文件夹</button>
+        <button id="assetExportBtn" class="asset-btn asset-btn-light" type="button" disabled>导出 CSV</button>
+        <button id="assetClearBtn" class="asset-btn asset-btn-ghost" type="button">清空</button>
+      </div>
+
+      <div class="asset-stats" aria-label="素材统计">
+        <article><strong id="assetStatTotal">0</strong><span>素材总数</span></article>
+        <article><strong id="assetStatImages">0</strong><span>图片素材</span></article>
+        <article><strong id="assetStatVideos">0</strong><span>视频数量</span></article>
+        <article><strong id="assetStatArchives">0</strong><span>压缩包数量</span></article>
+        <article><strong id="assetStatSize">0 KB</strong><span>总大小</span></article>
+        <article><strong id="assetStatLandscape">0</strong><span>横图</span></article>
+        <article><strong id="assetStatPortrait">0</strong><span>竖图</span></article>
+        <article><strong id="assetStatSquare">0</strong><span>方图</span></article>
+      </div>
+    </section>
+
+    <section class="asset-filters" aria-label="筛选素材">
+      <label>
+        <span>搜索</span>
+        <input id="assetSearchInput" type="search" placeholder="名称、渠道、分类、尺寸" />
+      </label>
+      <label>
+        <span>游戏名</span>
+        <select id="assetGameFilter">
+          <option value="all">全部游戏</option>
+        </select>
+      </label>
+      <label>
+        <span>分类</span>
+        <select id="assetCategoryFilter">
+          <option value="all">全部分类</option>
+        </select>
+      </label>
+      <label>
+        <span>渠道</span>
+        <select id="assetChannelFilter">
+          <option value="all">全部渠道</option>
+        </select>
+      </label>
+      <label>
+        <span>种类</span>
+        <select id="assetTypeFilter">
+          <option value="all">全部种类</option>
+        </select>
+      </label>
+      <label>
+        <span>方向</span>
+        <select id="assetOrientationFilter">
+          <option value="all">全部方向</option>
+          <option value="横图">横图</option>
+          <option value="竖图">竖图</option>
+          <option value="方图">方图</option>
+          <option value="未知">未知</option>
+        </select>
+      </label>
+      <label>
+        <span>格式</span>
+        <select id="assetFormatFilter">
+          <option value="all">全部格式</option>
+        </select>
+      </label>
+      <label>
+        <span>尺寸</span>
+        <input id="assetSizeFilter" type="search" placeholder="1080x450 / banner" />
+      </label>
+      <label>
+        <span>上传日期</span>
+        <input id="assetDateFilter" type="date" />
+      </label>
+    </section>
+
+    <section class="asset-content" aria-label="素材结果">
+      <aside class="asset-category-panel">
+        <h2>自动归类</h2>
+        <div id="assetCategoryList" class="asset-category-list">
+          <p class="asset-empty-small">上传后显示分类统计。</p>
+        </div>
+      </aside>
+
+      <section class="asset-table-card">
+        <div class="asset-table-head">
+          <div>
+            <h2>素材清单</h2>
+            <p id="assetStatusText">等待上传素材。</p>
+          </div>
+          <div class="asset-view-actions">
+            <button id="assetCardViewBtn" class="asset-view-btn is-active" type="button">卡片</button>
+            <button id="assetTableViewBtn" class="asset-view-btn" type="button">表格</button>
+            <span id="assetVisibleCount" class="asset-count">0 项</span>
+          </div>
+        </div>
+        <div id="assetCardGrid" class="asset-card-grid">
+          <p class="asset-empty">上传素材后自动生成卡片。</p>
+        </div>
+        <div class="asset-table-wrap">
+          <table class="asset-table">
+            <thead>
+              <tr>
+                <th>预览</th>
+                <th>名称</th>
+                <th>游戏名</th>
+                <th>渠道名称</th>
+                <th>素材分类</th>
+                <th>尺寸</th>
+                <th>方向</th>
+                <th>大小</th>
+                <th>种类</th>
+                <th>上传时间</th>
+                <th>标签</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="assetTableBody">
+              <tr>
+                <td colspan="12" class="asset-empty">上传素材后自动生成清单。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="asset-manager.js"></script>
+</body>
+</html>

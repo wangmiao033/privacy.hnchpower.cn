@@ -1,0 +1,15 @@
+name = "asset-manager-worker"
+main = "asset-manager-worker.js"
+compatibility_date = "2026-05-11"
+
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "asset-manager"
+
+[vars]
+R2_PUBLIC_BASE_URL = "https://assets.hnchpower.cn"
+ALLOWED_ORIGINS = "https://privacy.hnchpower.cn,http://localhost:8080"
+
+# Do not put real tokens in this file.
+# Set the upload/edit/delete token with:
+# wrangler secret put ASSET_MANAGER_TOKEN
