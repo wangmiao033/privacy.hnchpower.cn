@@ -3,5 +3,17 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".",
   "framework": null,
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/document-policy.html",
+      "has": [{ "type": "query", "key": "id" }],
+      "destination": "/api/document-policy"
+    },
+    {
+      "source": "/document-policy.html",
+      "has": [{ "type": "query", "key": "code" }],
+      "destination": "/api/document-policy"
+    }
+  ]
 }

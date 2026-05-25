@@ -26,6 +26,10 @@
       width: min(920px, calc(100% - 32px));
       margin: 0 auto;
       padding: 40px 0 56px;
+      visibility: hidden;
+    }
+    .doc-shell.is-ready {
+      visibility: visible;
     }
     .doc-header,
     .doc-article,
@@ -122,20 +126,45 @@
       }
     }
   </style>
+  <script src="supabase-config.js"></script>
+  <script>
+    (function () {
+      var sp = new URLSearchParams(window.location.search);
+      var id = (sp.get("id") || sp.get("code") || "").trim();
+      if (!/^[A-Za-z0-9]{4,16}$/.test(id)) return;
+      var cfg = window.SupabaseConfig || {};
+      if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY) return;
+      var base = String(cfg.SUPABASE_URL).replace(/\/+$/, "") + "/functions/v1";
+      window.__DOC_POLICY_FETCH__ = fetch(
+        base + "/get-document-policy-link?id=" + encodeURIComponent(id),
+        { headers: { apikey: cfg.SUPABASE_ANON_KEY } }
+      )
+        .then(function (res) {
+          return res.text().then(function (raw) {
+            var json = {};
+            try { json = raw ? JSON.parse(raw) : {}; } catch (_e) {}
+            if (!res.ok) throw new Error((json && json.error) || raw || ("HTTP " + res.status));
+            if (!json.data) throw new Error("返回格式错误：data 为空");
+            return json.data;
+          });
+        })
+        .catch(function (err) {
+          window.__DOC_POLICY_FETCH__ = null;
+          throw err;
+        });
+    })();
+  </script>
 </head>
 <body>
   <main class="doc-shell">
     <header class="doc-header">
       <p class="doc-kicker">隐私协议文档</p>
-      <h1 id="doc-title" class="doc-title">正在加载...</h1>
-      <p id="doc-meta" class="doc-meta">请稍候</p>
+      <h1 id="doc-title" class="doc-title"></h1>
+      <p id="doc-meta" class="doc-meta"></p>
     </header>
-    <article id="doc-article" class="doc-article">
-      <p>正在加载文档内容...</p>
-    </article>
+    <article id="doc-article" class="doc-article"></article>
   </main>
 
-  <script src="supabase-config.js"></script>
   <script src="page-visit-log.js"></script>
   <script src="document-policy.js"></script>
 </body>

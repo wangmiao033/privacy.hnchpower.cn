@@ -1,8 +1,15 @@
 (function () {
+  if (document.documentElement.getAttribute("data-doc-rendered") === "ssr") return;
+
   var titleEl = document.getElementById("doc-title");
   var metaEl = document.getElementById("doc-meta");
   var articleEl = document.getElementById("doc-article");
+  var shellEl = document.querySelector(".doc-shell");
   var SB_CFG = window.SupabaseConfig || {};
+
+  function markReady() {
+    if (shellEl) shellEl.classList.add("is-ready");
+  }
 
   function escapeHtml(s) {
     return String(s || "")
@@ -61,6 +68,19 @@
       "<p>" + escapeHtml(message) + "</p>" +
       (detail ? "<p>" + escapeHtml(detail) + "</p>" : "");
     document.title = "隐私协议文档 - 无法展示";
+    markReady();
+  }
+
+  function renderDocument(row) {
+    var title = String(row.title || "隐私协议文档");
+    titleEl.textContent = title;
+    metaEl.textContent = row.created_at
+      ? "生成时间：" + new Date(row.created_at).toLocaleString("zh-CN")
+      : "正式展示页";
+    articleEl.className = "doc-article";
+    articleEl.innerHTML = sanitizeHtml(row.content_html || "");
+    document.title = title;
+    markReady();
   }
 
   function getFunctionsBaseUrl() {
@@ -90,14 +110,12 @@
       renderError("链接缺少有效的文档编号。", "请从文档隐私链接工具重新生成。");
       return;
     }
+
     try {
-      var row = await fetchDocument(id);
-      var title = String(row.title || "隐私协议文档");
-      titleEl.textContent = title;
-      metaEl.textContent = row.created_at ? "生成时间：" + new Date(row.created_at).toLocaleString("zh-CN") : "正式展示页";
-      articleEl.className = "doc-article";
-      articleEl.innerHTML = sanitizeHtml(row.content_html || "");
-      document.title = title;
+      var row = window.__DOC_POLICY_FETCH__
+        ? await window.__DOC_POLICY_FETCH__
+        : await fetchDocument(id);
+      renderDocument(row);
     } catch (e) {
       renderError("短链无效或已失效。", (e && e.message) || "请确认链接正确，或重新生成。");
     }

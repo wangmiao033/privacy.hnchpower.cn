@@ -40,5 +40,12 @@ Deno.serve(async (req) => {
   if (result.error) return json({ error: result.error.message || "Query failed" }, 500);
   if (!result.data) return json({ error: "Document link not found" }, 404);
 
-  return json({ data: result.data });
+  return new Response(JSON.stringify({ data: result.data }), {
+    status: 200,
+    headers: {
+      ...CORS_HEADERS,
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+    },
+  });
 });
