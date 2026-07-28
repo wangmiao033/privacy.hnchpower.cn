@@ -81,6 +81,8 @@
 
     initialized = true;
     var originalRemoveBackground = removeBackground;
+    var originalGetSelectedMode = getSelectedMode;
+    var originalGetSelectedModeLabel = typeof getSelectedModeLabel === "function" ? getSelectedModeLabel : null;
     var modeTip = document.querySelector(".bgremove-mode-tip");
     var originalModeTip = modeTip ? modeTip.textContent : "";
     var settings = document.getElementById("bgremoveStampSettings");
@@ -88,6 +90,20 @@
     var strengthInput = document.getElementById("bgremoveStampStrength");
     var strengthValue = document.getElementById("bgremoveStampStrengthValue");
     var processButton = document.getElementById("bgremoveProcessBtn");
+
+    getSelectedMode = function () {
+      var liveChecked = document.querySelector("input[name='bgremoveMode']:checked");
+      return liveChecked ? liveChecked.value : originalGetSelectedMode();
+    };
+
+    if (originalGetSelectedModeLabel) {
+      getSelectedModeLabel = function () {
+        var liveChecked = document.querySelector("input[name='bgremoveMode']:checked");
+        var label = liveChecked ? liveChecked.closest("label") : null;
+        var title = label ? label.querySelector("strong") : null;
+        return title ? title.textContent : originalGetSelectedModeLabel();
+      };
+    }
 
     removeBackground = function (file) {
       if (getSelectedMode() !== STAMP_MODE) {
