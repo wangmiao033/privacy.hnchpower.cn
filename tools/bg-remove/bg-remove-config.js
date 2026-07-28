@@ -4,4 +4,11 @@
  */
 (function (global) {
   global.BG_REMOVE_API_BASE_URL = "";
+  if (typeof document !== "undefined" && !document.getElementById("bgremoveStampAddonScript")) {
+    var script = document.createElement("script");
+    script.id = "bgremoveStampAddonScript";
+    script.src = "bg-remove-stamp.js";
+    script.async = false;
+    document.head.appendChild(script);
+  }
 })(typeof window !== "undefined" ? window : this);
