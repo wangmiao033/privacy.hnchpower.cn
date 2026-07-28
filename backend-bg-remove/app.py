@@ -1,4 +1,10 @@
+import asyncio
+import shutil
+import subprocess
+import tempfile
 from io import BytesIO
+from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
@@ -30,8 +36,12 @@ MODE_CONFIG = {
 }
 SESSION_CACHE = {}
 
+MAX_SPREADSHEET_SIZE = 20 * 1024 * 1024
+ALLOWED_SPREADSHEET_EXTENSIONS = {".xlsx", ".xls", ".xlsm", ".ods", ".csv"}
+LIBREOFFICE_BINARY = shutil.which("libreoffice") or shutil.which("soffice")
 
-app = FastAPI(title="HN Tools Background Remove API")
+
+app = FastAPI(title="HN Tools Processing API")
 
 
 @app.get("/api/warmup")
@@ -86,6 +96,96 @@ async def remove_background(file: UploadFile = File(...), mode: str = Form("stan
         media_type="image/png",
         headers={"Content-Disposition": 'attachment; filename="bg-removed.png"'},
     )
+
+
+@app.post("/api/spreadsheet-to-pdf")
+async def spreadsheet_to_pdf(file: UploadFile = File(...)):
+    original_name = Path(file.filename or "spreadsheet.xlsx").name
+    suffix = Path(original_name).suffix.lower()
+
+    if suffix not in ALLOWED_SPREADSHEET_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail="仅支持 XLSX、XLS、XLSM、ODS 和 CSV 表格文件。",
+        )
+
+    content = await file.read()
+    await file.close()
+
+    if not content:
+        raise HTTPException(status_code=400, detail="上传的表格文件为空。")
+
+    if len(content) > MAX_SPREADSHEET_SIZE:
+        raise HTTPException(status_code=413, detail="表格文件不能超过 20MB。")
+
+    if not LIBREOFFICE_BINARY:
+        raise HTTPException(status_code=503, detail="转换服务缺少 LibreOffice，请联系管理员。")
+
+    try:
+        output = await asyncio.to_thread(_convert_spreadsheet_to_pdf, content, suffix)
+    except subprocess.TimeoutExpired as exc:
+        raise HTTPException(status_code=504, detail="表格转换超时，请稍后重试。") from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="转换失败，请确认文件可以在 Excel 或 WPS 中正常打开。",
+        ) from exc
+
+    download_name = f"{Path(original_name).stem}.pdf"
+    encoded_name = quote(download_name)
+    return Response(
+        content=output,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": (
+                'attachment; filename="spreadsheet.pdf"; '
+                f"filename*=UTF-8''{encoded_name}"
+            ),
+            "Cache-Control": "no-store",
+        },
+    )
+
+
+def _convert_spreadsheet_to_pdf(content: bytes, suffix: str) -> bytes:
+    with tempfile.TemporaryDirectory(prefix="hn-sheetpdf-") as temp_dir:
+        temp_path = Path(temp_dir)
+        input_path = temp_path / f"input{suffix}"
+        output_dir = temp_path / "output"
+        profile_dir = temp_path / "libreoffice-profile"
+        output_dir.mkdir()
+        profile_dir.mkdir()
+        input_path.write_bytes(content)
+
+        command = [
+            LIBREOFFICE_BINARY,
+            "--headless",
+            "--nologo",
+            "--nodefault",
+            "--nolockcheck",
+            "--nofirststartwizard",
+            f"-env:UserInstallation={profile_dir.as_uri()}",
+            "--convert-to",
+            "pdf:calc_pdf_Export",
+            "--outdir",
+            str(output_dir),
+            str(input_path),
+        ]
+        result = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            timeout=150,
+            check=False,
+        )
+
+        pdf_files = sorted(output_dir.glob("*.pdf"))
+        if result.returncode != 0 or not pdf_files:
+            raise RuntimeError(
+                "LibreOffice conversion failed: "
+                + (result.stderr.strip() or result.stdout.strip() or "unknown error")
+            )
+
+        return pdf_files[0].read_bytes()
 
 
 def get_session(model_name: str):
