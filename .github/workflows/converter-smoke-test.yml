@@ -1,0 +1,86 @@
+name: Converter smoke test
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend-bg-remove/**"
+      - ".github/workflows/converter-smoke-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: write
+
+jobs:
+  verify-spreadsheet-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CONVERTER_BASE_URL: https://privacy-hnchpower-cn.onrender.com
+    steps:
+      - name: Wait for deployed API and convert a sample CSV
+        shell: bash
+        run: |
+          set -uo pipefail
+
+          post_status() {
+            local state="$1"
+            local description="$2"
+            curl -fsS -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/statuses/${GITHUB_SHA}" \
+              -d "$(jq -n \
+                --arg state "$state" \
+                --arg description "$description" \
+                --arg target_url "https://privacy.hnchpower.cn/tools/excel-to-pdf/" \
+                '{state: $state, context: "Converter smoke test", description: $description, target_url: $target_url}')" \
+              >/dev/null
+          }
+
+          fail_test() {
+            local message="$1"
+            echo "::error::${message}"
+            post_status failure "$message" || true
+            exit 1
+          }
+
+          post_status pending "Waiting for the Render converter deployment"
+
+          ready=0
+          for attempt in $(seq 1 50); do
+            echo "Checking deployed OpenAPI schema (${attempt}/50)..."
+            schema="$(curl -fsS --max-time 60 "${CONVERTER_BASE_URL}/openapi.json" 2>/dev/null || true)"
+            if grep -q '"/api/spreadsheet-to-pdf"' <<<"${schema}"; then
+              ready=1
+              break
+            fi
+            sleep 30
+          done
+
+          if [[ "$ready" -ne 1 ]]; then
+            fail_test "Converter endpoint was not deployed within 25 minutes"
+          fi
+
+          printf '项目,金额\n测试,45.60\n' > /tmp/hn-converter-smoke.csv
+          http_code="$(curl -sS --max-time 240 \
+            -o /tmp/hn-converter-smoke.pdf \
+            -w '%{http_code}' \
+            -F 'file=@/tmp/hn-converter-smoke.csv;type=text/csv' \
+            "${CONVERTER_BASE_URL}/api/spreadsheet-to-pdf" || true)"
+
+          if [[ "$http_code" != "200" ]]; then
+            fail_test "Converter returned HTTP ${http_code:-000}"
+          fi
+
+          signature="$(head -c 4 /tmp/hn-converter-smoke.pdf || true)"
+          pdf_size="$(stat -c '%s' /tmp/hn-converter-smoke.pdf 2>/dev/null || echo 0)"
+          if [[ "$signature" != "%PDF" || "$pdf_size" -lt 500 ]]; then
+            fail_test "Converter response was not a valid PDF"
+          fi
+
+          echo "Generated PDF size: ${pdf_size} bytes"
+          post_status success "Render converter generated a valid PDF"
