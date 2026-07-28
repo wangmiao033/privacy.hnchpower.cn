@@ -6,7 +6,7 @@
   global.BG_REMOVE_API_BASE_URL = "";
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") {
-      document.write('<script src="bg-remove-stamp.js"><\\/script>');
+      document.write('<script src="bg-remove-stamp.js"><\/script>');
     } else {
       var script = document.createElement("script");
       script.src = "bg-remove-stamp.js";
