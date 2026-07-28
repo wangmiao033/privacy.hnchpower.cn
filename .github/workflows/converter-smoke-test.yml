@@ -27,6 +27,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CONVERTER_BASE_URL: https://privacy-hnchpower-cn.onrender.com
+      EXPECTED_ENGINE: libreoffice-low-memory-v2
     steps:
       - name: Wait for deployed API and convert a sample CSV
         shell: bash
@@ -60,9 +61,10 @@ jobs:
 
           ready=0
           for attempt in $(seq 1 50); do
-            echo "Checking deployed OpenAPI schema (${attempt}/50)..."
-            schema="$(curl -fsS --max-time 60 "${CONVERTER_BASE_URL}/openapi.json" 2>/dev/null || true)"
-            if grep -q '"/api/spreadsheet-to-pdf"' <<<"${schema}"; then
+            echo "Checking deployed converter version (${attempt}/50)..."
+            health="$(curl -fsS --max-time 60 "${CONVERTER_BASE_URL}/health" 2>/dev/null || true)"
+            if grep -q "\"spreadsheet_engine\":\"${EXPECTED_ENGINE}\"" <<<"${health}" \
+              && grep -q '"spreadsheet_to_pdf":true' <<<"${health}"; then
               ready=1
               break
             fi
@@ -70,22 +72,25 @@ jobs:
           done
 
           if [[ "$ready" -ne 1 ]]; then
-            fail_test "Converter endpoint was not deployed within 25 minutes"
+            fail_test "Converter version was not deployed within 25 minutes"
           fi
 
           printf '项目,金额\n测试,45.60\n' > /tmp/hn-converter-smoke.csv
           http_code="$(curl -sS --max-time 240 \
-            -o /tmp/hn-converter-smoke.pdf \
+            -o /tmp/hn-converter-response.bin \
             -w '%{http_code}' \
             -F 'file=@/tmp/hn-converter-smoke.csv;type=text/csv' \
             "${CONVERTER_BASE_URL}/api/spreadsheet-to-pdf" || true)"
 
           if [[ "$http_code" != "200" ]]; then
+            echo "Converter response body:"
+            head -c 2000 /tmp/hn-converter-response.bin 2>/dev/null || true
+            echo
             fail_test "Converter returned HTTP ${http_code:-000}"
           fi
 
-          signature="$(head -c 4 /tmp/hn-converter-smoke.pdf || true)"
-          pdf_size="$(stat -c '%s' /tmp/hn-converter-smoke.pdf 2>/dev/null || echo 0)"
+          signature="$(head -c 4 /tmp/hn-converter-response.bin || true)"
+          pdf_size="$(stat -c '%s' /tmp/hn-converter-response.bin 2>/dev/null || echo 0)"
           if [[ "$signature" != "%PDF" || "$pdf_size" -lt 500 ]]; then
             fail_test "Converter response was not a valid PDF"
           fi
