@@ -1,3 +1,4 @@
 Trigger the production spreadsheet-to-PDF smoke test on 2026-07-28.
 Retry after fixing the workflow token environment.
 Retry after reducing Render memory usage.
+Wait for the low-memory engine version before testing.
