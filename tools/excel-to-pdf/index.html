@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Excel 表格转 PDF - HN Tools</title>
+  <meta name="description" content="上传 Excel、WPS 表格或 CSV 文件，使用 LibreOffice 服务端转换为 PDF，尽量保留原始排版、合并单元格、边框、列宽和打印设置。" />
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/excel-to-pdf/" />
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
+  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
+  <link rel="stylesheet" href="excel-to-pdf.css" />
+</head>
+<body class="sheetpdf-page">
+  <header class="sheetpdf-header">
+    <div class="sheetpdf-header-inner">
+      <a class="sheetpdf-brand" href="../../index.html" aria-label="返回 HN Tools 首页">
+        <span class="sheetpdf-brand-mark" aria-hidden="true"></span>
+        <span>
+          <strong>HN Tools</strong>
+          <small>文档 / PDF / 图片工具集</small>
+        </span>
+      </a>
+      <a class="sheetpdf-back" href="../../index.html#section-image">返回工具首页</a>
+    </div>
+  </header>
+
+  <main class="sheetpdf-main">
+    <section class="sheetpdf-hero">
+      <div>
+        <p class="sheetpdf-kicker">表格排版转换</p>
+        <h1>Excel 表格转 PDF</h1>
+        <p class="sheetpdf-lead">上传 Excel 或 WPS 表格，自动生成 PDF。转换时优先沿用原文件的工作表、合并单元格、边框、列宽和打印设置。</p>
+      </div>
+      <div class="sheetpdf-hero-badge" aria-label="转换流程">
+        <span>上传表格</span>
+        <i aria-hidden="true">→</i>
+        <span>自动转换</span>
+        <i aria-hidden="true">→</i>
+        <span>下载 PDF</span>
+      </div>
+    </section>
+
+    <section class="sheetpdf-layout" aria-label="表格转 PDF 工具">
+      <section class="sheetpdf-card sheetpdf-upload-card">
+        <header class="sheetpdf-card-head">
+          <div>
+            <p>01 上传</p>
+            <h2>选择表格文件</h2>
+          </div>
+          <span class="sheetpdf-tag">单文件转换</span>
+        </header>
+
+        <label id="sheetpdfDropzone" class="sheetpdf-dropzone" for="sheetpdfFileInput">
+          <span class="sheetpdf-upload-icon" aria-hidden="true"></span>
+          <strong>点击选择或拖拽表格到这里</strong>
+          <span>支持 XLSX、XLS、XLSM、ODS、CSV，单个文件不超过 20MB</span>
+        </label>
+        <input id="sheetpdfFileInput" class="sheetpdf-file-input" type="file" accept=".xlsx,.xls,.xlsm,.ods,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" />
+
+        <div id="sheetpdfFileInfo" class="sheetpdf-file-info" hidden>
+          <span class="sheetpdf-file-icon" aria-hidden="true">XLS</span>
+          <div>
+            <strong id="sheetpdfFileName">-</strong>
+            <span id="sheetpdfFileMeta">-</span>
+          </div>
+          <button id="sheetpdfRemoveFile" type="button" aria-label="移除文件">移除</button>
+        </div>
+
+        <div class="sheetpdf-format-note">
+          <strong>排版说明</strong>
+          <p>工具按原表格的打印设置导出。原文件若已设置横向、缩放、打印区域或分页，PDF 会尽量保持一致。</p>
+        </div>
+
+        <div class="sheetpdf-actions">
+          <button id="sheetpdfConvertBtn" class="sheetpdf-btn sheetpdf-btn-primary" type="button" disabled>开始转换 PDF</button>
+          <button id="sheetpdfResetBtn" class="sheetpdf-btn sheetpdf-btn-secondary" type="button">重新选择</button>
+        </div>
+      </section>
+
+      <aside class="sheetpdf-card sheetpdf-status-card">
+        <header class="sheetpdf-card-head">
+          <div>
+            <p>02 状态</p>
+            <h2>转换进度</h2>
+          </div>
+          <span id="sheetpdfServiceBadge" class="sheetpdf-service-badge">检查服务</span>
+        </header>
+
+        <div id="sheetpdfStatus" class="sheetpdf-status" role="status" aria-live="polite">
+          <span id="sheetpdfStatusIcon" class="sheetpdf-status-icon" aria-hidden="true"></span>
+          <div>
+            <strong id="sheetpdfStatusTitle">等待上传文件</strong>
+            <p id="sheetpdfStatusText">选择表格后即可转换。</p>
+          </div>
+        </div>
+
+        <div id="sheetpdfProgress" class="sheetpdf-progress" hidden aria-hidden="true">
+          <span></span>
+        </div>
+
+        <div id="sheetpdfResult" class="sheetpdf-result" hidden>
+          <span class="sheetpdf-result-icon" aria-hidden="true">PDF</span>
+          <div>
+            <strong id="sheetpdfResultName">转换完成.pdf</strong>
+            <span id="sheetpdfResultMeta">PDF 已生成</span>
+          </div>
+          <button id="sheetpdfDownloadBtn" class="sheetpdf-btn sheetpdf-btn-download" type="button">下载 PDF</button>
+        </div>
+
+        <ul class="sheetpdf-benefits">
+          <li><strong>保持格式</strong><span>优先保留边框、列宽、合并单元格和打印布局。</span></li>
+          <li><strong>中文字体</strong><span>服务端配置中文及常用 Office 替代字体，减少乱码。</span></li>
+          <li><strong>自动清理</strong><span>转换文件只在临时目录中处理，完成后立即删除。</span></li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="sheetpdf-info-grid" aria-label="使用说明">
+      <article>
+        <span>1</span>
+        <h2>先检查 Excel 打印设置</h2>
+        <p>需要一页宽或横向展示时，建议先在 Excel / WPS 中设置纸张方向、缩放和打印区域。</p>
+      </article>
+      <article>
+        <span>2</span>
+        <h2>转换期间不要关闭页面</h2>
+        <p>文件会上传到转换服务处理。服务冷启动时可能需要几十秒，请等待状态变为“转换完成”。</p>
+      </article>
+      <article>
+        <span>3</span>
+        <h2>下载后核对分页</h2>
+        <p>复杂公式、特殊字体或外部链接可能存在兼容差异，正式使用前请快速检查页数和分页位置。</p>
+      </article>
+    </section>
+
+    <section class="sheetpdf-privacy">
+      <strong>文件处理说明</strong>
+      <p>此功能需要将表格上传到 HN Tools 的独立转换服务。服务仅在临时目录内完成转换，不建立文件库，也不长期保存上传文件和生成结果。敏感文件仍建议在本机 Excel / WPS 中直接导出 PDF。</p>
+    </section>
+  </main>
+
+  <footer class="sheetpdf-footer">HN Tools · Excel 表格转 PDF</footer>
+
+  <script src="../bg-remove/bg-remove-config.js"></script>
+  <script src="excel-to-pdf.js"></script>
+</body>
+</html>
