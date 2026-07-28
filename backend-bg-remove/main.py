@@ -30,6 +30,7 @@ ALLOWED_ORIGINS = [
 MAX_SPREADSHEET_SIZE = 20 * 1024 * 1024
 ALLOWED_SPREADSHEET_EXTENSIONS = {".xlsx", ".xls", ".xlsm", ".ods", ".csv"}
 LIBREOFFICE_BINARY = shutil.which("libreoffice") or shutil.which("soffice")
+SPREADSHEET_ENGINE_VERSION = "libreoffice-low-memory-v2"
 
 # Render 免费实例内存有限：抠图和 LibreOffice 转换串行执行。
 HEAVY_TASK_LOCK = asyncio.Lock()
@@ -49,6 +50,7 @@ def health():
     return {
         "status": "ok",
         "spreadsheet_to_pdf": bool(LIBREOFFICE_BINARY),
+        "spreadsheet_engine": SPREADSHEET_ENGINE_VERSION,
     }
 
 
