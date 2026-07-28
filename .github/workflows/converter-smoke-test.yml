@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       CONVERTER_BASE_URL: https://privacy-hnchpower-cn.onrender.com
     steps:
       - name: Wait for deployed API and convert a sample CSV
