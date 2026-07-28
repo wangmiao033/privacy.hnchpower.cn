@@ -7,6 +7,13 @@ on:
     paths:
       - "backend-bg-remove/**"
       - ".github/workflows/converter-smoke-test.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "backend-bg-remove/**"
+      - ".github/workflows/converter-smoke-test.yml"
+      - ".github/converter-smoke-trigger.txt"
   workflow_dispatch:
 
 permissions:
