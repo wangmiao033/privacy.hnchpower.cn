@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HN Tools - 运营文档链接与 PDF 工具台</title>
   <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
+  <meta name="description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
   <link rel="canonical" href="https://privacy.hnchpower.cn/" />
   <meta property="og:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
-  <meta property="og:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
+  <meta property="og:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://privacy.hnchpower.cn/" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
-  <meta name="twitter:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章和图片尺寸处理。" />
+  <meta name="twitter:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" href="assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
@@ -51,7 +51,7 @@
       <div class="home-hero-copy">
         <p class="home-hero-eyebrow">运营首选 · 上传文档生成链接 · 上架资料处理</p>
         <h1 class="home-hero-title">运营文档链接与上架工具台</h1>
-        <p class="home-hero-lead">把 Word 隐私协议、合规文档、PDF 和图片处理入口集中在一个页面。运营上传文档后即可生成正式链接，适合应用上架、官网展示和日常素材处理。</p>
+        <p class="home-hero-lead">把 Word 隐私协议、合规文档、PDF、表格和图片处理入口集中在一个页面。运营上传文档后即可生成正式链接，适合应用上架、官网展示和日常素材处理。</p>
         <p class="home-hero-note">不需要找代码、不需要手动改页面；常用工具独立加载，流程清楚，打开就能处理。</p>
         <div class="home-hero-cta">
           <a class="home-btn home-btn-primary" href="tools/document-policy/">上传文档生成链接</a>
@@ -67,7 +67,7 @@
               <div class="home-mock-panel-title">Tool Console</div>
               <div class="home-mock-panel-list">
                 <div class="home-mock-panel-item home-mock-panel-item--active"><span>Word 上传生成链接</span><em>推荐</em></div>
-                <div class="home-mock-panel-item"><span>隐私政策填表生成</span><em>备用</em></div>
+                <div class="home-mock-panel-item"><span>Excel 表格转 PDF</span><em>新增</em></div>
                 <div class="home-mock-panel-item"><span>PDF 骑缝章</span><em>本地</em></div>
                 <div class="home-mock-panel-item"><span>图片尺寸处理</span><em>批量</em></div>
               </div>
@@ -162,10 +162,10 @@
     <section id="section-image" class="home-section" aria-labelledby="image-heading">
       <header class="home-section-head">
         <div class="home-section-head-text">
-          <h2 id="image-heading" class="home-section-title">图片工具</h2>
-          <p class="home-section-lead">批量生成多尺寸图片和 Icon 文件，适配素材投放与商店上架。</p>
+          <h2 id="image-heading" class="home-section-title">图片与表格工具</h2>
+          <p class="home-section-lead">批量生成多尺寸图片和 Icon 文件，也可将 Excel / WPS 表格转换为 PDF。</p>
         </div>
-        <p class="home-section-desc">本地处理 / 批量出图</p>
+        <p class="home-section-desc">本地处理 / 在线转换</p>
       </header>
       <div class="home-grid">
         <a class="home-card" href="tools/bg-remove/">
@@ -228,6 +228,21 @@
             <span class="home-card-chevron" aria-hidden="true">→</span>
           </span>
         </a>
+        <a class="home-card" href="tools/excel-to-pdf/">
+          <div class="home-card-top">
+            <span class="home-card-icon home-card-icon--pdf" aria-hidden="true"></span>
+            <div class="home-card-tags">
+              <span class="home-tag">Excel / WPS</span>
+              <span class="home-tag home-tag--muted">保持排版</span>
+            </div>
+          </div>
+          <h3 class="home-card-title">Excel 表格转 PDF</h3>
+          <p class="home-card-desc">上传表格自动生成 PDF，尽量保留合并单元格、边框、列宽和原始打印设置。</p>
+          <span class="home-card-footer">
+            <span class="home-card-arrow">进入工具</span>
+            <span class="home-card-chevron" aria-hidden="true">→</span>
+          </span>
+        </a>
       </div>
     </section>
 
@@ -241,8 +256,8 @@
       </header>
       <div class="home-feature-grid">
         <article class="home-feature-card">
-          <h3>浏览器本地处理</h3>
-          <p>文件和图片尽量在当前浏览器完成，不上传服务器，减少外发风险。</p>
+          <h3>本地优先与临时处理</h3>
+          <p>能在浏览器完成的任务尽量本地处理；需要服务端转换的文件仅在临时目录中使用。</p>
         </article>
         <article class="home-feature-card">
           <h3>打开即用</h3>
