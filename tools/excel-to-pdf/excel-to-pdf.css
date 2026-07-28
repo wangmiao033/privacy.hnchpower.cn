@@ -1,0 +1,734 @@
+:root {
+  --sheetpdf-bg: #eef5fb;
+  --sheetpdf-panel: rgba(255, 255, 255, 0.9);
+  --sheetpdf-border: #d7e5f4;
+  --sheetpdf-text: #0f172a;
+  --sheetpdf-muted: #64748b;
+  --sheetpdf-blue: #2563eb;
+  --sheetpdf-blue-dark: #1d4ed8;
+  --sheetpdf-green: #059669;
+  --sheetpdf-red: #dc2626;
+  --sheetpdf-shadow: 0 16px 42px rgba(30, 64, 175, 0.1);
+  --sheetpdf-radius-lg: 18px;
+  --sheetpdf-radius-md: 12px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+  color: var(--sheetpdf-text);
+  background: var(--sheetpdf-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(59, 130, 246, 0.13), transparent 28rem),
+    linear-gradient(180deg, #f5f9fd 0%, var(--sheetpdf-bg) 42%, #edf4fa 100%);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.sheetpdf-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.75);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.sheetpdf-header-inner {
+  width: min(1120px, calc(100% - 32px));
+  min-height: 64px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.sheetpdf-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.sheetpdf-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background: linear-gradient(145deg, #60a5fa, #4f46e5);
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.25);
+  position: relative;
+}
+
+.sheetpdf-brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 5px;
+}
+
+.sheetpdf-brand strong,
+.sheetpdf-brand small {
+  display: block;
+}
+
+.sheetpdf-brand strong {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.sheetpdf-brand small {
+  margin-top: 2px;
+  color: var(--sheetpdf-muted);
+  font-size: 11px;
+}
+
+.sheetpdf-back {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 8px 12px;
+  border: 1px solid #dbe6f2;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.sheetpdf-back:hover {
+  border-color: #93c5fd;
+  color: var(--sheetpdf-blue);
+}
+
+.sheetpdf-main {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 44px 0 56px;
+}
+
+.sheetpdf-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 22px;
+}
+
+.sheetpdf-kicker {
+  margin: 0 0 8px;
+  color: var(--sheetpdf-blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.sheetpdf-hero h1 {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.sheetpdf-lead {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.sheetpdf-hero-badge {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 13px;
+  border: 1px solid var(--sheetpdf-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+}
+
+.sheetpdf-hero-badge i {
+  color: #94a3b8;
+  font-style: normal;
+}
+
+.sheetpdf-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr);
+  gap: 18px;
+}
+
+.sheetpdf-card {
+  padding: 24px;
+  border: 1px solid var(--sheetpdf-border);
+  border-radius: var(--sheetpdf-radius-lg);
+  background: var(--sheetpdf-panel);
+  box-shadow: var(--sheetpdf-shadow);
+}
+
+.sheetpdf-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.sheetpdf-card-head p {
+  margin: 0 0 5px;
+  color: var(--sheetpdf-blue);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sheetpdf-card-head h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+}
+
+.sheetpdf-tag,
+.sheetpdf-service-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 25px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: var(--sheetpdf-blue);
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.sheetpdf-service-badge.is-ready {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.sheetpdf-service-badge.is-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.sheetpdf-dropzone {
+  min-height: 230px;
+  border: 2px dashed #bcd2ea;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(248, 251, 255, 0.96), rgba(241, 247, 253, 0.92));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+  cursor: pointer;
+}
+
+.sheetpdf-dropzone:hover,
+.sheetpdf-dropzone.is-dragover {
+  border-color: #60a5fa;
+  background: #eff6ff;
+  transform: translateY(-1px);
+}
+
+.sheetpdf-dropzone strong {
+  font-size: 17px;
+}
+
+.sheetpdf-dropzone > span:last-child {
+  color: var(--sheetpdf-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.sheetpdf-upload-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #dbeafe, #bfdbfe);
+  position: relative;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.sheetpdf-upload-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 29px;
+  border: 3px solid var(--sheetpdf-blue);
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+}
+
+.sheetpdf-upload-icon::after {
+  content: "↑";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: var(--sheetpdf-blue);
+  font-size: 19px;
+  font-weight: 900;
+  transform: translate(-50%, -50%);
+}
+
+.sheetpdf-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sheetpdf-file-info {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 14px;
+  border: 1px solid #dbe7f4;
+  border-radius: 13px;
+  background: #fff;
+}
+
+.sheetpdf-file-icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: #dcfce7;
+  color: #047857;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.sheetpdf-file-info > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.sheetpdf-file-info strong,
+.sheetpdf-file-info span {
+  display: block;
+}
+
+.sheetpdf-file-info strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.sheetpdf-file-info span {
+  margin-top: 4px;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+}
+
+.sheetpdf-file-info button {
+  border: 0;
+  background: transparent;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sheetpdf-file-info button:hover {
+  color: var(--sheetpdf-red);
+}
+
+.sheetpdf-format-note {
+  margin-top: 14px;
+  padding: 13px 15px;
+  border-left: 4px solid #60a5fa;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+
+.sheetpdf-format-note strong {
+  font-size: 13px;
+}
+
+.sheetpdf-format-note p {
+  margin: 5px 0 0;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sheetpdf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.sheetpdf-btn {
+  min-height: 42px;
+  padding: 9px 17px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 800;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.sheetpdf-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.sheetpdf-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sheetpdf-btn-primary {
+  flex: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+}
+
+.sheetpdf-btn-secondary {
+  color: #475569;
+  border-color: #d8e3ef;
+  background: #fff;
+}
+
+.sheetpdf-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-height: 92px;
+  padding: 16px;
+  border: 1px solid #dbe7f4;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.sheetpdf-status-icon {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 3px solid #bfdbfe;
+  border-top-color: var(--sheetpdf-blue);
+  border-radius: 50%;
+}
+
+.sheetpdf-status.is-idle .sheetpdf-status-icon {
+  border: 0;
+  background: #dbeafe;
+  position: relative;
+}
+
+.sheetpdf-status.is-idle .sheetpdf-status-icon::after {
+  content: "…";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--sheetpdf-blue);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sheetpdf-status.is-processing .sheetpdf-status-icon {
+  animation: sheetpdf-spin 0.9s linear infinite;
+}
+
+.sheetpdf-status.is-success .sheetpdf-status-icon {
+  border: 0;
+  background: #d1fae5;
+  position: relative;
+}
+
+.sheetpdf-status.is-success .sheetpdf-status-icon::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #047857;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.sheetpdf-status.is-error .sheetpdf-status-icon {
+  border: 0;
+  background: #fee2e2;
+  position: relative;
+}
+
+.sheetpdf-status.is-error .sheetpdf-status-icon::after {
+  content: "!";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #b91c1c;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+@keyframes sheetpdf-spin {
+  to { transform: rotate(360deg); }
+}
+
+.sheetpdf-status strong {
+  display: block;
+  font-size: 14px;
+}
+
+.sheetpdf-status p {
+  margin: 6px 0 0;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.sheetpdf-progress {
+  height: 6px;
+  margin: 12px 2px 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dbeafe;
+}
+
+.sheetpdf-progress span {
+  display: block;
+  width: 35%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  animation: sheetpdf-progress 1.2s ease-in-out infinite;
+}
+
+@keyframes sheetpdf-progress {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(360%); }
+}
+
+.sheetpdf-result {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px 12px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid #a7f3d0;
+  border-radius: 14px;
+  background: #ecfdf5;
+}
+
+.sheetpdf-result-icon {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  color: #b91c1c;
+  background: #fee2e2;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.sheetpdf-result div {
+  min-width: 0;
+}
+
+.sheetpdf-result strong,
+.sheetpdf-result span {
+  display: block;
+}
+
+.sheetpdf-result strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.sheetpdf-result span {
+  margin-top: 3px;
+  color: #047857;
+  font-size: 11px;
+}
+
+.sheetpdf-btn-download {
+  grid-column: 1 / -1;
+  width: 100%;
+  color: #fff;
+  background: var(--sheetpdf-green);
+}
+
+.sheetpdf-benefits {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.sheetpdf-benefits li {
+  padding-top: 12px;
+  border-top: 1px solid #e5edf5;
+}
+
+.sheetpdf-benefits strong,
+.sheetpdf-benefits span {
+  display: block;
+}
+
+.sheetpdf-benefits strong {
+  font-size: 13px;
+}
+
+.sheetpdf-benefits span {
+  margin-top: 4px;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.sheetpdf-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.sheetpdf-info-grid article {
+  position: relative;
+  padding: 20px 19px 18px;
+  border: 1px solid var(--sheetpdf-border);
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.sheetpdf-info-grid article > span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  color: var(--sheetpdf-blue);
+  background: #dbeafe;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sheetpdf-info-grid h2 {
+  margin: 13px 0 7px;
+  font-size: 15px;
+}
+
+.sheetpdf-info-grid p {
+  margin: 0;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.sheetpdf-privacy {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px dashed #b9cce1;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.sheetpdf-privacy strong {
+  font-size: 13px;
+}
+
+.sheetpdf-privacy p {
+  margin: 6px 0 0;
+  color: var(--sheetpdf-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.sheetpdf-footer {
+  padding: 22px 16px 32px;
+  color: #94a3b8;
+  text-align: center;
+  font-size: 12px;
+}
+
+@media (max-width: 880px) {
+  .sheetpdf-hero {
+    display: block;
+  }
+
+  .sheetpdf-hero-badge {
+    width: fit-content;
+    margin-top: 18px;
+  }
+
+  .sheetpdf-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .sheetpdf-main,
+  .sheetpdf-header-inner {
+    width: min(100% - 22px, 1120px);
+  }
+
+  .sheetpdf-main {
+    padding-top: 28px;
+  }
+
+  .sheetpdf-brand small {
+    display: none;
+  }
+
+  .sheetpdf-back {
+    font-size: 12px;
+  }
+
+  .sheetpdf-card {
+    padding: 18px;
+  }
+
+  .sheetpdf-dropzone {
+    min-height: 200px;
+  }
+
+  .sheetpdf-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sheetpdf-hero-badge {
+    display: none;
+  }
+}
