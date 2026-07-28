@@ -21,6 +21,13 @@ const body =
   "  global.BG_REMOVE_API_BASE_URL = " +
   JSON.stringify(url) +
   ";\n" +
+  '  if (typeof document !== "undefined" && !document.getElementById("bgremoveStampAddonScript")) {\n' +
+  '    var script = document.createElement("script");\n' +
+  '    script.id = "bgremoveStampAddonScript";\n' +
+  '    script.src = "bg-remove-stamp.js";\n' +
+  "    script.async = false;\n" +
+  "    document.head.appendChild(script);\n" +
+  "  }\n" +
   '})(typeof window !== "undefined" ? window : this);\n';
 
 fs.writeFileSync(outPath, banner + body, "utf8");
