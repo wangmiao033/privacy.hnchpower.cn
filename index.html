@@ -1,338 +1,307 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HN Tools - 运营文档链接与 PDF 工具台</title>
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
+  <title>HN Tools｜游戏发行与运营文件工具台</title>
+  <meta name="theme-color" content="#08111f" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="description" content="面向游戏发行、产品上架与日常运营的一站式工具台：隐私政策发布、扫描件生成、PDF 盖章、Excel 转 PDF、红章提取、图片抠图与多尺寸处理。" />
   <link rel="canonical" href="https://privacy.hnchpower.cn/" />
-  <meta property="og:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
-  <meta property="og:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta property="og:title" content="HN Tools｜游戏发行与运营文件工具台" />
+  <meta property="og:description" content="隐私文档、扫描件、PDF、表格和图片处理集中在一个工具台。" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://privacy.hnchpower.cn/" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="HN Tools - 运营文档链接与 PDF 工具台" />
-  <meta name="twitter:description" content="面向运营和产品上架的内部工具台，支持上传文档生成隐私链接、隐私政策生成、PDF 骑缝章、Excel 表格转 PDF 和图片尺寸处理。" />
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="icon" href="assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
-  <link rel="icon" href="assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180" />
-  <link rel="stylesheet" href="home.css" />
+  <link rel="stylesheet" href="home-v2.css" />
   <link rel="stylesheet" href="feedback-widget.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "HN Tools",
+    "url": "https://privacy.hnchpower.cn/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "游戏发行与运营文件工具台，提供隐私政策、扫描件、PDF、表格和图片处理能力。"
+  }
+  </script>
 </head>
-<body class="home-page">
-  <a class="home-skip" href="#home-main">跳到主要内容</a>
+<body class="site-page">
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
 
-  <header class="home-nav">
-    <div class="home-nav-inner">
-      <a class="home-brand" href="./">
-        <span class="home-brand-mark" aria-hidden="true"></span>
-        <span class="home-brand-text">
-          <span class="home-brand-name">HN Tools</span>
-          <span class="home-brand-tagline">文档 / PDF / 图片工具集</span>
-        </span>
-      </a>
-      <nav class="home-nav-links" aria-label="主导航">
-        <a class="home-nav-link" href="./">首页</a>
-        <a class="home-nav-link" href="#section-policy">政策文档</a>
-        <a class="home-nav-link" href="#section-pdf">PDF 工具</a>
-        <a class="home-nav-link" href="#section-image">图片工具</a>
-        <a class="home-nav-link" href="#section-more">更多</a>
-        <a class="home-nav-primary" href="tools/document-policy/">运营发链接</a>
+  <div class="site-shell">
+    <aside id="site-sidebar" class="site-sidebar" aria-label="站点导航">
+      <div class="sidebar-head">
+        <a class="brand" href="./" aria-label="HN Tools 首页">
+          <span class="brand-mark">HN</span>
+          <span class="brand-copy">
+            <strong>HN Tools</strong>
+            <small>发行运营工具台</small>
+          </span>
+        </a>
+        <button id="sidebar-close" class="icon-button sidebar-close" type="button" aria-label="关闭导航">×</button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="sidebar-label">工作台</p>
+        <a class="sidebar-link is-active" href="#overview" data-nav="overview">
+          <span class="nav-icon">⌂</span><span>总览</span>
+        </a>
+        <a class="sidebar-link" href="#recent" data-nav="recent">
+          <span class="nav-icon">↻</span><span>最近使用</span>
+        </a>
+        <a class="sidebar-link" href="#tools" data-category-link="all">
+          <span class="nav-icon">▦</span><span>全部工具</span><em>8</em>
+        </a>
+
+        <p class="sidebar-label">分类</p>
+        <a class="sidebar-link" href="#tools" data-category-link="policy">
+          <span class="nav-icon">◈</span><span>政策与发布</span>
+        </a>
+        <a class="sidebar-link" href="#tools" data-category-link="pdf">
+          <span class="nav-icon">▤</span><span>PDF 与文件</span>
+        </a>
+        <a class="sidebar-link" href="#tools" data-category-link="image">
+          <span class="nav-icon">◇</span><span>图片与素材</span>
+        </a>
+        <a class="sidebar-link" href="#workflows" data-nav="workflows">
+          <span class="nav-icon">⇄</span><span>快捷流程</span>
+        </a>
       </nav>
+
+      <div class="sidebar-bottom">
+        <div class="privacy-note">
+          <span class="privacy-note-icon">✓</span>
+          <div><strong>本地优先</strong><small>敏感文件尽量仅在浏览器处理</small></div>
+        </div>
+        <a class="sidebar-action" href="account.html">个人中心</a>
+        <a id="home-admin-entry" class="sidebar-action sidebar-action-primary" href="https://admin.hnchpower.cn/dashboard">管理后台</a>
+      </div>
+    </aside>
+
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+
+    <div class="site-workspace">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="sidebar-open" class="icon-button mobile-menu" type="button" aria-label="打开导航">☰</button>
+          <div class="mobile-brand"><span>HN</span><strong>Tools</strong></div>
+          <label class="command-search" for="global-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+            <input id="global-search" type="search" autocomplete="off" placeholder="搜索工具、用途或格式…" />
+            <kbd>Ctrl K</kbd>
+          </label>
+        </div>
+        <div class="topbar-actions">
+          <button id="theme-toggle" class="topbar-button" type="button" aria-label="切换明暗主题"><span aria-hidden="true">◐</span><span class="topbar-button-text">主题</span></button>
+          <a class="topbar-button" href="account.html"><span aria-hidden="true">◎</span><span class="topbar-button-text">账号</span></a>
+        </div>
+      </header>
+
+      <main id="main-content" class="main-content">
+        <section id="overview" class="dashboard-hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow"><span></span> HN Tools 2.0 · 发行运营效率中心</p>
+            <h1 id="hero-title">运营文件，<br /><em>一次处理到位。</em></h1>
+            <p class="hero-lead">隐私政策发布、授权书扫描、PDF 盖章、表格转换和素材处理集中管理。少找入口，少走步骤，直接完成交付。</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="tools/document-policy/">上传隐私文档生成链接 <span>→</span></a>
+              <a class="button button-secondary" href="tools/doc-aging/">生成扫描件 PDF</a>
+            </div>
+            <div class="hero-trust">
+              <span>✓ 无需安装</span><span>✓ 中文文件名</span><span>✓ 移动端可用</span>
+            </div>
+          </div>
+
+          <div class="hero-console" aria-label="工具台概览">
+            <div class="console-head">
+              <span class="console-dots"><i></i><i></i><i></i></span>
+              <span>operations-console</span>
+              <em>ONLINE</em>
+            </div>
+            <div class="console-body">
+              <div class="console-command"><span>$</span> 选择今天要处理的任务</div>
+              <a href="tools/document-policy/" class="console-row is-featured"><span class="console-index">01</span><span><b>隐私协议发布</b><small>Word → 正式在线链接</small></span><em>常用</em></a>
+              <a href="tools/doc-aging/" class="console-row"><span class="console-index">02</span><span><b>扫描件格式</b><small>图片 / PDF → 红章扫描件</small></span><em>NEW</em></a>
+              <a href="tools/pdf-seal/" class="console-row"><span class="console-index">03</span><span><b>PDF 骑缝章</b><small>PDF + 印章 → 完整成稿</small></span><em>本地</em></a>
+              <a href="tools/sizesnap/" class="console-row"><span class="console-index">04</span><span><b>图尺快裁</b><small>母版 → 多尺寸素材包</small></span><em>批量</em></a>
+            </div>
+            <div class="console-status"><span><i></i>服务正常</span><span>8 个工具可用</span></div>
+          </div>
+        </section>
+
+        <section class="metric-strip" aria-label="站点能力概览">
+          <article><strong>8</strong><span>核心工具</span><small>覆盖上架与日常运营</small></article>
+          <article><strong>3</strong><span>文件工作流</span><small>按实际业务顺序串联</small></article>
+          <article><strong>0</strong><span>安装成本</span><small>打开网页直接使用</small></article>
+          <article><strong>Local</strong><span>本地处理优先</span><small>降低敏感文件外传</small></article>
+        </section>
+
+        <section id="recent" class="content-section recent-section" hidden aria-labelledby="recent-title">
+          <div class="section-heading">
+            <div><p class="section-kicker">RECENT</p><h2 id="recent-title">最近使用</h2><p>自动保留你最近打开的工具，仅存储在当前浏览器。</p></div>
+            <button id="clear-recent" class="text-button" type="button">清除记录</button>
+          </div>
+          <div id="recent-tools" class="recent-grid"></div>
+        </section>
+
+        <section id="tools" class="content-section" aria-labelledby="tools-title">
+          <div class="section-heading tools-heading">
+            <div><p class="section-kicker">TOOLBOX</p><h2 id="tools-title">全部工具</h2><p>按场景筛选，也可以直接输入关键词搜索。</p></div>
+            <div class="category-tabs" role="group" aria-label="工具分类">
+              <button type="button" class="category-tab is-active" data-category="all">全部</button>
+              <button type="button" class="category-tab" data-category="favorites">已收藏</button>
+              <button type="button" class="category-tab" data-category="policy">政策发布</button>
+              <button type="button" class="category-tab" data-category="pdf">PDF 文件</button>
+              <button type="button" class="category-tab" data-category="image">图片素材</button>
+            </div>
+          </div>
+
+          <div id="tool-grid" class="tool-grid">
+            <article class="tool-card tool-card-featured" data-tool-id="document-policy" data-category="policy" data-keywords="隐私协议 word 文档 上传 发布 链接 app 上架 备案">
+              <button class="favorite-button" type="button" aria-label="收藏上传隐私文档生成链接" data-favorite="document-policy">☆</button>
+              <a class="tool-card-link" href="tools/document-policy/">
+                <div class="tool-card-top"><span class="tool-icon icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 13v6h14v-6"/></svg></span><span class="tool-status status-core">核心入口</span></div>
+                <h3>上传隐私文档生成链接</h3>
+                <p>上传 Word 或粘贴正文，预览确认后生成可直接提交应用商店的正式链接。</p>
+                <div class="tool-tags"><span>Word</span><span>在线发布</span><span>上架</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="privacy-policy" data-category="policy" data-keywords="隐私政策 生成 模板 公司 产品 邮箱 发布">
+              <button class="favorite-button" type="button" aria-label="收藏隐私政策生成与发布" data-favorite="privacy-policy">☆</button>
+              <a class="tool-card-link" href="tools/privacy-policy/">
+                <div class="tool-card-top"><span class="tool-icon icon-indigo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7zM14 3v5h5M10 12h5m-5 4h5"/></svg></span><span class="tool-status">模板生成</span></div>
+                <h3>隐私政策生成与发布</h3>
+                <p>没有现成文档时，填写公司、产品、邮箱等信息，从标准模板快速生成。</p>
+                <div class="tool-tags"><span>模板</span><span>政策</span><span>发布</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="doc-aging" data-category="pdf" data-keywords="扫描件 扫描 pdf 图片 红章 公章 授权书 备案 合同 多页">
+              <button class="favorite-button" type="button" aria-label="收藏扫描件格式" data-favorite="doc-aging">☆</button>
+              <a class="tool-card-link" href="tools/doc-aging/">
+                <div class="tool-card-top"><span class="tool-icon icon-red"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h12v5H6zM5 9h14a2 2 0 0 1 2 2v6h-4m-10 0H3v-6a2 2 0 0 1 2-2Zm2 5h10v8H7z"/></svg></span><span class="tool-status status-new">新增</span></div>
+                <h3>扫描件格式</h3>
+                <p>上传图片或 PDF，保留红色公章并按页面顺序合并成正式扫描件 PDF。</p>
+                <div class="tool-tags"><span>PDF</span><span>保留红章</span><span>多页</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="pdf-seal" data-category="pdf" data-keywords="pdf 骑缝章 印章 盖章 合同 授权书 本地">
+              <button class="favorite-button" type="button" aria-label="收藏PDF骑缝章" data-favorite="pdf-seal">☆</button>
+              <a class="tool-card-link" href="tools/pdf-seal/">
+                <div class="tool-card-top"><span class="tool-icon icon-orange"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8v5l2 2v3H6v-3l2-2zM5 16h14v5H5zM9 13v3m6-3v3"/></svg></span><span class="tool-status status-local">本地处理</span></div>
+                <h3>PDF 骑缝章</h3>
+                <p>上传 PDF 与印章图，自动切分骑缝位置并导出完整盖章文件。</p>
+                <div class="tool-tags"><span>PDF</span><span>印章</span><span>合同</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="excel-to-pdf" data-category="pdf" data-keywords="excel wps xls xlsx 表格 转 pdf 排版 打印">
+              <button class="favorite-button" type="button" aria-label="收藏Excel表格转PDF" data-favorite="excel-to-pdf">☆</button>
+              <a class="tool-card-link" href="tools/excel-to-pdf/">
+                <div class="tool-card-top"><span class="tool-icon icon-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 10h16M10 4v16M7 14l6 4m0-4-6 4"/></svg></span><span class="tool-status">保持排版</span></div>
+                <h3>Excel / WPS 表格转 PDF</h3>
+                <p>上传 XLS、XLSX 表格自动生成 PDF，尽量保留列宽、边框与打印设置。</p>
+                <div class="tool-tags"><span>Excel</span><span>WPS</span><span>PDF</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="seal-cutout" data-category="image" data-keywords="红章 公章 印章 扣图 抠图 透明 png 合同章 财务章">
+              <button class="favorite-button" type="button" aria-label="收藏红章快速扣图" data-favorite="seal-cutout">☆</button>
+              <a class="tool-card-link" href="tools/seal-cutout/">
+                <div class="tool-card-top"><span class="tool-icon icon-rose"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="10" r="6"/><path d="M8 16v5l4-2 4 2v-5M9 10h6"/></svg></span><span class="tool-status">透明 PNG</span></div>
+                <h3>红章快速扣图</h3>
+                <p>识别公章、合同章和财务章，去除纸张与黑灰文字，导出透明印章图。</p>
+                <div class="tool-tags"><span>红章</span><span>透明图</span><span>本地</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="bg-remove" data-category="image" data-keywords="在线 抠图 去背景 人物 商品 证件照 透明 png 图片">
+              <button class="favorite-button" type="button" aria-label="收藏在线抠图" data-favorite="bg-remove">☆</button>
+              <a class="tool-card-link" href="tools/bg-remove/">
+                <div class="tool-card-top"><span class="tool-icon icon-cyan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM4 16l5-5 4 4 2-2 5 5M15.5 8.5h.01"/></svg></span><span class="tool-status">透明 PNG</span></div>
+                <h3>在线抠图</h3>
+                <p>移除人物、商品或证件照背景，快速获得可继续设计使用的透明 PNG。</p>
+                <div class="tool-tags"><span>去背景</span><span>人物</span><span>商品</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+
+            <article class="tool-card" data-tool-id="sizesnap" data-category="image" data-keywords="图片 尺寸 裁剪 批量 游戏素材 商店图 icon 广告图 zip">
+              <button class="favorite-button" type="button" aria-label="收藏图尺快裁" data-favorite="sizesnap">☆</button>
+              <a class="tool-card-link" href="tools/sizesnap/">
+                <div class="tool-card-top"><span class="tool-icon icon-purple"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v14a4 4 0 0 0 4 4h10M3 7h14a4 4 0 0 1 4 4v10M7 7l10 10"/></svg></span><span class="tool-status status-batch">批量处理</span></div>
+                <h3>图尺快裁</h3>
+                <p>用一张母版批量生成游戏素材、商店图、广告图和 Icon 多尺寸文件。</p>
+                <div class="tool-tags"><span>批量</span><span>多尺寸</span><span>ZIP</span></div>
+                <span class="tool-enter">进入工具 <b>→</b></span>
+              </a>
+            </article>
+          </div>
+
+          <div id="tool-empty" class="tool-empty" hidden>
+            <span>⌕</span><h3>没有找到匹配工具</h3><p>换一个关键词，或切换到“全部”分类。</p>
+          </div>
+        </section>
+
+        <section id="workflows" class="content-section" aria-labelledby="workflows-title">
+          <div class="section-heading"><div><p class="section-kicker">WORKFLOWS</p><h2 id="workflows-title">按业务直接走流程</h2><p>不是只给工具入口，而是按真实交付顺序组织。</p></div></div>
+          <div class="workflow-grid">
+            <article class="workflow-card workflow-blue">
+              <div class="workflow-head"><span>01</span><div><strong>APP 上架与备案</strong><small>隐私文档 + 授权材料</small></div></div>
+              <ol><li><a href="tools/document-policy/">上传隐私协议并生成正式链接</a></li><li><a href="tools/doc-aging/">将授权书处理为红章扫描件</a></li><li><a href="tools/privacy-policy/">缺少文档时从模板生成政策</a></li></ol>
+            </article>
+            <article class="workflow-card workflow-orange">
+              <div class="workflow-head"><span>02</span><div><strong>合同与授权文件</strong><small>印章提取 + PDF 成稿</small></div></div>
+              <ol><li><a href="tools/seal-cutout/">从图片中提取透明红章</a></li><li><a href="tools/pdf-seal/">为多页 PDF 添加骑缝章</a></li><li><a href="tools/doc-aging/">输出正式扫描件 PDF</a></li></ol>
+            </article>
+            <article class="workflow-card workflow-purple">
+              <div class="workflow-head"><span>03</span><div><strong>素材与报表交付</strong><small>图片处理 + 文件转换</small></div></div>
+              <ol><li><a href="tools/bg-remove/">处理人物或商品透明底图</a></li><li><a href="tools/sizesnap/">批量生成渠道所需尺寸</a></li><li><a href="tools/excel-to-pdf/">将最终表格转换为 PDF</a></li></ol>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section assurance-section" aria-label="使用保障">
+          <article><span>01</span><div><h3>本地处理优先</h3><p>印章、图片和多数 PDF 操作尽量在浏览器内完成，降低敏感资料外传风险。</p></div></article>
+          <article><span>02</span><div><h3>工具独立运行</h3><p>每个功能独立加载，一个工具异常不会影响其他入口，维护和排查更清晰。</p></div></article>
+          <article><span>03</span><div><h3>围绕交付设计</h3><p>默认文件格式、页面顺序和中文命名更贴近日常发行运营的实际使用。</p></div></article>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div><strong>HN Tools</strong><span>游戏发行与运营文件工具台</span></div>
+        <p>© <span id="home-year"></span> HN Tools · 工具页独立运行</p>
+      </footer>
     </div>
-  </header>
-
-  <section class="home-hero" aria-label="简介">
-    <div class="home-hero-bg" aria-hidden="true"></div>
-    <div class="home-hero-inner">
-      <div class="home-hero-copy">
-        <p class="home-hero-eyebrow">运营首选 · 上传文档生成链接 · 上架资料处理</p>
-        <h1 class="home-hero-title">运营文档链接与上架工具台</h1>
-        <p class="home-hero-lead">把 Word 隐私协议、合规文档、PDF、表格和图片处理入口集中在一个页面。运营上传文档后即可生成正式链接，适合应用上架、官网展示和日常素材处理。</p>
-        <p class="home-hero-note">不需要找代码、不需要手动改页面；常用工具独立加载，流程清楚，打开就能处理。</p>
-        <div class="home-hero-cta">
-          <a class="home-btn home-btn-primary" href="tools/document-policy/">上传文档生成链接</a>
-          <a class="home-btn home-btn-secondary" href="#section-policy">查看全部政策工具</a>
-        </div>
-      </div>
-      <div class="home-hero-visual" aria-hidden="true">
-        <div class="home-hero-glow"></div>
-        <div class="home-hero-mock">
-          <div class="home-mock-window">
-            <div class="home-mock-dots"><span></span><span></span><span></span></div>
-            <div class="home-mock-body">
-              <div class="home-mock-panel-title">Tool Console</div>
-              <div class="home-mock-panel-list">
-                <div class="home-mock-panel-item home-mock-panel-item--active"><span>Word 上传生成链接</span><em>推荐</em></div>
-                <div class="home-mock-panel-item"><span>Excel 表格转 PDF</span><em>新增</em></div>
-                <div class="home-mock-panel-item"><span>PDF 骑缝章</span><em>本地</em></div>
-                <div class="home-mock-panel-item"><span>图片尺寸处理</span><em>批量</em></div>
-              </div>
-              <div class="home-mock-badge">Link Ready</div>
-            </div>
-          </div>
-          <div class="home-mock-card home-mock-card--float">
-            <span class="home-mock-card-icon">HN</span>
-            <span class="home-mock-card-text">Tools Station</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <main id="home-main" class="home-main">
-    <section id="section-policy" class="home-section" aria-labelledby="policy-heading">
-      <header class="home-section-head">
-        <div class="home-section-head-text">
-          <h2 id="policy-heading" class="home-section-title">政策文档</h2>
-          <p class="home-section-lead">运营优先使用「上传文档生成链接」；只有需要从模板填信息时，再使用旧的填表生成工具。</p>
-        </div>
-        <p class="home-section-desc">运营最常用</p>
-      </header>
-      <div class="home-policy-layout">
-        <a class="home-card home-card-featured" href="tools/document-policy/">
-          <span class="home-card-ribbon">运营推荐</span>
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--upload" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag home-tag--strong">上传 Word</span>
-              <span class="home-tag home-tag--muted">生成正式链接</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">上传隐私协议文档，直接生成链接</h3>
-          <p class="home-card-desc">运营拿到 Word 文档后，上传或粘贴正文，确认预览，一键生成可复制的正式隐私链接。</p>
-          <div class="home-card-steps" aria-hidden="true">
-            <span>1 上传文档</span>
-            <span>2 预览核对</span>
-            <span>3 复制链接</span>
-          </div>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">现在上传生成</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-        <a class="home-card home-card-secondary-tool" href="tools/privacy-policy/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--doc" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">填表生成</span>
-              <span class="home-tag home-tag--muted">模板</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">隐私政策生成与发布</h3>
-          <p class="home-card-desc">没有现成文档时，填写公司、产品、邮箱等信息，从模板生成隐私政策链接。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入填表工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <section id="section-pdf" class="home-section" aria-labelledby="pdf-heading">
-      <header class="home-section-head">
-        <div class="home-section-head-text">
-          <h2 id="pdf-heading" class="home-section-title">PDF 处理</h2>
-          <p class="home-section-lead">文件仅在您的浏览器中处理，不上传服务器，适合敏感文档。</p>
-        </div>
-        <p class="home-section-desc">本地浏览器侧能力</p>
-      </header>
-      <div class="home-grid">
-        <a class="home-card" href="tools/pdf-seal/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--pdf" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">本地处理</span>
-              <span class="home-tag home-tag--muted">浏览器</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">PDF 骑缝章</h3>
-          <p class="home-card-desc">上传 PDF 与印章图，自动切分骑缝、导出成稿。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <section id="section-image" class="home-section" aria-labelledby="image-heading">
-      <header class="home-section-head">
-        <div class="home-section-head-text">
-          <h2 id="image-heading" class="home-section-title">图片与表格工具</h2>
-          <p class="home-section-lead">批量生成多尺寸图片和 Icon 文件，也可将 Excel / WPS 表格转换为 PDF。</p>
-        </div>
-        <p class="home-section-desc">本地处理 / 在线转换</p>
-      </header>
-      <div class="home-grid">
-        <a class="home-card" href="tools/bg-remove/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--image" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">在线抠图</span>
-              <span class="home-tag home-tag--muted">透明 PNG</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">在线抠图</h3>
-          <p class="home-card-desc">上传人物、商品或证件照图片，调用独立后端服务移除背景，导出透明 PNG。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-        <a class="home-card" href="tools/sizesnap/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--image" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">本地处理</span>
-              <span class="home-tag home-tag--muted">批量出图</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">图尺快裁</h3>
-          <p class="home-card-desc">批量生成游戏素材、商店图、广告图和 Icon 多尺寸版本，支持 ZIP 打包导出。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-        <a class="home-card" href="tools/seal-cutout/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--image" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">红章提取</span>
-              <span class="home-tag home-tag--muted">透明 PNG</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">红章快速扣图</h3>
-          <p class="home-card-desc">自动识别红色公章、合同章、财务章和签章，去除纸张背景与黑灰文字，导出透明 PNG。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-        <a class="home-card" href="tools/doc-aging/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--image" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">文档做旧</span>
-              <span class="home-tag home-tag--muted">扫描风格</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">扫描做旧工具</h3>
-          <p class="home-card-desc">一键生成稍微做旧、灰度扫描或黑白扫描效果，适合备案说明图、合同截图和留档图。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-        <a class="home-card" href="tools/excel-to-pdf/">
-          <div class="home-card-top">
-            <span class="home-card-icon home-card-icon--pdf" aria-hidden="true"></span>
-            <div class="home-card-tags">
-              <span class="home-tag">Excel / WPS</span>
-              <span class="home-tag home-tag--muted">保持排版</span>
-            </div>
-          </div>
-          <h3 class="home-card-title">Excel 表格转 PDF</h3>
-          <p class="home-card-desc">上传表格自动生成 PDF，尽量保留合并单元格、边框、列宽和原始打印设置。</p>
-          <span class="home-card-footer">
-            <span class="home-card-arrow">进入工具</span>
-            <span class="home-card-chevron" aria-hidden="true">→</span>
-          </span>
-        </a>
-      </div>
-    </section>
-
-    <section id="section-features" class="home-section" aria-labelledby="feature-heading">
-      <header class="home-section-head">
-        <div class="home-section-head-text">
-          <h2 id="feature-heading" class="home-section-title">为什么选择这些工具</h2>
-          <p class="home-section-lead">专注轻量、快速、可信赖的在线处理体验。</p>
-        </div>
-        <p class="home-section-desc">能力特性</p>
-      </header>
-      <div class="home-feature-grid">
-        <article class="home-feature-card">
-          <h3>本地优先与临时处理</h3>
-          <p>能在浏览器完成的任务尽量本地处理；需要服务端转换的文件仅在临时目录中使用。</p>
-        </article>
-        <article class="home-feature-card">
-          <h3>打开即用</h3>
-          <p>无需安装复杂软件，适合临时处理与日常办公，打开网页即可开始。</p>
-        </article>
-        <article class="home-feature-card">
-          <h3>工具独立加载</h3>
-          <p>每个工具独立运行，减少互相影响，页面更轻量、可维护性更好。</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="section-more" class="home-section" aria-labelledby="more-heading">
-      <header class="home-section-head">
-        <div class="home-section-head-text">
-          <h2 id="more-heading" class="home-section-title">更多</h2>
-          <p class="home-section-lead">账号与短链记录等与发布能力配套使用。</p>
-        </div>
-        <p class="home-section-desc">扩展入口与说明</p>
-      </header>
-      <div class="home-placeholder" role="note">
-        <span class="home-placeholder-icon" aria-hidden="true"></span>
-        <p class="home-placeholder-text">
-          个人中心与账号相关：请在「隐私政策工具」内使用登录入口，或前往
-          <a class="home-inline-link" href="account.html">个人中心</a>。
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="home-footer">
-    <div class="home-footer-inner">
-      <p class="home-footer-line">© <span id="home-year"></span> · 静态工具导航</p>
-      <p class="home-footer-sub">本站为静态页面集合，工具页各自独立加载。</p>
-    </div>
-  </footer>
+  </div>
 
   <div class="home-feedback-root">
     <div class="home-feedback-backdrop" hidden tabindex="-1" aria-hidden="true"></div>
     <div class="home-feedback-ui">
-      <div
-        id="home-feedback-dialog"
-        class="home-feedback-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="home-feedback-title"
-        hidden
-      >
+      <div id="home-feedback-dialog" class="home-feedback-dialog" role="dialog" aria-modal="true" aria-labelledby="home-feedback-title" hidden>
         <div class="home-feedback-dialog-inner">
-          <div class="home-feedback-dialog-head">
-            <h2 id="home-feedback-title">问题反馈</h2>
-            <button type="button" class="home-feedback-close" aria-label="关闭">×</button>
-          </div>
+          <div class="home-feedback-dialog-head"><h2 id="home-feedback-title">问题反馈</h2><button type="button" class="home-feedback-close" aria-label="关闭">×</button></div>
           <p class="home-feedback-desc">如遇功能异常、页面错误或使用问题，可发送邮件联系我们</p>
-          <p class="home-feedback-email">
-            <a href="mailto:yszt@dxyx6888.com">yszt@dxyx6888.com</a>
-          </p>
-          <div class="home-feedback-actions">
-            <a
-              class="home-feedback-btn home-feedback-btn--primary"
-              href="mailto:yszt@dxyx6888.com?subject=网站反馈&amp;body=请描述您遇到的问题："
-            >发送邮件</a>
-            <button type="button" class="home-feedback-btn home-feedback-btn--secondary home-feedback-copy">复制邮箱</button>
-          </div>
+          <p class="home-feedback-email"><a href="mailto:yszt@dxyx6888.com">yszt@dxyx6888.com</a></p>
+          <div class="home-feedback-actions"><a class="home-feedback-btn home-feedback-btn--primary" href="mailto:yszt@dxyx6888.com?subject=网站反馈&amp;body=请描述您遇到的问题：">发送邮件</a><button type="button" class="home-feedback-btn home-feedback-btn--secondary home-feedback-copy">复制邮箱</button></div>
         </div>
       </div>
-      <button
-        type="button"
-        class="home-feedback-fab"
-        aria-expanded="false"
-        aria-haspopup="dialog"
-        aria-controls="home-feedback-dialog"
-      >
-        问题反馈
-      </button>
+      <button type="button" class="home-feedback-fab" aria-expanded="false" aria-haspopup="dialog" aria-controls="home-feedback-dialog">问题反馈</button>
     </div>
   </div>
 
@@ -340,7 +309,7 @@
   <script src="supabase-config.js"></script>
   <script src="auth.js"></script>
   <script src="page-visit-log.js"></script>
-  <script src="home.js"></script>
+  <script src="home-v2.js"></script>
   <script src="feedback-widget.js"></script>
 </body>
 </html>
