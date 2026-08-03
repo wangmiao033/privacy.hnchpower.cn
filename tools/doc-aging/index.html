@@ -1,136 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>扫描做旧工具 - 批量生成旧文档/扫描件风格</title>
-  <meta name="description" content="批量上传图片，一键生成做旧纸张风格或扫描件风格。所有图片仅在本地浏览器处理，不上传服务器。" />
-  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/doc-aging/" />
-  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any" />
-  <link rel="icon" href="../../assets/icons/favicon-32x32.png" sizes="32x32" type="image/png" />
-  <link rel="icon" href="../../assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
-  <link rel="apple-touch-icon" href="../../assets/icons/apple-touch-icon.png" sizes="180x180" />
-  <link rel="stylesheet" href="doc-aging.css" />
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>扫描件格式｜图片/PDF生成扫描件</title>
+<meta name="description" content="上传图片或PDF，生成保留红色公章的扫描件效果并导出多页PDF。文件仅在本地浏览器处理。">
+<link rel="canonical" href="https://privacy.hnchpower.cn/tools/doc-aging/">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#152033;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif}button,input,select{font:inherit}.hero{background:linear-gradient(125deg,#12203a,#1751aa);color:#fff}.hero>div{max-width:1280px;margin:auto;padding:28px 22px;display:flex;justify-content:space-between;gap:20px}.hero h1{margin:0 0 8px;font-size:38px}.hero p{margin:0;color:#dbe8ff;line-height:1.7}.back{align-self:flex-start;padding:9px 14px;border:1px solid #ffffff55;border-radius:9px;color:#fff;text-decoration:none}.main{max-width:1280px;margin:auto;padding:18px 22px 42px}.safe{padding:11px 13px;border:1px solid #cbdcf9;border-radius:10px;background:#eef5ff;color:#35517f}.grid{display:grid;grid-template-columns:350px 1fr;gap:15px;margin-top:15px;align-items:start}.card{border:1px solid #dce3ed;border-radius:14px;background:#fff;box-shadow:0 12px 35px #20304d12}.panel{position:sticky;top:12px;padding:17px}.row{display:flex;justify-content:space-between;align-items:center;gap:8px}.row h2{margin:0;font-size:17px}.tag{padding:3px 7px;border-radius:999px;background:#edf2f8;color:#56657b;font-size:11px}.drop{min-height:125px;margin-top:12px;padding:16px;border:2px dashed #b7c5d8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;text-align:center;cursor:pointer;background:#f8faff}.drop:hover,.drop.drag{border-color:#2467e8;background:#eff5ff}.drop.disabled{opacity:.5;cursor:not-allowed}.plus{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;background:#2467e8;font-size:24px}.drop small{color:#718096}#file{display:none}.section{margin-top:16px;padding-top:15px;border-top:1px solid #edf0f5}.modes{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.modes button{padding:9px;border:1px solid #d9e0ea;border-radius:9px;background:#fff;cursor:pointer;text-align:left}.modes button.on{border-color:#2467e8;color:#16458e;background:#edf4ff;box-shadow:inset 0 0 0 1px #2467e8}.modes b{display:block;font-size:12px}.modes span{display:block;margin-top:3px;color:#728096;font-size:9px}.range{margin-top:11px}.range label{display:flex;justify-content:space-between;margin-bottom:4px;color:#536077;font-size:11px;font-weight:700}.range input{width:100%;accent-color:#2467e8}.check{margin-top:12px;padding:9px;border:1px solid #efd4d4;border-radius:9px;display:flex;gap:7px;color:#922d2d;background:#fff8f8;font-size:11px;font-weight:700}.field{display:grid;grid-template-columns:76px 1fr;align-items:center;gap:7px;margin-top:9px;color:#526078;font-size:11px;font-weight:700}.field input,.field select{height:35px;min-width:0;padding:0 8px;border:1px solid #d7dfea;border-radius:8px;background:#fff}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.btn{min-height:40px;padding:8px;border:1px solid #ced7e3;border-radius:9px;background:#fff;color:#34435b;cursor:pointer;font-weight:750}.btn.primary{grid-column:1/-1;min-height:46px;border-color:#2467e8;background:#2467e8;color:#fff}.btn:disabled,.modes button:disabled{opacity:.4;cursor:not-allowed}.progress{margin-top:11px;padding:9px;border-radius:9px;background:#f0f5ff}.progress div{display:flex;justify-content:space-between;font-size:10px}.progress progress{width:100%;height:7px;accent-color:#2467e8}.hidden{display:none!important}.status{margin-top:11px;padding-top:9px;border-top:1px dashed #dfe5ed;color:#5f6c80;font-size:10px;line-height:1.6}.view{padding:17px}.viewhead{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:11px;border-bottom:1px solid #edf0f4}.viewhead h2{margin:0;font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nav{display:flex;align-items:center;gap:6px}.nav button{width:31px;height:31px;border:1px solid #d6dee9;border-radius:8px;background:#fff;cursor:pointer}.nav span{min-width:55px;text-align:center;color:#677489;font-size:11px}.preview{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:12px}.label{display:flex;justify-content:space-between;margin-bottom:5px;color:#526079;font-size:11px;font-weight:700}.red{padding:2px 6px;border-radius:999px;color:#992d2d;background:#fff0f0;font-size:8px}.stage{min-height:540px;padding:10px;border:1px solid #dce3ed;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:auto;background:#edf0f4}.stage img{display:block;max-width:100%;max-height:72vh;object-fit:contain;background:#fff;box-shadow:0 10px 25px #10182828}.stage p{color:#7a8799;text-align:center}.pages{margin-top:14px;padding:14px}.pages h2{margin:0;font-size:16px}.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:8px;margin-top:10px}.item{padding:7px;border:1px solid #dce3ed;border-radius:9px;display:grid;grid-template-columns:42px 1fr 23px;gap:7px;align-items:center}.item.on{border-color:#2467e8;background:#f2f7ff}.thumb{width:42px;height:54px;border:1px solid #d8dfe8;border-radius:5px;object-fit:cover}.pick{min-width:0;padding:0;border:0;background:none;text-align:left;cursor:pointer}.name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;font-weight:700}.badge{display:inline-block;margin-top:4px;padding:2px 5px;border-radius:999px;background:#edf1f5;color:#617086;font-size:8px}.badge.done{background:#e5f3e9;color:#28613b}.badge.work{background:#e6efff;color:#244e9a}.badge.err{background:#ffe8e8;color:#962e2e}.del{width:23px;height:23px;padding:0;border:1px solid #d5dde7;border-radius:6px;background:#fff;cursor:pointer}@media(max-width:850px){.grid{grid-template-columns:1fr}.panel{position:static}.preview{grid-template-columns:1fr}.stage{min-height:380px}}@media(max-width:520px){.hero>div{flex-direction:column}.hero h1{font-size:32px}.main,.hero>div{padding-left:14px;padding-right:14px}.modes,.actions{grid-template-columns:1fr}.btn.primary{grid-column:auto}.field{grid-template-columns:1fr}.stage{min-height:290px}.list{grid-template-columns:1fr}}
+</style>
 </head>
-<body class="docaging-page">
-  <header class="docaging-header">
-    <div class="docaging-header-inner">
-      <div>
-        <h1>扫描做旧工具</h1>
-        <p>支持单张或批量上传，快速生成「稍旧风格」或「扫描件风格」，适合备案说明、合同截图、内部留档图。</p>
-      </div>
-      <a href="../../index.html">返回首页</a>
-    </div>
-  </header>
-
-  <main class="docaging-main">
-    <p class="docaging-privacy">所有图片仅在本地浏览器处理，不会上传服务器。批量处理完成后可一次导出 ZIP。</p>
-
-    <section class="docaging-grid">
-      <article class="docaging-card">
-        <h2>上传与设置</h2>
-        <label id="docagingDropZone" class="docaging-dropzone" for="docagingFileInput">
-          <strong>点击批量上传 / 拖拽多张图片</strong>
-          <span>支持 png、jpg、jpeg、webp；单图不超过 10MB，最多 30 张</span>
-        </label>
-        <input id="docagingFileInput" type="file" multiple accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" />
-
-        <div class="docaging-presets">
-          <button type="button" data-preset="aged" class="is-active">稍微做旧</button>
-          <button type="button" data-preset="scan">扫描件灰度</button>
-          <button type="button" data-preset="bw">黑白扫描</button>
-        </div>
-        <div class="docaging-effects">
-          <button type="button" data-effect="lightScanAged" class="is-active">轻微扫描做旧</button>
-          <button type="button" data-effect="warmPaper">暖白纸感</button>
-          <button type="button" data-effect="copyDoc">复印件</button>
-          <button type="button" data-effect="grayScan">灰度扫描</button>
-          <button type="button" data-effect="hardBW">黑白扫描</button>
-        </div>
-        <div class="docaging-microlevels" id="docagingMicroLevels">
-          <span class="docaging-microlevels-label">轻微扫描做旧档位</span>
-          <button type="button" data-level="light">更轻</button>
-          <button type="button" data-level="standard" class="is-active">标准</button>
-          <button type="button" data-level="heavy">稍重</button>
-        </div>
-
-        <div class="docaging-control">
-          <label for="docagingIntensity">效果强度 <span id="docagingIntensityValue">20</span></label>
-          <input id="docagingIntensity" type="range" min="0" max="100" value="20" />
-        </div>
-        <div class="docaging-control">
-          <label for="docagingContrast">对比度 <span id="docagingContrastValue">-6</span></label>
-          <input id="docagingContrast" type="range" min="-40" max="80" value="-6" />
-        </div>
-        <label class="docaging-toggle">
-          <input id="docagingTextureToggle" type="checkbox" checked />
-          <span>启用纸张折痕/污点纹理</span>
-        </label>
-        <div class="docaging-control docaging-control-texture">
-          <label for="docagingTextureStrength">纹理强度 <span id="docagingTextureStrengthValue">28</span></label>
-          <input id="docagingTextureStrength" type="range" min="0" max="100" value="28" />
-        </div>
-
-        <div id="docagingBatchSummary" class="docaging-batch-summary" hidden>
-          <div>
-            <strong>已选择 <span id="docagingBatchCount">0</span> 张</strong>
-            <span id="docagingBatchProgressText">等待批量处理</span>
-          </div>
-          <progress id="docagingBatchProgress" max="1" value="0"></progress>
-        </div>
-
-        <div class="docaging-actions">
-          <button id="docagingDownloadBtn" type="button" disabled>导出当前 PNG</button>
-          <button id="docagingBatchProcessBtn" type="button" class="primary" disabled>批量处理全部</button>
-          <button id="docagingZipDownloadBtn" type="button" class="primary" disabled>批量导出 ZIP</button>
-          <button id="docagingResetBtn" type="button" class="light">清空</button>
-        </div>
-
-        <dl class="docaging-meta">
-          <div><dt>当前图片尺寸</dt><dd id="docagingMetaSize">-</dd></div>
-          <div><dt>当前文件体积</dt><dd id="docagingMetaFile">-</dd></div>
-          <div><dt>状态</dt><dd id="docagingMetaStatus">等待上传图片</dd></div>
-        </dl>
-      </article>
-
-      <article class="docaging-card">
-        <div class="docaging-card-title-row">
-          <h2>原图预览</h2>
-          <span id="docagingOriginalName" class="docaging-preview-name"></span>
-        </div>
-        <div class="docaging-preview">
-          <img id="docagingOriginalPreview" hidden alt="原图预览" />
-          <p id="docagingOriginalPlaceholder">上传后显示原图</p>
-        </div>
-      </article>
-
-      <article class="docaging-card">
-        <div class="docaging-card-title-row">
-          <h2>效果预览</h2>
-          <span id="docagingResultName" class="docaging-preview-name"></span>
-        </div>
-        <div class="docaging-preview docaging-preview-old">
-          <img id="docagingResultPreview" hidden alt="做旧结果预览" />
-          <p id="docagingResultPlaceholder">处理后显示做旧/扫描效果</p>
-        </div>
-      </article>
-    </section>
-
-    <section id="docagingBatchPanel" class="docaging-card docaging-batch-card" hidden>
-      <div class="docaging-batch-heading">
-        <div>
-          <h2>批量文件</h2>
-          <p>点击文件切换预览；修改参数后，点击“批量处理全部”统一重新生成。</p>
-        </div>
-        <span id="docagingBatchStats">0 张</span>
-      </div>
-      <div id="docagingBatchList" class="docaging-batch-list"></div>
-    </section>
-  </main>
-
-  <canvas id="docagingSourceCanvas" hidden></canvas>
-  <canvas id="docagingOutputCanvas" hidden></canvas>
-  <script src="doc-aging.js"></script>
-</body>
-</html>
+<body>
+<header class="hero"><div><div><h1>扫描件格式</h1><p>上传图片或 PDF，生成类似扫描仪输出的文件；默认保留红色公章，并按页面顺序合并导出 PDF。</p></div><a class="back" href="../../index.html">返回首页</a></div></header>
+<main class="main">
+<div class="safe"><b>本地处理：</b>文件不会上传服务器。PDF 拆页、扫描效果和文件合成都在当前浏览器完成。</div>
+<div class="grid">
+<aside class="card panel">
+<div class="row"><h2>① 上传文件</h2><span id="count" class="tag">0 页</span></div>
+<label id="drop" class="drop" for="file"><span class="plus">＋</span><b>点击上传 / 拖拽文件</b><span>PDF、PNG、JPG、WEBP</span><small>单个文件不超过 50MB，最多 50 页</small></label><input id="file" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
+<div class="section"><div class="row"><h2>② 扫描效果</h2></div><div class="modes"><button class="on" data-mode="color"><b>彩色扫描件</b><span>推荐，保留红章</span></button><button data-mode="gray"><b>灰度扫描</b><span>正文灰度，红章可保留</span></button><button data-mode="bw"><b>黑白扫描</b><span>高对比复印效果</span></button><button data-mode="aged"><b>轻微做旧</b><span>暖白纸张留档感</span></button></div>
+<div class="range"><label>扫描强度 <output id="sv">28</output></label><input id="strength" type="range" min="0" max="100" value="28"></div><div class="range"><label>文字对比度 <output id="cv">12</output></label><input id="contrast" type="range" min="-20" max="55" value="12"></div><div class="range"><label>去灰底 <output id="bv">18</output></label><input id="background" type="range" min="0" max="60" value="18"></div><label class="check"><input id="keepRed" type="checkbox" checked>保留红色公章（灰度/黑白模式也保留）</label></div>
+<div class="section"><div class="row"><h2>③ 导出扫描件</h2></div><label class="field"><span>PDF 文件名</span><input id="outName" value="扫描件" maxlength="80"></label><label class="field"><span>A4 页边距</span><select id="margin"><option value="6">窄边距 6mm</option><option value="10" selected>标准边距 10mm</option><option value="15">宽边距 15mm</option><option value="0">无边距</option></select></label><div class="actions"><button id="pdfBtn" class="btn primary" disabled>下载扫描件 PDF</button><button id="allBtn" class="btn" disabled>生成全部扫描页</button><button id="jpgBtn" class="btn" disabled>导出当前 JPG</button><button id="clearBtn" class="btn">清空</button></div><div id="progress" class="progress hidden"><div><span id="progressText">正在处理</span><b id="percent">0%</b></div><progress id="bar" max="100" value="0"></progress></div><div id="status" class="status">等待上传文件</div></div>
+</aside>
+<section><div class="card view"><div class="viewhead"><h2 id="title">原文件预览</h2><div class="nav"><button id="prev" disabled>‹</button><span id="indicator">0 / 0</span><button id="next" disabled>›</button></div></div><div class="preview"><div><div class="label"><span>原文件</span><span id="info">-</span></div><div class="stage"><img id="original" class="hidden"><p id="originalEmpty">上传后显示原文件</p></div></div><div><div class="label"><span>扫描件效果</span><span class="red">保留红章</span></div><div class="stage"><img id="result" class="hidden"><p id="resultEmpty">处理后显示扫描件效果</p></div></div></div></div><div id="pagesBox" class="card pages hidden"><div class="row"><h2>文件页列表</h2><span class="tag">点击切换预览</span></div><div id="list" class="list"></div></div></section>
+</div></main>
+<canvas id="source" hidden></canvas><canvas id="output" hidden></canvas>
+<script type="module">
+const $=s=>document.querySelector(s),MAX=50,SIDE=3000,PDFSIDE=2500,accepted=new Set(["image/png","image/jpeg","image/webp"]);
+const el={file:$("#file"),drop:$("#drop"),count:$("#count"),strength:$("#strength"),contrast:$("#contrast"),background:$("#background"),sv:$("#sv"),cv:$("#cv"),bv:$("#bv"),keepRed:$("#keepRed"),outName:$("#outName"),margin:$("#margin"),pdfBtn:$("#pdfBtn"),allBtn:$("#allBtn"),jpgBtn:$("#jpgBtn"),clearBtn:$("#clearBtn"),progress:$("#progress"),progressText:$("#progressText"),percent:$("#percent"),bar:$("#bar"),status:$("#status"),title:$("#title"),prev:$("#prev"),next:$("#next"),indicator:$("#indicator"),info:$("#info"),original:$("#original"),originalEmpty:$("#originalEmpty"),result:$("#result"),resultEmpty:$("#resultEmpty"),pagesBox:$("#pagesBox"),list:$("#list"),source:$("#source"),output:$("#output")};
+const sctx=el.source.getContext("2d",{willReadFrequently:true}),octx=el.output.getContext("2d",{willReadFrequently:true});let pages=[],active=-1,mode="color",version=1,busy=false,timer,pdfjsPromise,pdflibPromise;
+const size=n=>n<1024?n+" B":n<1048576?(n/1024).toFixed(1)+" KB":(n/1048576).toFixed(2)+" MB",clamp=v=>Math.max(0,Math.min(255,v)),wait=()=>new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0))),canvasBlob=(c,t,q)=>new Promise((r,j)=>c.toBlob(b=>b?r(b):j(Error("图片生成失败")),t,q)),loadImage=u=>new Promise((r,j)=>{const i=new Image;i.onload=()=>r(i);i.onerror=()=>j(Error("图片读取失败"));i.src=u});
+function setStatus(t){el.status.textContent=t}function showProgress(t,n,total){const p=Math.round(n/Math.max(1,total)*100);el.progress.classList.remove("hidden");el.progressText.textContent=t;el.percent.textContent=p+"%";el.bar.value=p}function hideProgress(){el.progress.classList.add("hidden");el.bar.value=0}function releaseResult(p){if(p.resultUrl)URL.revokeObjectURL(p.resultUrl);p.resultUrl="";p.resultBlob=null;p.resultVersion=0}function ready(p){return !!(p&&p.resultBlob&&p.resultVersion===version&&p.state==="done")}
+function settings(){return{mode,strength:+el.strength.value/100,contrast:+el.contrast.value,background:+el.background.value/100,keepRed:el.keepRed.checked}}function isRed(r,g,b){return r>75&&r>Math.max(g,b)*1.23&&r-Math.min(g,b)>22}function contrast(v,a){const f=259*(a+255)/(255*(259-a));return clamp(f*(v-128)+128)}function noise(x,y){let n=x*374761393+y*668265263;n=(n^(n>>13))*1274126177;n^=n>>16;return(n>>>0)/4294967295-.5}
+function applyEffect(imageData,w,h,s){const a=imageData.data;for(let i=0;i<a.length;i+=4){const p=i/4,x=p%w,y=Math.floor(p/w),r=a[i],g=a[i+1],b=a[i+2],gray=.299*r+.587*g+.114*b,red=s.keepRed&&isRed(r,g,b),paper=Math.max(0,Math.min(1,(gray-125)/120)),grain=noise(x,y)*(2.5+s.strength*8.5)*(.35+paper*.65),edge=Math.pow(Math.max(Math.abs(x/(w-1||1)-.5)*2,Math.abs(y/(h-1||1)-.5)*2),2.2)*s.strength*8;if(s.mode==="color"){const sat=.97-s.strength*.08,light=paper*s.background*44;let nr=contrast(gray*(1-sat)+r*sat+light+grain-edge,s.contrast),ng=contrast(gray*(1-sat)+g*sat+light+grain-edge,s.contrast),nb=contrast(gray*(1-sat)+b*sat+light+grain-edge,s.contrast);if(red){nr=clamp(nr*1.1+10);ng*=.92;nb*=.92}a[i]=nr;a[i+1]=ng;a[i+2]=nb}else if(s.mode==="gray"){if(red){a[i]=clamp(contrast(r+grain,s.contrast)*1.08+8);a[i+1]=clamp(contrast(g+grain,s.contrast)*.88);a[i+2]=clamp(contrast(b+grain,s.contrast)*.88)}else{const z=contrast(gray+paper*s.background*50+grain-edge,s.contrast+s.strength*8);a[i]=a[i+1]=a[i+2]=z}}else if(s.mode==="bw"){if(red){a[i]=clamp(r*1.12+8);a[i+1]=clamp(g*.82);a[i+2]=clamp(b*.82)}else{const z=contrast(gray+paper*s.background*60+grain,s.contrast+28)>=(166-s.strength*34)?255:24;a[i]=a[i+1]=a[i+2]=z}}else{const light=paper*(8+s.strength*18);let nr=contrast(r+light+grain-edge,s.contrast-3),ng=contrast(g+light*.72+grain-edge,s.contrast-4),nb=contrast(b+light*.2+grain-edge,s.contrast-5);if(red){nr=clamp(nr*1.08+7);ng*=.9;nb*=.9}a[i]=nr;a[i+1]=ng;a[i+2]=nb}}return imageData}
+async function processPage(p,v,s){if(!p||v!==version)return false;p.state="work";renderList();updateButtons();try{const image=await loadImage(p.url),sw=image.naturalWidth||image.width,sh=image.naturalHeight||image.height,scale=Math.min(1,SIDE/Math.max(sw,sh)),w=Math.max(1,Math.round(sw*scale)),h=Math.max(1,Math.round(sh*scale));el.source.width=el.output.width=w;el.source.height=el.output.height=h;sctx.fillStyle=octx.fillStyle="#fff";sctx.fillRect(0,0,w,h);octx.fillRect(0,0,w,h);sctx.drawImage(image,0,0,w,h);image.src="";const data=sctx.getImageData(0,0,w,h);octx.putImageData(applyEffect(data,w,h,s),0,0);const blob=await canvasBlob(el.output,"image/jpeg",.94);if(v!==version){p.state="wait";return false}releaseResult(p);p.resultBlob=blob;p.resultUrl=URL.createObjectURL(blob);p.resultWidth=w;p.resultHeight=h;p.resultVersion=v;p.state="done";show();renderList();updateButtons();return true}catch(e){p.state="err";p.error=e.message||"处理失败";renderList();updateButtons();return false}}
+function schedule(delay=160){clearTimeout(timer);timer=setTimeout(async()=>{const p=pages[active];if(busy||!p||ready(p))return;setStatus("正在生成当前页扫描效果…");const ok=await processPage(p,version,settings());setStatus(ok?"当前页处理完成，可下载扫描件 PDF":p.error||"处理失败")},delay)}function invalidate(t){version++;pages.forEach(p=>{releaseResult(p);p.state="wait"});show();renderList();updateButtons();if(pages.length){setStatus(t);schedule()}}
+function show(){const p=pages[active],n=pages.length;el.count.textContent=n+" 页";el.indicator.textContent=n?(active+1)+" / "+n:"0 / 0";el.prev.disabled=busy||active<=0;el.next.disabled=busy||active<0||active>=n-1;el.pagesBox.classList.toggle("hidden",!n);if(!p){el.original.classList.add("hidden");el.result.classList.add("hidden");el.originalEmpty.classList.remove("hidden");el.resultEmpty.classList.remove("hidden");el.title.textContent="原文件预览";el.info.textContent="-";return}el.title.textContent=p.name;el.info.textContent=(active+1)+"/"+n+" · "+size(p.bytes);el.original.src=p.url;el.original.classList.remove("hidden");el.originalEmpty.classList.add("hidden");if(ready(p)){el.result.src=p.resultUrl;el.result.classList.remove("hidden");el.resultEmpty.classList.add("hidden")}else{el.result.classList.add("hidden");el.resultEmpty.classList.remove("hidden");el.resultEmpty.textContent=p.state==="work"?"正在生成当前页…":"当前页等待处理"}}
+function select(i,auto=true){if(i<0||i>=pages.length)return;active=i;show();renderList();updateButtons();if(auto&&!ready(pages[i])&&!busy)schedule(20)}function removePage(i){if(busy)return;const p=pages[i];URL.revokeObjectURL(p.url);releaseResult(p);pages.splice(i,1);if(!pages.length)active=-1;else if(active>=pages.length)active=pages.length-1;else if(i<active)active--;show();renderList();updateButtons();setStatus(pages.length?"已移除 1 页":"等待上传文件")}
+function renderList(){el.list.textContent="";pages.forEach((p,i)=>{const item=document.createElement("div");item.className="item"+(i===active?" on":"");const img=document.createElement("img");img.className="thumb";img.src=ready(p)?p.resultUrl:p.url;const pick=document.createElement("button");pick.className="pick";pick.disabled=busy;pick.onclick=()=>select(i);const name=document.createElement("span");name.className="name";name.textContent=(i+1)+". "+p.name;const badge=document.createElement("span");badge.className="badge "+(p.state==="done"?"done":p.state==="work"?"work":p.state==="err"?"err":"");badge.textContent=p.state==="done"?"已生成":p.state==="work"?"处理中":p.state==="err"?"失败":"待处理";pick.append(name,badge);const del=document.createElement("button");del.className="del";del.textContent="×";del.disabled=busy;del.onclick=()=>removePage(i);item.append(img,pick,del);el.list.append(item)})}
+function updateButtons(){const has=pages.length>0,p=pages[active],all=has&&pages.every(ready);el.pdfBtn.disabled=busy||!has;el.allBtn.disabled=busy||!has||all;el.jpgBtn.disabled=busy||!ready(p);el.clearBtn.disabled=busy;el.file.disabled=busy||pages.length>=MAX;el.drop.classList.toggle("disabled",el.file.disabled);document.querySelectorAll(".modes button").forEach(b=>b.disabled=busy);[el.strength,el.contrast,el.background,el.keepRed,el.outName,el.margin].forEach(x=>x.disabled=busy);show()}
+function addBlob(blob,name,bytes=blob.size){if(pages.length>=MAX)return;pages.push({name,url:URL.createObjectURL(blob),bytes,resultBlob:null,resultUrl:"",resultVersion:0,state:"wait",error:""})}async function getPdfJs(){if(!pdfjsPromise)pdfjsPromise=(async()=>{let last;for(const url of["https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs","https://unpkg.com/pdfjs-dist@4.10.38/build/pdf.min.mjs"])try{const lib=await import(url);lib.GlobalWorkerOptions.workerSrc=url.replace("pdf.min.mjs","pdf.worker.min.mjs");return lib}catch(e){last=e}throw last||Error("PDF 组件加载失败")})();return pdfjsPromise}async function getPdfLib(){if(!pdflibPromise)pdflibPromise=import("https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm");return pdflibPromise}
+async function addPdf(file){const lib=await getPdfJs(),doc=await lib.getDocument({data:await file.arrayBuffer()}).promise,total=Math.min(doc.numPages,MAX-pages.length),base=file.name.replace(/\.pdf$/i,"");for(let i=1;i<=total;i++){showProgress("正在拆分 PDF 第 "+i+"/"+total+" 页",i-1,total);const page=await doc.getPage(i),v=page.getViewport({scale:1}),scale=Math.max(.65,Math.min(3,PDFSIDE/Math.max(v.width,v.height))),vp=page.getViewport({scale}),canvas=document.createElement("canvas");canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);const ctx=canvas.getContext("2d",{alpha:false});ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);await page.render({canvasContext:ctx,viewport:vp,background:"white"}).promise;const blob=await canvasBlob(canvas,"image/jpeg",.96);addBlob(blob,base+"_第"+i+"页");canvas.width=canvas.height=1;showProgress("正在拆分 PDF 第 "+i+"/"+total+" 页",i,total)}}
+async function addFiles(fileList){if(busy)return;const files=[...fileList];if(!files.length)return;busy=true;updateButtons();const before=pages.length;let failed=0;try{for(const file of files){if(pages.length>=MAX)break;if(file.size>50*1048576){failed++;continue}const name=file.name.toLowerCase(),isPdf=file.type==="application/pdf"||name.endsWith(".pdf"),isImage=accepted.has(file.type)||/\.(png|jpe?g|webp)$/.test(name);try{if(isPdf)await addPdf(file);else if(isImage)addBlob(file,file.name.replace(/\.[^.]+$/,"")||"页面",file.size);else failed++}catch(e){failed++}}}finally{busy=false;el.file.value="";hideProgress();if(active<0&&pages.length)active=0;show();renderList();updateButtons()}const added=pages.length-before;setStatus(added?"已加入 "+added+" 页"+(failed?"，未加入 "+failed+" 个文件":""):"没有可加入的文件");if(added)select(active<0?0:active)}
+async function processAll(){if(busy||!pages.length)return false;clearTimeout(timer);busy=true;updateButtons();const v=version,s=settings(),todo=pages.filter(p=>!ready(p));let ok=0;try{for(let i=0;i<todo.length;i++){showProgress("正在生成扫描页 "+(i+1)+"/"+todo.length,i,todo.length);setStatus("正在处理："+todo[i].name);await wait();if(await processPage(todo[i],v,s))ok++;showProgress("正在生成扫描页 "+(i+1)+"/"+todo.length,i+1,todo.length)}}finally{busy=false;hideProgress();renderList();updateButtons()}const done=pages.every(ready);setStatus(done?"全部 "+pages.length+" 页已生成，可下载扫描件 PDF":"处理完成：成功 "+ok+" 页");return done}
+function cleanName(v){return(String(v||"扫描件").trim().replace(/[\\/:*?"<>|]+/g,"-").replace(/\.pdf$/i,"")||"扫描件")}function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+async function buildPdf(){const {PDFDocument}=await getPdfLib(),pdf=await PDFDocument.create(),margin=+el.margin.value*72/25.4;for(const p of pages){const image=await pdf.embedJpg(await p.resultBlob.arrayBuffer()),land=p.resultWidth>p.resultHeight,w=land?841.89:595.28,h=land?595.28:841.89,page=pdf.addPage([w,h]),scale=Math.min((w-2*margin)/p.resultWidth,(h-2*margin)/p.resultHeight),dw=p.resultWidth*scale,dh=p.resultHeight*scale;page.drawImage(image,{x:(w-dw)/2,y:(h-dh)/2,width:dw,height:dh})}return new Blob([await pdf.save()],{type:"application/pdf"})}async function downloadPdf(){if(busy||!pages.length)return;if(!pages.every(ready)&&!await processAll())return;busy=true;updateButtons();try{showProgress("正在合并扫描件 PDF",0,pages.length);setStatus("正在合并 "+pages.length+" 页扫描件…");const blob=await buildPdf(),name=cleanName(el.outName.value)+".pdf";download(blob,name);setStatus("已生成："+name+"（"+size(blob.size)+"）")}catch(e){setStatus(e.message||"PDF 生成失败")}finally{busy=false;hideProgress();updateButtons()}}
+function clearAll(){if(busy)return;clearTimeout(timer);pages.forEach(p=>{URL.revokeObjectURL(p.url);releaseResult(p)});pages=[];active=-1;el.file.value="";hideProgress();show();renderList();updateButtons();setStatus("等待上传文件")}
+el.file.onchange=()=>addFiles(el.file.files);el.drop.ondragover=e=>{e.preventDefault();if(!el.file.disabled)el.drop.classList.add("drag")};el.drop.ondragleave=()=>el.drop.classList.remove("drag");el.drop.ondrop=e=>{e.preventDefault();el.drop.classList.remove("drag");if(!el.file.disabled)addFiles(e.dataTransfer.files)};document.querySelectorAll(".modes button").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll(".modes button").forEach(x=>x.classList.toggle("on",x===b));invalidate("扫描模式已更新，正在刷新当前页…")});[el.strength,el.contrast,el.background].forEach(x=>x.oninput=()=>{el.sv.textContent=el.strength.value;el.cv.textContent=el.contrast.value;el.bv.textContent=el.background.value;invalidate("扫描参数已更新，正在刷新当前页…")});el.keepRed.onchange=()=>invalidate("红章设置已更新，正在刷新当前页…");el.prev.onclick=()=>select(active-1);el.next.onclick=()=>select(active+1);el.allBtn.onclick=processAll;el.pdfBtn.onclick=downloadPdf;el.jpgBtn.onclick=()=>{const p=pages[active];if(ready(p)){const name=cleanName(p.name)+"_扫描件.jpg";download(p.resultBlob,name);setStatus("已导出："+name)}};el.clearBtn.onclick=clearAll;clearAll();
+</script>
+</body></html>
