@@ -1,0 +1,27 @@
+.account-billing-panel[hidden] { display: none !important; }
+.billing-orders-title {
+  font-size: 14px;
+  margin: 20px 0 12px;
+  color: #213a65;
+}
+.billing-orders-list { color: #72839a; font-size: 12px; }
+.billing-order-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e4ebf5;
+  border-radius: 11px;
+  padding: 11px 13px;
+  margin: 10px 0;
+  overflow-wrap: anywhere;
+  color: #263958;
+  background: #fbfdff;
+}
+.billing-order-row strong, .billing-order-row small {
+  display: block;
+  line-height: 1.6;
+}
+.billing-order-row strong { font-size: 13px; }
+.billing-order-row small { color: #76849b; font-size: 11px; }
+.billing-order-right { text-align: right; flex: 0 0 auto; }
