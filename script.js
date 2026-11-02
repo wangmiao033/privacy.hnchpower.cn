@@ -145,7 +145,7 @@
     }
   }
 
-  async function createShortPolicyLink(values, accessToken) {
+  async function createShortPolicyLink(values, accessToken, requestId) {
     var base = getFunctionsBaseUrl();
     if (!base || !SB_CFG.SUPABASE_ANON_KEY) {
       throw new Error("Supabase 配置缺失，无法生成短链");
@@ -165,6 +165,7 @@
         game: values.game,
         email: values.email,
         date: values.date,
+        request_id: requestId,
       }),
     });
     var rawText = await res.text();
@@ -270,7 +271,15 @@
         btnPublish.disabled = false;
         return;
       }
-      var shortCode = await createShortPolicyLink(values, token);
+      if (window.HNPayGate && !(await window.HNPayGate.ensureCanPublish(token))) {
+        btnPublish.disabled = false;
+        return;
+      }
+      var requestId = window.HNPayGate
+        ? window.HNPayGate.requestId("policy", values)
+        : crypto.randomUUID();
+      var shortCode = await createShortPolicyLink(values, token, requestId);
+      if (window.HNPayGate) window.HNPayGate.published("policy");
       url = buildPublishUrlByCode(shortCode);
     } catch (e) {
       var detail = e && e.message ? e.message : "短链创建失败";
@@ -278,7 +287,11 @@
       console.error("[publish] session exists:", !!window.AppSupabaseClient);
       console.error("[publish] request url:", getFunctionsBaseUrl() + "/create-policy-link");
       console.error("[publish] error detail:", detail);
-      showToast("发布失败：" + readablePublishError(detail));
+      if (/PAYMENT_REQUIRED/.test(detail) && window.HNPayGate) {
+        window.HNPayGate.showPayment(token);
+      } else {
+        showToast("发布失败：" + readablePublishError(detail));
+      }
       btnPublish.disabled = false;
       return;
     }

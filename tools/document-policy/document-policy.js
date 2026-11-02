@@ -170,7 +170,7 @@
     }
   }
 
-  async function createDocumentPolicyLink(values, accessToken) {
+  async function createDocumentPolicyLink(values, accessToken, requestId) {
     var base = getFunctionsBaseUrl();
     if (!base || !SB_CFG.SUPABASE_ANON_KEY) throw new Error("Supabase 配置缺失");
     var res = await fetch(base + "/create-document-policy-link", {
@@ -180,7 +180,7 @@
         apikey: SB_CFG.SUPABASE_ANON_KEY,
         Authorization: "Bearer " + accessToken,
       },
-      body: JSON.stringify(values),
+      body: JSON.stringify(Object.assign({}, values, { request_id: requestId })),
     });
     var raw = await res.text();
     var json = {};
@@ -272,11 +272,24 @@
         btnPublish.disabled = false;
         return;
       }
+      var publishValues = {
+        title: titleEl.value.trim(),
+        content_html: currentHtml,
+        content_text: currentText.slice(0, 20000),
+      };
+      if (window.HNPayGate && !(await window.HNPayGate.ensureCanPublish(token))) {
+        btnPublish.disabled = false;
+        return;
+      }
+      var requestId = window.HNPayGate
+        ? window.HNPayGate.requestId("document", publishValues)
+        : crypto.randomUUID();
       var code = await createDocumentPolicyLink({
         title: titleEl.value.trim(),
         content_html: currentHtml,
         content_text: currentText.slice(0, 20000),
-      }, token);
+      }, token, requestId);
+      if (window.HNPayGate) window.HNPayGate.published("document");
       var url = buildUrl(code);
       urlEl.value = url;
       timeEl.textContent = "最近一次生成：" + new Date().toLocaleTimeString("zh-CN", { hour12: false });
@@ -295,7 +308,12 @@
       );
     } catch (e) {
       console.error("[document-policy] publish failed", e);
-      showToast("发布失败：" + ((e && e.message) || "请稍后重试"));
+      var message = (e && e.message) || "请稍后重试";
+      if (/PAYMENT_REQUIRED/.test(message) && window.HNPayGate) {
+        window.HNPayGate.showPayment(token);
+      } else {
+        showToast("发布失败：" + message);
+      }
     } finally {
       btnPublish.disabled = false;
     }

@@ -1,0 +1,127 @@
+/* Payment UI is shown only when attempting to publish without entitlement. */
+.hn-billing-overlay[hidden], .hn-billing-overlay [hidden], #hn-billing-notice[hidden] {
+  display: none !important;
+}
+.hn-billing-overlay {
+  position: fixed;
+  z-index: 99999;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 30, 53, .5);
+  padding: 18px;
+  backdrop-filter: blur(5px);
+}
+.hn-billing-dialog {
+  position: relative;
+  width: min(100%, 440px);
+  border-radius: 20px;
+  padding: 27px;
+  color: #14223b;
+  background: #fff;
+  box-shadow: 0 22px 80px rgba(10, 25, 59, .22);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.hn-billing-dialog * { box-sizing: border-box; }
+.hn-billing-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: 0;
+  background: transparent;
+  font-size: 26px;
+  color: #7988a0;
+  cursor: pointer;
+}
+.hn-billing-symbol {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  border-radius: 15px;
+  background: #eef5ff;
+}
+#hn-billing-title {
+  margin: 14px 0 5px;
+  font-size: 23px;
+  letter-spacing: -.4px;
+}
+.hn-billing-desc, .hn-billing-subtitle {
+  color: #65738a;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.hn-billing-desc { margin: 0 0 18px; }
+.hn-billing-choices { display: grid; gap: 10px; }
+.hn-billing-choices button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e0e8f5;
+  border-radius: 13px;
+  padding: 16px 18px;
+  background: #fafcff;
+  color: #19365e;
+  cursor: pointer;
+}
+.hn-billing-choices button:hover {
+  border-color: #7caeff;
+  background: #f1f7ff;
+}
+.hn-billing-choices strong, .hn-billing-choices small {
+  display: block;
+}
+.hn-billing-choices strong { font-size: 15px; }
+.hn-billing-choices small {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #697891;
+}
+.hn-billing-checkout { text-align: center; }
+.hn-billing-amount-label { font-size: 13px; color: #697891; }
+.hn-billing-amount { font-size: 34px; font-weight: 750; color: #155bea; margin: 8px 0; }
+.hn-billing-buy, .hn-billing-pay-link, .hn-billing-verify {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 10px;
+  background: #2166ec;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 14px;
+  margin: 13px 0;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+.hn-billing-verify { background: #ecf3ff; color: #1552ca; }
+.hn-billing-buy:disabled, .hn-billing-verify:disabled { opacity: .55; cursor: wait; }
+.hn-billing-back {
+  border: 0;
+  background: transparent;
+  color: #60728f;
+  padding: 8px;
+  cursor: pointer;
+}
+.hn-billing-msg { min-height: 22px; color: #566c8a; font-size: 12px; line-height: 1.6; }
+#hn-billing-notice {
+  position: fixed;
+  z-index: 100000;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(90vw, 520px);
+  background: #16356e;
+  color: #fff;
+  padding: 13px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(12, 32, 75, .25);
+  font-size: 13px;
+}
+@media (max-width: 480px) {
+  .hn-billing-dialog { padding: 22px; border-radius: 18px; }
+  .hn-billing-amount { font-size: 30px; }
+}

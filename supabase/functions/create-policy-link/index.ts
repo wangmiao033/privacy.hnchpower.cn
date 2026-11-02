@@ -67,19 +67,44 @@ Deno.serve(async (req) => {
   }
   createdBy = userRes.data.user.id;
 
+  const enforceBilling = Deno.env.get("ALIPAY_BILLING_ENABLED") === "true";
+  const requestId = String(body.request_id || "");
+  if (enforceBilling && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requestId)) {
+    return json({ error: "Missing or invalid request_id" }, 400);
+  }
+
   for (let i = 0; i < 8; i++) {
     const shortCode = genCode(6);
-    const insertRes = await admin.from("policy_links").insert({
-      short_code: shortCode,
-      company,
-      game,
-      email,
-      date,
-      created_by: createdBy,
-    });
-    if (!insertRes.error) return json({ short_code: shortCode });
-    if (insertRes.error.code !== "23505") {
-      return json({ error: insertRes.error.message || "Insert failed" }, 500);
+    if (enforceBilling) {
+      // Entitlement check, credit deduction, link insert and request deduplication
+      // must happen atomically in the database. The client cannot bypass this.
+      const result = await admin.rpc("billing_publish_policy", {
+        p_user_id: createdBy,
+        p_kind: "policy",
+        p_request_id: requestId,
+        p_short_code: shortCode,
+        p_company: company,
+        p_game: game,
+        p_email: email,
+        p_date: date,
+      });
+      if (!result.error) return json({ short_code: result.data });
+      if (/PAYMENT_REQUIRED/.test(result.error.message || "")) {
+        return json({ error: "PAYMENT_REQUIRED" }, 402);
+      }
+      if (result.error.code !== "23505") {
+        return json({ error: "Publish failed" }, 500);
+      }
+    } else {
+      // Before payments go live, preserve existing publishing behavior.
+      const insertRes = await admin.from("policy_links").insert({
+        short_code: shortCode,
+        company, game, email, date, created_by: createdBy,
+      });
+      if (!insertRes.error) return json({ short_code: shortCode });
+      if (insertRes.error.code !== "23505") {
+        return json({ error: insertRes.error.message || "Insert failed" }, 500);
+      }
     }
   }
 

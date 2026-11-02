@@ -81,18 +81,44 @@ Deno.serve(async (req) => {
   const contentHtml = stripBlockedHtml(contentHtmlRaw);
   if (!contentHtml) return json({ error: "Document content is empty after sanitizing" }, 400);
 
+  const enforceBilling = Deno.env.get("ALIPAY_BILLING_ENABLED") === "true";
+  const requestId = String(body.request_id || "");
+  if (enforceBilling && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(requestId)) {
+    return json({ error: "Missing or invalid request_id" }, 400);
+  }
+
   for (let i = 0; i < 8; i++) {
     const shortCode = genCode(8);
-    const insertRes = await admin.from("document_policy_links").insert({
-      short_code: shortCode,
-      title,
-      content_html: contentHtml,
-      content_text: contentText,
-      created_by: createdBy,
-    });
-    if (!insertRes.error) return json({ short_code: shortCode });
-    if (insertRes.error.code !== "23505") {
-      return json({ error: insertRes.error.message || "Insert failed" }, 500);
+    if (enforceBilling) {
+      const result = await admin.rpc("billing_publish_policy", {
+        p_user_id: createdBy,
+        p_kind: "document",
+        p_request_id: requestId,
+        p_short_code: shortCode,
+        p_title: title,
+        p_content_html: contentHtml,
+        p_content_text: contentText,
+      });
+      if (!result.error) return json({ short_code: result.data });
+      if (/PAYMENT_REQUIRED/.test(result.error.message || "")) {
+        return json({ error: "PAYMENT_REQUIRED" }, 402);
+      }
+      if (result.error.code !== "23505") {
+        return json({ error: "Publish failed" }, 500);
+      }
+    } else {
+      // Before payments go live, keep existing publications working.
+      const insertRes = await admin.from("document_policy_links").insert({
+        short_code: shortCode,
+        title,
+        content_html: contentHtml,
+        content_text: contentText,
+        created_by: createdBy,
+      });
+      if (!insertRes.error) return json({ short_code: shortCode });
+      if (insertRes.error.code !== "23505") {
+        return json({ error: insertRes.error.message || "Insert failed" }, 500);
+      }
     }
   }
 
