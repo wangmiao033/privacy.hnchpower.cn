@@ -277,6 +277,12 @@
 
   async function publish() {
     if (inFlight) return;
+    // Preview deployments use the same Supabase project. Never let a design
+    // preview accidentally create real customer documents or wrong-domain URLs.
+    if (location.hostname !== "privacy.hnchpower.cn") {
+      showToast("当前为界面预览，正式发布功能暂不开放。上线后可正常生成链接。");
+      return;
+    }
     var request;
     try {
       request = checkForm();
