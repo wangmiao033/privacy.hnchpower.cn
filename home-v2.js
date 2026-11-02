@@ -44,7 +44,13 @@
 
   function getFavorites() {
     var value = safeRead(STORAGE_FAVORITES, []);
-    return Array.isArray(value) ? value : [];
+    // The old template tool was merged into the unified policy studio.
+    // Preserve bookmarks and favorites after the transition.
+    return Array.isArray(value)
+      ? Array.from(new Set(value.map(function (id) {
+          return id === "privacy-policy" ? "document-policy" : id;
+        })))
+      : [];
   }
 
   function updateFavoriteButtons() {
@@ -107,6 +113,9 @@
     if (!recentSection || !recentTools) return;
     var recent = safeRead(STORAGE_RECENT, []);
     if (!Array.isArray(recent)) recent = [];
+    recent = Array.from(new Set(recent.map(function (id) {
+      return id === "privacy-policy" ? "document-policy" : id;
+    })));
     var available = recent.map(function (id) {
       return toolCards.find(function (card) { return card.getAttribute("data-tool-id") === id; });
     }).filter(Boolean);

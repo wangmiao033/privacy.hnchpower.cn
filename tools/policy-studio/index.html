@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7faff">
+  <meta name="description" content="HN Tools 隐私协议发布工作台。上传现有 Word 文档，或选择标准模板，实时预览并发布正式链接。">
+  <title>隐私协议发布工作台 · HN Tools</title>
+  <link rel="canonical" href="https://privacy.hnchpower.cn/tools/policy-studio/">
+  <link rel="icon" href="../../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="studio.css">
+</head>
+<body id="top">
+  <a class="skip-link" href="#studio-main">跳转到主内容</a>
+  <header class="studio-topbar">
+    <div class="studio-topbar-inner">
+      <a class="studio-brand" href="../../index.html" aria-label="HN Tools 首页">
+        <img src="../../assets/icons/favicon.svg" width="32" height="32" alt="">
+        <span><b>HN Tools</b><small>隐私协议服务</small></span>
+      </a>
+      <nav class="studio-nav" aria-label="主导航">
+        <a href="../../index.html">工具首页</a>
+        <a id="account-entry-link" class="account-link" href="../../account.html">登录 / 注册</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="studio-container">
+    <section class="studio-hero" aria-labelledby="studio-heading">
+      <div class="studio-hero-copy">
+        <p class="studio-eyebrow"><span></span> POLICY WORKSPACE</p>
+        <h1 id="studio-heading">隐私协议，<em>从创建到发布。</em></h1>
+        <p class="studio-hero-desc">已有协议直接上传，没有文档就使用模板。两种方式，一套发布流程。</p>
+      </div>
+      <div class="studio-step-strip" aria-label="发布流程">
+        <span><b>01</b> 选择方式</span>
+        <i aria-hidden="true"></i>
+        <span><b>02</b> 预览确认</span>
+        <i aria-hidden="true"></i>
+        <span><b>03</b> 获取链接</span>
+      </div>
+    </section>
+
+    <section class="studio-mode-section" aria-label="选择协议创建方式">
+      <div class="section-intro">
+        <h2>你想如何创建协议？</h2>
+        <p>选择一种方式，随时可以切换。</p>
+      </div>
+      <div class="studio-modes" role="group" aria-label="协议创建方式">
+        <button type="button" id="select-upload" class="studio-mode is-active" aria-pressed="true" data-mode="upload">
+          <span class="mode-icon mode-icon-blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="mode-copy"><strong>上传已有协议</strong><small>有 Word 等现成文档 · 自动解析预览</small></span>
+          <span class="mode-tick" aria-hidden="true">✓</span>
+        </button>
+        <button type="button" id="select-template" class="studio-mode" aria-pressed="false" data-mode="template">
+          <span class="mode-icon mode-icon-indigo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M8 3h7l5 5v13H8a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm7 0v5h5M9 13h7M9 17h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="mode-copy"><strong>使用固定模板</strong><small>还没有协议 · 填写四项信息自动生成</small></span>
+          <span class="mode-tick" aria-hidden="true">✓</span>
+        </button>
+      </div>
+    </section>
+
+    <main id="studio-main" class="studio-layout">
+      <section class="studio-panel studio-form-panel" aria-labelledby="details-title">
+        <div class="panel-heading">
+          <div><span class="panel-step">01 / 编辑内容</span><h2 id="details-title">准备协议</h2></div>
+          <span class="panel-pill" id="selected-mode-label">上传文档</span>
+        </div>
+
+        <div id="upload-fields" class="studio-fields">
+          <label class="field-label" for="doc-title">协议名称 <span>*</span></label>
+          <input id="doc-title" type="text" maxlength="120" placeholder="例如：《某某游戏》隐私政策" autocomplete="off">
+          <p class="field-helper">作为正式协议页面的标题展示。</p>
+
+          <label class="field-label" for="doc-file">上传协议文档 <span>*</span></label>
+          <div class="drop-zone" id="doc-drop">
+            <div class="drop-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V5m0 0L7.5 9.5M12 5l4.5 4.5M5 15v4h14v-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </div>
+            <p><strong>选择文件</strong> 或拖拽文件到这里</p>
+            <small>支持 DOCX / HTML / TXT，单文件不超过 5MB</small>
+            <input id="doc-file" type="file" accept=".docx,.html,.htm,.txt,text/html,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          </div>
+          <p id="file-status" class="field-helper" role="status" aria-live="polite">文档仅在你确认发布时上传正文；本地解析预览。</p>
+
+          <details class="paste-details" id="paste-details">
+            <summary>没有文件？也可以直接粘贴协议正文</summary>
+            <label class="field-label" for="doc-source">协议正文</label>
+            <textarea id="doc-source" rows="9" placeholder="把完整协议粘贴在这里，可以直接预览。"></textarea>
+          </details>
+        </div>
+
+        <form id="template-fields" class="studio-fields" hidden novalidate>
+          <label class="field-label" for="field-company">公司名称 <span>*</span></label>
+          <input id="field-company" name="company" type="text" autocomplete="organization" placeholder="填写运营主体的企业全称" maxlength="120">
+          <label class="field-label" for="field-game">游戏 / 应用名称 <span>*</span></label>
+          <input id="field-game" name="game" type="text" placeholder="例如：某某游戏" maxlength="120">
+          <label class="field-label" for="field-email">联系邮箱 <span>*</span></label>
+          <input id="field-email" name="email" type="email" autocomplete="email" placeholder="privacy@example.com" maxlength="160">
+          <label class="field-label" for="field-date">更新日期 <span>*</span></label>
+          <input id="field-date" name="date" type="date">
+          <div class="studio-notice">
+            <span aria-hidden="true">ⓘ</span>
+            <p>固定模板仅替换基本信息。正式使用前，请根据实际业务核对 SDK、个人信息收集、权限和未成年人保护等条款。</p>
+          </div>
+        </form>
+
+        <div class="form-bottom">
+          <p id="studio-form-hint" class="studio-status" role="status" aria-live="polite">上传或粘贴文档，即可实时预览。</p>
+          <a class="preview-jump" href="#studio-preview">查看协议预览 <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section class="studio-panel studio-preview-panel" id="studio-preview" aria-labelledby="preview-title">
+        <div class="panel-heading preview-heading">
+          <div><span class="panel-step">02 / 核对内容</span><h2 id="preview-title">实时预览</h2></div>
+          <span class="preview-status"><span aria-hidden="true"></span> 实时同步</span>
+        </div>
+        <div class="paper-frame">
+          <div class="paper-toolbar">
+            <span><i aria-hidden="true"></i> 协议正文预览</span>
+            <span>桌面 / 手机适配</span>
+          </div>
+          <article id="studio-preview-content" class="paper-content" tabindex="0" aria-live="off">
+            <div class="paper-empty">
+              <span aria-hidden="true">▤</span>
+              <h3>你的协议将在这里展示</h3>
+              <p>选择一个文件，或切换到固定模板填写基本信息。</p>
+            </div>
+          </article>
+        </div>
+        <div class="studio-publish-actions">
+          <button id="btn-publish" type="button" class="primary-action">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12l14-8-4 16-3.7-6.3L5 12z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            <span class="publish-label">生成正式链接</span>
+          </button>
+          <button id="btn-copy-preview" type="button" class="secondary-action">复制正文</button>
+          <button id="btn-print" type="button" class="secondary-action">打印 / PDF</button>
+        </div>
+        <p class="publish-helper">预览不产生正式链接。点击发布后，系统会保存协议并生成可公开访问的网址。</p>
+
+        <section id="publish-result" class="publish-result" hidden aria-labelledby="result-title">
+          <div class="result-top"><strong id="result-title">✓ 发布成功</strong><span>正式链接可长期访问</span></div>
+          <div class="result-url">
+            <input id="published-url" type="url" readonly aria-label="正式协议链接">
+            <button type="button" id="btn-copy-link">复制</button>
+            <a id="btn-open-link" target="_blank" rel="noopener noreferrer">打开</a>
+          </div>
+          <p id="publish-time">已发布</p>
+        </section>
+      </section>
+    </main>
+    <p class="studio-legal-note">HN Tools 提供文档技术服务，不代替法律审查。发布前请核对条款与业务实际情况是否一致。</p>
+  </div>
+
+  <div class="mobile-quickbar">
+    <a href="#studio-preview">查看预览</a>
+    <button id="btn-mobile-publish" type="button">生成正式链接</button>
+  </div>
+  <div id="studio-toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="../../supabase-config.js"></script>
+  <script src="../../auth.js"></script>
+  <script src="../../header-account-link.js"></script>
+  <script src="../../template.js"></script>
+  <script src="../../policy-publish-log.js"></script>
+  <script src="../../page-visit-log.js"></script>
+  <script src="studio.js"></script>
+</body>
+</html>

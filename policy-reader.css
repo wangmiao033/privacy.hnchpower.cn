@@ -1,0 +1,250 @@
+/* Shared visual system for both legacy public URL formats.
+   Does not touch document HTML, identifiers, API requests, or access permissions. */
+:root {
+  --reader-font-size: 17px;
+  --reader-ink: #1d2d46;
+  --reader-muted: #7586a0;
+  --reader-primary: #2b65d9;
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body.page-agreement, body.reader-document-page {
+  background: #f6f8fc;
+  color: var(--reader-ink);
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+.reader-progress {
+  height: 3px; position: fixed; top: 0; left: 0;
+  width: 0%; background: #2775e8; z-index: 100;
+  transition: width .09s linear;
+  pointer-events: none;
+}
+.reader-nav {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #e6ecf4;
+}
+.reader-nav-inner {
+  max-width: 1260px; margin: 0 auto; padding: 13px 26px;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+}
+.reader-brand {
+  display: inline-flex; align-items: center; gap: 11px;
+  font-size: 14px; font-weight: 750; text-decoration: none;
+  white-space: nowrap; color: #192c4d;
+}
+.reader-brand img { width: 30px; height: 30px; border-radius: 9px; }
+.reader-brand span { font-weight: 500; color: #8d9ab0; font-size: 12px; padding-left: 11px; border-left: 1px solid #d9e2ef; }
+.reader-actions { display: flex; gap: 8px; align-items: center; }
+.reader-btn {
+  min-height: 35px; border-radius: 8px; padding: 7px 12px;
+  color: #49627f; background: #fff; border: 1px solid #e0e8f3;
+  font-size: 12px; font-weight: 650; line-height: 1.4;
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  cursor: pointer;
+}
+.reader-btn:hover { background: #eff5ff; color: #265dbd; border-color: #c9dcf7; }
+.reader-btn:focus-visible { outline: 3px solid #accaff; outline-offset: 2px; }
+.reader-btn.reader-print-btn { color: #fff; background: #2a69d7; border-color: #2a69d7; }
+.reader-btn.reader-print-btn:hover { background: #1b55b5; }
+.reader-size-indicator { font-size: 11px; color: #768aa8; min-width: 27px; text-align: center; }
+.reader-layout {
+  width: min(100% - 44px, 1230px); margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 910px);
+  gap: 28px; justify-content: center; align-items: start;
+}
+html[data-has-toc="true"] .reader-layout {
+  grid-template-columns: minmax(195px, 225px) minmax(0, 860px);
+}
+.reader-toc-aside {
+  margin-top: 36px; position: sticky; top: 95px;
+  max-height: calc(100vh - 124px); overflow-y: auto;
+  padding: 19px 6px 20px 0;
+}
+.reader-toc-aside h2 {
+  color: #2d4361; font-size: 12px; font-weight: 800; letter-spacing: .4px;
+  margin: 0 0 12px;
+}
+.reader-toc-list { display: flex; flex-direction: column; gap: 3px; }
+.reader-toc-list a {
+  color: #71829a; font-size: 12px; line-height: 1.65; text-decoration: none;
+  padding: 8px 10px; border-radius: 7px; transition: .15s;
+  white-space: normal; overflow-wrap: anywhere;
+}
+.reader-toc-list a:hover, .reader-toc-list a.is-active {
+  color: #2461c7; background: #eaf2ff;
+}
+.reader-toc-list a.sublevel { padding-left: 20px; }
+.reader-mobile-toc { display: none; }
+
+/* Uploaded document renderer */
+.reader-layout .doc-shell {
+  padding: 36px 0 46px; margin: 0;
+  width: 100%; max-width: none;
+}
+.reader-layout .doc-header {
+  margin: 0 0 13px;
+  padding: 32px 42px 26px;
+  box-shadow: 0 3px 21px rgba(29,57,95,.035);
+  border: 1px solid #e6ecf4;
+  border-radius: 14px;
+}
+.reader-layout .doc-kicker {
+  display: inline-block;
+  color: #3b74d3; font-size: 11px; font-weight: 750;
+  letter-spacing: .8px; margin-bottom: 12px;
+}
+.reader-layout .doc-title {
+  font-size: clamp(27px,3vw,34px);
+  line-height: 1.32; color: #162945;
+  letter-spacing: -.55px; margin: 0;
+  overflow-wrap: anywhere;
+}
+.reader-layout .doc-meta { margin-top: 17px; color: #8a9bb1; font-size: 12px; }
+.reader-layout .doc-article,
+.reader-layout .doc-error {
+  padding: 36px 42px 52px;
+  background: #fff; border: 1px solid #e6ecf4;
+  border-radius: 14px;
+  box-shadow: 0 6px 28px rgba(35,60,94,.045);
+}
+
+/* Generated policy renderer: preserve underlying template markup. */
+.reader-layout .agreement-article {
+  width: 100%; max-width: none;
+  margin: 36px 0 46px;
+  padding: 36px 42px 52px;
+  border: 1px solid #e6ecf4;
+  border-radius: 14px;
+  box-shadow: 0 6px 28px rgba(35,60,94,.045);
+  background: #fff;
+  min-height: 320px;
+}
+.reader-layout .agreement-article .policy-doc { max-width: none; }
+.reader-layout .agreement-article .policy-doc-title { font-size: clamp(26px,2.7vw,34px); }
+
+/* Shared readable typography, long tables and links. */
+.reader-layout .doc-article, .reader-layout .agreement-article {
+  font-size: var(--reader-font-size);
+  color: var(--reader-ink);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.reader-layout .doc-article p,
+.reader-layout .doc-article li,
+.reader-layout .agreement-article p,
+.reader-layout .agreement-article li,
+.reader-layout .agreement-article .policy-doc-body p,
+.reader-layout .agreement-article .policy-doc-body li {
+  font-size: var(--reader-font-size);
+  line-height: 1.95;
+  color: #293a53;
+  letter-spacing: .06px;
+  text-align: left;
+  margin-bottom: .95em;
+}
+.reader-layout .doc-article h1,
+.reader-layout .doc-article h2,
+.reader-layout .doc-article h3,
+.reader-layout .agreement-article h1,
+.reader-layout .agreement-article h2,
+.reader-layout .agreement-article h3 {
+  color: #172c48; line-height: 1.48; scroll-margin-top: 90px;
+}
+.reader-layout .doc-article h1, .reader-layout .agreement-article h1 { font-size: 1.6em; }
+.reader-layout .doc-article h2, .reader-layout .agreement-article h2 { font-size: 1.3em; }
+.reader-layout .doc-article h3, .reader-layout .agreement-article h3 { font-size: 1.12em; }
+.reader-layout .doc-article ul, .reader-layout .agreement-article ul,
+.reader-layout .doc-article ol, .reader-layout .agreement-article ol { padding-left: 1.5em; }
+.reader-layout .doc-article th, .reader-layout .doc-article td,
+.reader-layout .agreement-article th, .reader-layout .agreement-article td {
+  line-height: 1.75; font-size: .86em;
+  padding: 10px 13px; vertical-align: top; overflow-wrap: anywhere;
+}
+.reader-layout .doc-article table,
+.reader-layout .agreement-article table {
+  display: block; width: 100%; max-width: 100%; overflow-x: auto;
+  border-collapse: collapse;
+  -webkit-overflow-scrolling: touch;
+}
+.reader-layout .doc-article a, .reader-layout .agreement-article a { color: #245cba; overflow-wrap: anywhere; }
+.reader-layout .doc-article img, .reader-layout .agreement-article img { max-width: 100%; height: auto; }
+.reader-layout .doc-article pre, .reader-layout .agreement-article pre { overflow: auto; }
+.reader-footer {
+  max-width: 1000px; margin: 0 auto 40px; padding: 0 20px;
+  color: #90a0b4; font-size: 11px; text-align: center;
+}
+.reader-backtop {
+  position: fixed; bottom: 25px; right: 25px; z-index: 10;
+  height: 42px; width: 42px; border: 1px solid #dfebf9;
+  border-radius: 13px; background: rgba(255,255,255,.93);
+  color: #2465cc; box-shadow: 0 5px 20px rgba(24,50,88,.11);
+  cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .18s;
+}
+.reader-backtop.is-visible { opacity: 1; pointer-events: auto; }
+
+@media (max-width: 930px) {
+  html[data-has-toc="true"] .reader-layout,
+  .reader-layout { display: block; width: min(100% - 32px, 850px); }
+  .reader-toc-aside { display: none !important; }
+  .reader-mobile-toc {
+    display: block; margin: 18px auto -14px;
+    background: #fff; border: 1px solid #e4eaf3; border-radius: 10px;
+    padding: 13px 16px; max-width: 850px;
+  }
+  .reader-mobile-toc[hidden] { display: none !important; }
+  .reader-mobile-toc summary { cursor: pointer; font-size: 13px; font-weight: 750; color: #3468b6; }
+  .reader-mobile-toc .reader-toc-list { margin-top: 12px; max-height: 240px; overflow-y: auto; }
+}
+@media (max-width: 600px) {
+  .reader-nav-inner { padding: 11px 13px; gap: 5px; }
+  .reader-brand { gap: 7px; font-size: 12px; }
+  .reader-brand img { height: 25px; width: 25px; }
+  .reader-brand span { display: none; }
+  .reader-actions { gap: 5px; }
+  .reader-btn { font-size: 11px; min-height: 34px; padding: 7px 9px; }
+  .reader-size-indicator { min-width: 20px; }
+  .reader-layout { width: calc(100% - 18px); }
+  .reader-layout .doc-shell { padding-top: 15px; padding-bottom: 24px; }
+  .reader-layout .doc-header { padding: 22px 21px 18px; margin-bottom: 9px; border-radius: 11px; }
+  .reader-layout .doc-title { font-size: 26px; letter-spacing: -.3px; }
+  .reader-layout .doc-article, .reader-layout .doc-error { padding: 25px 20px 33px; border-radius: 11px; }
+  .reader-layout .agreement-article { margin: 15px 0 25px; padding: 25px 20px 33px; border-radius: 11px; }
+  .reader-layout .doc-article p,
+  .reader-layout .doc-article li,
+  .reader-layout .agreement-article p,
+  .reader-layout .agreement-article li,
+  .reader-layout .agreement-article .policy-doc-body p {
+    line-height: 1.85; margin-bottom: 1em;
+  }
+  .reader-mobile-toc { margin: 9px auto 0; }
+  .reader-footer { margin-bottom: 72px; }
+  .reader-backtop { right: 14px; bottom: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reader-progress, .reader-backtop { transition: none; }
+}
+@media print {
+  @page { margin: 16mm; }
+  body.page-agreement, body.reader-document-page { background: white !important; }
+  .reader-progress, .reader-nav, .reader-toc-aside, .reader-mobile-toc,
+  .reader-footer, .reader-backtop { display: none !important; }
+  html[data-has-toc="true"] .reader-layout, .reader-layout { display: block; width: 100%; max-width: none; }
+  .reader-layout .doc-shell { padding: 0; width: 100%; visibility: visible; }
+  .reader-layout .doc-header, .reader-layout .doc-article, .reader-layout .doc-error,
+  .reader-layout .agreement-article {
+    border: 0; padding: 0; margin: 0 0 15px; box-shadow: none;
+    background: white; border-radius: 0; max-width: none;
+  }
+  .reader-layout .doc-article, .reader-layout .agreement-article {
+    font-size: 11.5pt; overflow: visible;
+  }
+  .reader-layout .doc-article p, .reader-layout .agreement-article p { font-size: 11.5pt; }
+  .reader-layout h1, .reader-layout h2, .reader-layout h3 { break-after: avoid; }
+  .reader-layout table { break-inside: avoid; }
+}
+.reader-toc-aside[hidden], .reader-mobile-toc[hidden] { display: none !important; }
+.reader-main { min-width: 0; }
