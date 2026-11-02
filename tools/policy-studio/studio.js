@@ -271,7 +271,7 @@
     inFlight = busy;
     nodes.publish.disabled = busy;
     nodes.mobilePublish.disabled = busy;
-    nodes.publish.textContent = busy ? "正在生成链接…" : "生成正式链接";
+    nodes.publish.querySelector(".publish-label").textContent = busy ? "正在生成链接…" : "生成正式链接";
     nodes.mobilePublish.textContent = busy ? "发布中…" : "生成正式链接";
   }
 
@@ -359,18 +359,20 @@
     if (!docHtml || !docText) throw new Error("文档中没有可以发布的文本");
     if (docHtml.length > MAX_HTML) throw new Error("文档内容过长，超出发布限制");
     if (!nodes.title.value.trim()) {
-      nodes.title.value = uploadTitleFromText(docText) || display || "隐私政策";
+      nodes.title.value = display || uploadTitleFromText(docText) || "隐私政策";
     }
     updatePreview();
   }
   async function loadFile(file) {
     if (!file) return;
     if (file.size > MAX_FILE_BYTES) {
+      docHtml = ""; docText = ""; updatePreview();
       setFormHint("文件超过 5MB，请压缩后再上传", true);
       return;
     }
     var lower = String(file.name || "").toLowerCase();
     if (!/\.(docx|html?|txt)$/.test(lower)) {
+      docHtml = ""; docText = ""; updatePreview();
       setFormHint("仅支持 DOCX、HTML 或 TXT 文件", true);
       return;
     }
@@ -405,7 +407,10 @@
   function setup() {
     var params = new URLSearchParams(location.search);
     var target = params.get("mode");
-    nodes.date.value = new Date().toLocaleDateString("en-CA");
+    var now = new Date();
+    nodes.date.value = now.getFullYear() + "-" +
+      String(now.getMonth() + 1).padStart(2, "0") + "-" +
+      String(now.getDate()).padStart(2, "0");
     setMode(target === "template" ? "template" : "upload", false);
 
     nodes.uploadButton.addEventListener("click", function () { setMode("upload", true); });
