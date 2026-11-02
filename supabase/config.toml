@@ -12,3 +12,12 @@ verify_jwt = false
 
 [functions.get-document-policy-link]
 verify_jwt = false
+
+[functions.create-alipay-order]
+verify_jwt = false
+
+[functions.alipay-notify]
+verify_jwt = false
+
+[functions.get-billing-status]
+verify_jwt = false
