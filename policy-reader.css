@@ -246,3 +246,5 @@ html[data-has-toc="true"] .reader-layout {
   .reader-layout h1, .reader-layout h2, .reader-layout h3 { break-after: avoid; }
   .reader-layout table { break-inside: avoid; }
 }
+.reader-toc-aside[hidden], .reader-mobile-toc[hidden] { display: none !important; }
+.reader-main { min-width: 0; }
