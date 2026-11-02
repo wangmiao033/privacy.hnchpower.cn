@@ -8,6 +8,7 @@
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="assets/icons/favicon.ico" sizes="any" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="account-billing.css" />
 </head>
 <body class="page-generator">
   <header class="site-header">
@@ -47,6 +48,13 @@
         <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
       </section>
 
+      <section id="billing-account" class="panel account-billing-panel" aria-label="会员权益与订单" hidden>
+        <h2 class="panel-title">发布权益</h2>
+        <p class="panel-subtitle" id="billing-membership">正在读取会员权益…</p>
+        <h3 class="billing-orders-title">支付记录</h3>
+        <div id="billing-orders" class="billing-orders-list">暂无支付订单</div>
+      </section>
+
       <section class="panel account-links-panel" aria-label="我的短链记录">
         <h2 class="panel-title">我的短链记录</h2>
         <p class="panel-subtitle">按创建时间倒序显示，仅当前登录账号可见</p>
@@ -63,5 +71,6 @@
   <script src="auth.js"></script>
   <script src="page-visit-log.js"></script>
   <script src="account.js"></script>
+  <script src="account-billing.js"></script>
 </body>
 </html>
