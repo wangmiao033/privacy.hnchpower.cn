@@ -16,16 +16,50 @@
   <link rel="icon" href="assets/icons/favicon-16x16.png" sizes="16x16" type="image/png" />
   <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" sizes="180x180" />
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="policy-reader.css" />
 </head>
 <body class="page-agreement">
-  <article id="agreement-root" class="agreement-article">
+  <div id="reader-progress" class="reader-progress" aria-hidden="true"></div>
+  <header class="reader-nav" id="page-top">
+    <div class="reader-nav-inner">
+      <a class="reader-brand" href="index.html" aria-label="HN Tools 首页">
+        <img src="assets/icons/favicon.svg" alt="" width="30" height="30">
+        HN Tools <span>隐私协议阅读</span>
+      </a>
+      <div class="reader-actions" aria-label="阅读工具">
+        <button id="reader-size-minus" type="button" class="reader-btn" aria-label="缩小字号">A−</button>
+        <span id="reader-size-value" class="reader-size-indicator" aria-live="polite">17</span>
+        <button id="reader-size-plus" type="button" class="reader-btn" aria-label="放大字号">A+</button>
+        <button id="reader-print" type="button" class="reader-btn reader-print-btn">打印 / PDF</button>
+      </div>
+    </div>
+  </header>
+  <div class="reader-layout">
+    <aside id="reader-toc-aside" class="reader-toc-aside" aria-label="文档目录" hidden>
+      <h2>文档目录</h2>
+      <nav id="reader-toc-desktop" class="reader-toc-list"></nav>
+    </aside>
+    <details id="reader-mobile-toc" class="reader-mobile-toc" hidden>
+      <summary>查看文档目录</summary>
+      <nav id="reader-toc-mobile" class="reader-toc-list" aria-label="手机文档目录"></nav>
+    </details>
+    <main class="reader-main">
+      <article id="agreement-root" class="agreement-article">
     <div id="agreement-loading" class="agreement-placeholder">正在加载…</div>
-  </article>
+      </article>
+    </main>
+  </div>
+  <footer class="reader-footer">
+    本页内容由协议发布者提供。如需了解个人信息处理方式，请联系协议正文中列明的运营主体。
+  </footer>
+  <button id="reader-backtop" class="reader-backtop" type="button" aria-label="返回顶部">↑</button>
+
   <script src="template.js"></script>
   <script src="supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script src="page-visit-log.js"></script>
   <script src="agreement.js"></script>
+  <script src="policy-reader.js"></script>
 </body>
 </html>
