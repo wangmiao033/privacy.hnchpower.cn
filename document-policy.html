@@ -126,6 +126,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="policy-reader.css" />
   <script src="supabase-config.js"></script>
   <script>
     (function () {
@@ -155,17 +156,47 @@
     })();
   </script>
 </head>
-<body>
-  <main class="doc-shell">
+<body class="reader-document-page">
+  <div id="reader-progress" class="reader-progress" aria-hidden="true"></div>
+  <header class="reader-nav" id="page-top">
+    <div class="reader-nav-inner">
+      <a class="reader-brand" href="index.html" aria-label="HN Tools 首页">
+        <img src="assets/icons/favicon.svg" alt="" width="30" height="30">
+        HN Tools <span>隐私协议阅读</span>
+      </a>
+      <div class="reader-actions" aria-label="阅读工具">
+        <button id="reader-size-minus" type="button" class="reader-btn" aria-label="缩小字号">A−</button>
+        <span id="reader-size-value" class="reader-size-indicator" aria-live="polite">17</span>
+        <button id="reader-size-plus" type="button" class="reader-btn" aria-label="放大字号">A+</button>
+        <button id="reader-print" type="button" class="reader-btn reader-print-btn">打印 / PDF</button>
+      </div>
+    </div>
+  </header>
+  <div class="reader-layout">
+    <aside id="reader-toc-aside" class="reader-toc-aside" aria-label="文档目录" hidden>
+      <h2>文档目录</h2>
+      <nav id="reader-toc-desktop" class="reader-toc-list"></nav>
+    </aside>
+    <details id="reader-mobile-toc" class="reader-mobile-toc" hidden>
+      <summary>查看文档目录</summary>
+      <nav id="reader-toc-mobile" class="reader-toc-list" aria-label="手机文档目录"></nav>
+    </details>
+    <main class="doc-shell">
     <header class="doc-header">
       <p class="doc-kicker">隐私协议文档</p>
       <h1 id="doc-title" class="doc-title"></h1>
       <p id="doc-meta" class="doc-meta"></p>
     </header>
     <article id="doc-article" class="doc-article"></article>
-  </main>
+    </main>
+  </div>
+  <footer class="reader-footer">
+    本页内容由协议发布者提供。如需了解个人信息处理方式，请联系协议正文中列明的运营主体。
+  </footer>
+  <button id="reader-backtop" class="reader-backtop" type="button" aria-label="返回顶部">↑</button>
 
   <script src="page-visit-log.js"></script>
   <script src="document-policy.js"></script>
+  <script src="policy-reader.js"></script>
 </body>
 </html>
